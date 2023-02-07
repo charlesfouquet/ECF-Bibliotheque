@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS commentaires;
 CREATE TABLE commentaires (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 contenu TEXT NOT NULL,
 dateCom DATETIME,
-id_livre INT,
-id_user INT);
+id_user INT,
+id_livre INT);
 
 DROP TABLE IF EXISTS livres;
 CREATE TABLE livres (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -99,30 +99,31 @@ INSERT INTO livres_auteurs (id_livre, id_auteur) VALUES (1, 1), (2, 1), (3, 1), 
 INSERT INTO livres_genres (id_livre, id_genre) VALUES (1, 1), (2, 1), (3, 1), (3, 2), (4, 1), (5, 1), (5, 2), (5, 5), (6, 1), (6, 4), (7, 1), (8, 1), (8, 4), (8, 5), (9, 3), (9, 1), (10, 1), (10, 5);
 
 INSERT INTO users (nom, prenom, email, password, adresse, cp, ville, tel) VALUES
-    ('Jaggers', 'Joyce', 'jjaggers0@techcrunch.com', PASSWORD('DNHHsno'), '37550 Hollow Ridge Terrace', '31029', 'Toulouse', '+33761596623'),
-    ('Stentiford', 'Tibold', 'tstentiford1@mail.ru', PASSWORD('wlmTCroZZlv'), '73 Gerald Avenue', '75020', 'Paris', '0811504121'),
-    ('Hryniewicz', 'Quintus', 'qhryniewicz2@spiegel.de', PASSWORD('2NmGp8KcZG'), '7737 Havey Place', '13012', 'Marseille', '0033257336173'),
-    ('Neate', 'Jeramey', 'jneate3@domainmarket.com', PASSWORD('i9fd1OVdq6gG'), '73 Utah Hill', '77000', 'Melun', '0918825481'),
-    ('Kalf', 'Violette', 'vkalf4@nature.com', PASSWORD('gZb9L42iHIY'), '5349 Jana Park', '64000', 'Hendaye', '0556571173')
+    ('Jaggers', 'Joyce', 'jjaggers0@techcrunch.com', PASSWORD('DNHHsno'), '37550 Hollow Ridge Terrace', '31029', 'Toulouse', '0165453412'),
+    ('Stentiford', 'Tibold', 'tstentiford1@mail.ru', PASSWORD('wlmTCroZZlv'), '73 Gerald Avenue', '75020', 'Paris', '0609764853'),
+    ('Hryniewicz', 'Quintus', 'qhryniewicz2@spiegel.de', PASSWORD('2NmGp8KcZG'), '7737 Havey Place', '13012', 'Marseille', '0298572645'),
+    ('Neate', 'Jeramey', 'jneate3@domainmarket.com', PASSWORD('i9fd1OVdq6gG'), '73 Utah Hill', '77000', 'Melun', '0187451309'),
+    ('Kalf', 'Violette', 'vkalf4@nature.com', PASSWORD('gZb9L42iHIY'), '5349 Jana Park', '64000', 'Hendaye', '0364897510'),
+    ('TestN', 'TestP', 'test@test.fr', PASSWORD('test'), '111 Random Street', '75012', 'Paris', '0612345678')
 ;
 
 INSERT INTO emprunts (dateSortie, dateRetour, id_user, id_livre) VALUES
-    ('3/26/2022', '8/1/2022', 3, 1),
-    ('7/9/2022', '7/10/2022', 2, 2),
-    ('7/1/2022', '11/12/2022', 3, 3),
-    ('10/17/2022', '10/19/2022', 4, 4),
-    ('7/26/2022', '8/1/2022', 3, 5),
-    ('4/30/2022', '4/10/2022', 5, 6),
-    ('2/9/2022', '2/28/2022', 2, 6),
-    ('1/26/2022', '2/15/2022', 5, 7),
-    ('2/24/2022', '3/10/2022', 8, 8),
-    ('5/21/2022', '5/26/2022', 1, 10)
+    ('2022/3/26', '2022/8/1', 3, 1),
+    ('2022/7/9', '2022/7/10', 2, 2),
+    ('2022/7/1', '2022/11/12', 3, 3),
+    ('2022/10/17', '2022/10/19', 4, 4),
+    ('2022/7/26', '2022/8/1', 3, 5),
+    ('2022/2/9', '2022/2/28', 2, 6),
+    ('2022/4/30', '2022/4/10', 5, 6),
+    ('2022/1/26', '2022/2/15', 5, 7),
+    ('2022/2/24', '2022/3/10', 3, 8),
+    ('2022/5/21', '2022/5/26', 1, 10)
 ;
 
-INSERT INTO commentaires (contenu, dateCom, id_livre, id_user) VALUES
-    ('Très bon livre', '2/13/2022', 1, 3),
-    ('Très bon livre', '7/31/2022', 6, 2),
-    ('Très bon livre', '5/7/2022', 6, 5),
-    ('Très bon livre', '1/8/2022', 10, 1),
-    ('Très bon livre', '2/20/2022', 7, 5)
+INSERT INTO commentaires (contenu, dateCom, id_user, id_livre) VALUES
+    ('Très bon livre', '2022/2/13', 3, 1),
+    ('Très bon livre', '2022/7/31', 2, 6),
+    ('Très bon livre', '2022/5/7', 5, 6),
+    ('Très bon livre', '2022/1/8', 1, 10),
+    ('Très bon livre', '2022/2/20', 5, 7)
 ;
