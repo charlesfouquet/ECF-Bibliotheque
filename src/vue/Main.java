@@ -1,5 +1,6 @@
 package vue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -13,6 +14,7 @@ public class Main extends JFrame {
 	 */
 	private static final long serialVersionUID = 2875626128795039613L;
 	private JPanel contentPane;
+	protected static Main frame;
 
 	/**
 	 * Launch the application.
@@ -21,7 +23,13 @@ public class Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main frame = new Main();
+					frame = new Main();
+					frame.getContentPane().setPreferredSize(new Dimension(1000, 600));
+					frame.pack();
+					frame.getContentPane().removeAll();
+//					frame.getContentPane().add();
+					frame.getContentPane().repaint();
+					frame.getContentPane().revalidate();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
