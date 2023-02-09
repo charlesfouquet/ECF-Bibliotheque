@@ -3,21 +3,20 @@ package vue;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Accueil extends JPanel {
 
@@ -85,6 +84,15 @@ public class Accueil extends JPanel {
 		body.add(newBooks);
 		
 		JButton toCatalog = new JButton("ACCES AU CATALOGUE COMPLET");
+		toCatalog.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				body.removeAll();
+				body.add(new Catalogue(null));
+				body.repaint();
+				body.revalidate();
+			}
+		});
 		toCatalog.setBackground(new Color(255, 255, 255));
 		toCatalog.setFont(new Font("Noto Serif", Font.PLAIN, 15));
 		toCatalog.setBounds(350, 470, 300, 40);
@@ -218,6 +226,16 @@ public class Accueil extends JPanel {
 		searchBtn.setFont(new Font("Noto Serif", Font.BOLD, 11));
 		searchBtn.setBounds(735, 15, 100, 19);
 		header.add(searchBtn);
+		
+		searchBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				body.removeAll();
+				body.add(new Catalogue(searchField.getText()));
+				body.repaint();
+				body.revalidate();
+			}
+		});
 		
 		JPanel userAccount = new JPanel();
 		userAccount.setBounds(850, 0, 150, 50);
