@@ -56,12 +56,12 @@ public class Main extends JFrame {
 					icons.add(new ImageIcon("src/images/home_128x128.png").getImage());
 					frame.setIconImages(icons);
 					
-					InputStream fontFile = null;
+					InputStream fontFile1 = null;
 					Font noto = null;
 					try {
-						fontFile = new BufferedInputStream(Files.newInputStream(Paths.get("src/font/NotoSerif-Regular.ttf")));
+						fontFile1 = new BufferedInputStream(Files.newInputStream(Paths.get("src/font/NotoSerif-Regular.ttf")));
 						try {
-							noto = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+							noto = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
 							GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
 							genv.registerFont(noto);
 						} catch (FontFormatException e) {
