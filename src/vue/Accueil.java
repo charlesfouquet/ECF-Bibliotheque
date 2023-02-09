@@ -69,10 +69,6 @@ public class Accueil extends JPanel {
 		add(body);
 		body.setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(156, 225, 321, 164);
-		body.add(panel);
-		
 		JPanel header = new JPanel();
 		header.setBackground(new Color(248, 243, 231));
 		header.setBounds(0, 0, 1000, 50);
