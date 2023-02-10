@@ -3,21 +3,22 @@ package vue;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Accueil extends JPanel {
 
@@ -63,11 +64,11 @@ public class Accueil extends JPanel {
 			}
 		});
 		
-		JMenuItem menuGenres = new JMenuItem("Auteurs");
-		menuBtn.add(menuGenres);
-		
-		JMenuItem menuAuteurs = new JMenuItem("Genres");
+		JMenuItem menuAuteurs = new JMenuItem("Auteurs");
 		menuBtn.add(menuAuteurs);
+		
+		JMenuItem menuGenres = new JMenuItem("Genres");
+		menuBtn.add(menuGenres);
 		
 		JMenuItem menuSeries = new JMenuItem("Series");
 		menuBtn.add(menuSeries);
@@ -85,6 +86,15 @@ public class Accueil extends JPanel {
 		body.add(newBooks);
 		
 		JButton toCatalog = new JButton("ACCES AU CATALOGUE COMPLET");
+		toCatalog.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				body.removeAll();
+				body.add(new Catalogue(null));
+				body.repaint();
+				body.revalidate();
+			}
+		});
 		toCatalog.setBackground(new Color(255, 255, 255));
 		toCatalog.setFont(new Font("Noto Serif", Font.PLAIN, 15));
 		toCatalog.setBounds(350, 470, 300, 40);
@@ -219,6 +229,16 @@ public class Accueil extends JPanel {
 		searchBtn.setBounds(735, 15, 100, 19);
 		header.add(searchBtn);
 		
+		searchBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				body.removeAll();
+				body.add(new Catalogue(searchField.getText()));
+				body.repaint();
+				body.revalidate();
+			}
+		});
+		
 		JPanel userAccount = new JPanel();
 		userAccount.setBounds(850, 0, 150, 50);
 		userAccount.setBackground(new Color(255, 255, 255));
@@ -261,6 +281,33 @@ public class Accueil extends JPanel {
 			public void mouseExited(MouseEvent e) {
 				connectionStatus1.setForeground(new Color(199, 152, 50));
 				connectionStatus2.setForeground(new Color(199, 152, 50));
+			}
+		});
+		
+		menuAuteurs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				body.removeAll();
+				body.add(new Tri(menuAuteurs.getText()));
+				body.repaint();
+				body.revalidate();
+			}
+		});
+		
+		menuGenres.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				body.removeAll();
+				body.add(new Tri(menuGenres.getText()));
+				body.repaint();
+				body.revalidate();
+			}
+		});
+		
+		menuSeries.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				body.removeAll();
+				body.add(new Tri(menuSeries.getText()));
+				body.repaint();
+				body.revalidate();
 			}
 		});
 
