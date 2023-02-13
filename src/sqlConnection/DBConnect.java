@@ -15,8 +15,10 @@ public class DBConnect {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			myConnection = DriverManager.getConnection(url+dbName,user,password);
+			System.out.println("OK");
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("KO");
 		}
 		return myConnection;
 	}

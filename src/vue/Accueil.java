@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,8 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
+import sqlConnection.DBConnect;
 
 public class Accueil extends JPanel {
 
@@ -89,6 +92,7 @@ public class Accueil extends JPanel {
 		toCatalog.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				Connection test = DBConnect.getConnect(); 
 				body.removeAll();
 				body.add(new Catalogue(null));
 				body.repaint();
