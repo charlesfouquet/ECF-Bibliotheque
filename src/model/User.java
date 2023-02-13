@@ -15,6 +15,7 @@ public class User {
 	//FK
 	private Role id_role;
 	
+	//Constructeur FULL param
 	public User(int id, String nom, String prenom, String email, String password, String adresse, int cp, String ville, String tel, Role id_role) {
 		super();
 		this.id = id;
@@ -27,6 +28,13 @@ public class User {
 		this.ville = ville;
 		this.tel = tel;
 		this.id_role = id_role;
+	}
+	//Constructeur 3 param
+	public User(String nom, String prenom, String email, String password) {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.password = password;
 	}
 
 	public int getId() {
