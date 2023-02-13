@@ -92,7 +92,6 @@ public class Accueil extends JPanel {
 		toCatalog.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Connection test = DBConnect.getConnect(); 
 				body.removeAll();
 				body.add(new Catalogue(null));
 				body.repaint();
