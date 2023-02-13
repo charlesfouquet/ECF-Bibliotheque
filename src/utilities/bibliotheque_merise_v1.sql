@@ -35,7 +35,7 @@ titre VARCHAR(255) NOT NULL,
 resume TEXT NOT NULL,
 datePubli DATE NOT NULL,
 nbPages INT NOT NULL,
-couverture BLOB NULL,
+couverture VARCHAR(255) NULL,
 id_editeur INT NOT NULL);
 
 DROP TABLE IF EXISTS exemplaires;
@@ -100,6 +100,17 @@ INSERT INTO editeurs (nomSocial) VALUES ("Michel Lafon"), ("Hachette"), ("Gallim
 
 INSERT INTO genres (theme) VALUES ("Fantastique"), ("Horreur"), ("Science-Fiction"), ("Policier"), ("Romance");
 
+DELIMITER //
+CREATE OR REPLACE TRIGGER autoCouverture
+	BEFORE INSERT ON livres
+	FOR EACH ROW
+	BEGIN
+        IF NEW.couverture IS NULL THEN
+		    SET NEW.couverture = CONCAT(NEW.ISBN, ".jpg");
+        END IF;
+	END //
+DELIMITER ;
+
 INSERT INTO livres (ISBN, titre, resume, datePubli, nbPages, id_editeur) VALUES 
 ("722664568-8", "Harry Potter à l'École des Sorciers", "L'intrigue du premier roman débute durant l'été 1991. Peu avant son onzième anniversaire, Harry reçoit une lettre l'invitant à se présenter lors de la rentrée des classes à l'école de sorcellerie de Poudlard. Malgré les tentatives de son oncle et de sa tante pour l'empêcher de s'y rendre, Rubeus Hagrid, un « demi-géant » envoyé par le directeur de Poudlard, Albus Dumbledore, va faire découvrir à Harry le monde des sorciers et l'amener à se rendre à la gare de King's Cross de Londres, où il prendra le Poudlard Express qui le conduira jusqu'à sa nouvelle école. Une fois à Poudlard, Harry apprend à maîtriser et utiliser les pouvoirs magiques qu'il possède et se fait deux amis inséparables : Ronald Weasley et Hermione Granger. Le trio tente d'empêcher Voldemort de s'emparer de la pierre philosophale de Nicolas Flamel, conservée sous bonne garde à Poudlard.", "1998-10-09", 305, 3), 
 ("015335736-3", "Harry Potter et la Chambre des Secrets", "L'année suivante, Harry et ses amis doivent faire face à une nouvelle menace à Poudlard. La fameuse Chambre des secrets, bâtie plusieurs siècles plus tôt par l'un des fondateurs de l'école, Salazar Serpentard, aurait été rouverte par son « héritier ». Cette Chambre, selon la légende, contiendrait un gigantesque monstre destiné à tuer les enfants sorciers nés de parents moldus acceptés à l'école contre le souhait de Serpentard. Hermione, née de parents moldus, se retrouve elle aussi menacée. Harry, sachant parler le fourchelang, est accusé en premier lieu d'être l'héritier de Serpentard par la plupart des élèves, tandis que Ginny Weasley, la sœur de Ron, est curieusement manipulée par un journal intime ayant appartenu à un certain Tom Jedusor. Harry apprend par la suite que Jedusor et Voldemort sont une seule et même personne, et que Jedusor est le véritable héritier de Serpentard, agissant sur l'école par le biais de ses souvenirs conservés dans son journal.", "1999-03-23", 364, 3), 
@@ -158,3 +169,30 @@ INSERT INTO commentaires (contenu, dateCom, id_user, ISBN_livre) VALUES
     ('Très bon livre', '2022/1/8', 1, '771915247-6'),
     ('Très bon livre', '2022/2/20', 5, '998528293-0')
 ;
+
+CREATE VIEW catalogue_complet AS
+SELECT l.id idL, l.ISBN ISBN_livreL, l.titre titreL, l.resume resumeL, l.datePubli datePubliL, l.nbPages nbPagesL, l.couverture couvertureL, a.nom nomA, a.prenom prenomA, a.bio bioA, e.nomSocial nomSocialE, g.theme themeG, s.nomSerie nomSerieS, ls.position tomeLS
+FROM livres l 
+JOIN livres_auteurs la ON l.ISBN = la.ISBN_livre 
+JOIN auteurs a ON la.id_auteur = a.id 
+JOIN editeurs e ON l.id_editeur = e.id 
+JOIN livres_genres lg ON l.ISBN = lg.ISBN_livre 
+JOIN genres g ON lg.id_genre = g.id 
+JOIN livres_series ls ON l.ISBN = ls.ISBN_livre 
+JOIN series s ON ls.id_serie = s.id;
+
+DROP VIEW IF EXISTS livres_dispos;
+CREATE VIEW IF NOT EXISTS livres_dispos AS
+SELECT l.id idL, l.ISBN ISBN_livreL, ex.id idEx, l.titre titreL, l.resume resumeL, l.datePubli datePubliL, l.nbPages nbPagesL, l.couverture couvertureL, a.nom nomA, a.prenom prenomA, a.bio bioA, ed.nomSocial nomSocialE, g.theme themeG, s.nomSerie nomSerieS, ls.position tomeLS
+FROM livres l 
+JOIN livres_auteurs la ON l.ISBN = la.ISBN_livre 
+JOIN auteurs a ON la.id_auteur = a.id 
+JOIN editeurs ed ON l.id_editeur = ed.id 
+JOIN livres_genres lg ON l.ISBN = lg.ISBN_livre 
+JOIN genres g ON lg.id_genre = g.id 
+JOIN livres_series ls ON l.ISBN = ls.ISBN_livre 
+JOIN series s ON ls.id_serie = s.id
+JOIN exemplaires ex ON ex.ISBN_livre = l.ISBN
+LEFT JOIN emprunts em ON ex.id = em.id_exemplaire
+WHERE em.dateRetour IS NOT NULL OR ex.id NOT IN (SELECT id_exemplaire FROM emprunts)  
+ORDER BY `idL` DESC;

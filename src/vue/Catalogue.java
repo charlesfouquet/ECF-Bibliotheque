@@ -1,16 +1,19 @@
 package vue;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+
+import controler.LivreDAO;
+import model.Livre;
 
 public class Catalogue extends JPanel {
 
@@ -43,34 +46,90 @@ public class Catalogue extends JPanel {
 		if ((searchString != null) && (searchString.length() > 0)) {
 			catalogTitle.setText("Résultats de votre recherche : " + searchString);
 			catalogTitle.setFont(new Font("Noto Serif", Font.BOLD, 25));
+			resultsTable.setModel(listeDispo(searchString));
 		} else {
-			
+			resultsTable.setModel(listeDispo());
 		}
-		
-		resultsTable.setModel(new DefaultTableModel(
-				new Object[][] {
-					{new ImageIcon(new ImageIcon("src/images/bookcover1.jpg").getImage().getScaledInstance(53, 75, Image.SCALE_SMOOTH)), "Test", "Test", "Test", "Test"},
-				},
-				new String[] {
-					" ", "Titre", "Auteur", "Pages", "ISBN"
-				}
-			) {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = -2767358890848023063L;
-
-				@Override
-			    public Class<?> getColumnClass(int column) {
-			        switch (column) {
-			            case 0: return ImageIcon.class;
-			            default: return String.class;
-			        }
-			    }
-			});
 			resultsTable.setRowHeight(75);
-			resultsTable.getColumnModel().getColumn(0).setPreferredWidth(53);
+			resultsTable.getColumnModel().getColumn(0).setPreferredWidth(0);
+			resultsTable.getColumnModel().getColumn(1).setPreferredWidth(400);
+			resultsTable.getColumnModel().getColumn(2).setPreferredWidth(0);
+			resultsTable.getColumnModel().getColumn(3).setPreferredWidth(0);
+			resultsTable.getColumnModel().getColumn(4).setPreferredWidth(0);
 			resultsPane.setViewportView(resultsTable);
+	}
+	
+	public DefaultTableModel listeDispo() {
+		String col [] =  {" ", "Titre", "Auteur", "Pages", "ISBN"};
 		
+		DefaultTableModel tableau = new DefaultTableModel(null, col)
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2767358890848023063L;
+
+			@Override
+		    public Class<?> getColumnClass(int column) {
+		        switch (column) {
+		            case 0: return ImageIcon.class;
+		            default: return String.class;
+		        }
+		    }
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		LivreDAO livreDao = new LivreDAO();
+		
+		for (Livre livre : livreDao.readDispo()) {
+			tableau.addRow(new Object[] {
+					new ImageIcon(new ImageIcon("src/images/" + livre.getCouverture()).getImage().getScaledInstance(53, 75, Image.SCALE_SMOOTH)),
+					livre.getTitre(),
+					livre.getAuteur().getNom() + ", " + livre.getAuteur().getPrenom(),
+					livre.getNbPages(),
+					livre.getISBN()
+			});
+		}
+		return tableau;
+	}
+	
+	public DefaultTableModel listeDispo(String searchString) {
+		String col [] =  {" ", "Titre", "Auteur", "Pages", "ISBN"};
+		
+		DefaultTableModel tableau = new DefaultTableModel(null, col)
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2767358890848023063L;
+
+			@Override
+		    public Class<?> getColumnClass(int column) {
+		        switch (column) {
+		            case 0: return ImageIcon.class;
+		            default: return String.class;
+		        }
+		    }
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		LivreDAO livreDao = new LivreDAO();
+		
+		for (Livre livre : livreDao.readDispo(searchString)) {
+			tableau.addRow(new Object[] {
+					new ImageIcon(new ImageIcon("src/images/" + livre.getCouverture()).getImage().getScaledInstance(53, 75, Image.SCALE_SMOOTH)),
+					livre.getTitre(),
+					livre.getAuteur().getNom() + ", " + livre.getAuteur().getPrenom(),
+					livre.getNbPages(),
+					livre.getISBN()
+			});
+		}
+		return tableau;
 	}
 }
