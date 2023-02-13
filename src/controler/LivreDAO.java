@@ -56,7 +56,6 @@ public class LivreDAO implements IDAO<Livre> {
 			PreparedStatement req = connect.prepareStatement("SELECT DISTINCT couvertureL, titreL, nomA, prenomA, nbPagesL, ISBN_livreL FROM livres_dispos WHERE titreL LIKE ? OR resumeL LIKE ? OR nomA LIKE ? OR prenomA LIKE ? OR bioA LIKE ? OR nomSocialE LIKE ? OR themeG LIKE ? OR nomSerieS LIKE ? OR ISBN_livreL LIKE ?");
 			
 			searchString = "%" + searchString.replace(" ", "%") + "%";
-			System.out.println("Test " + searchString);
 			
 			for (int i = 1; i <= 9; i++) {
 				req.setString(i, searchString);
