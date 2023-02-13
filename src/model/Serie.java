@@ -1,11 +1,11 @@
 package model;
 
-public class Series {
+public class Serie {
 	
 	private int id;
 	private String nomSerie;
 	
-	public Series(int id, String nomSerie) {
+	public Serie(int id, String nomSerie) {
 		super();
 		this.id = id;
 		this.nomSerie = nomSerie;

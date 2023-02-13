@@ -2,16 +2,16 @@ package model;
 
 import java.sql.Date;
 
-public class Emprunts {
+public class Emprunt {
 	
 	private int id;
 	private Date dateSortie;
 	private Date dateRetour;
 	
 	//FK
-	private Users id_user;
+	private User id_user;
 	
-	public Emprunts(int id, Date dateSortie, Date dateRetour, Users id_user) {
+	public Emprunt(int id, Date dateSortie, Date dateRetour, User id_user) {
 		super();
 		this.id = id;
 		this.dateSortie = dateSortie;
@@ -37,10 +37,10 @@ public class Emprunts {
 	public void setDateretour(Date dateRetour) {
 		this.dateRetour = dateRetour;
 	}
-	public Users getId_user() {
+	public User getId_user() {
 		return id_user;
 	}
-	public void setId_user(Users id_user) {
+	public void setId_user(User id_user) {
 		this.id_user = id_user;
 	}
 }

@@ -1,13 +1,13 @@
 package model;
 
-public class Auteurs {
+public class Auteur {
 	
 	private int id;
 	private String nom;
 	private String prenom;
 	private String bio;
 	
-	public Auteurs(int id, String nom, String prenom, String bio) {
+	public Auteur(int id, String nom, String prenom, String bio) {
 		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;

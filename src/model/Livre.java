@@ -2,7 +2,7 @@ package model;
 
 import java.sql.Date;
 
-public class Livres {
+public class Livre {
 	
 	private int id;
 	private String ISBN;
@@ -13,9 +13,9 @@ public class Livres {
 	private String couverture;
 	
 	//FK
-	private Editeurs id_editeur;
+	private Editeur id_editeur;
 
-	public Livres(int id, String iSBN, String titre, String resume, Date datePubli, int nbPages, String couverture, Editeurs id_editeur) {
+	public Livre(int id, String iSBN, String titre, String resume, Date datePubli, int nbPages, String couverture, Editeur id_editeur) {
 		super();
 		this.id = id;
 		ISBN = iSBN;
@@ -69,10 +69,10 @@ public class Livres {
 	public void setCouverture(String couverture) {
 		this.couverture = couverture;
 	}
-	public Editeurs getId_editeur() {
+	public Editeur getId_editeur() {
 		return id_editeur;
 	}
-	public void setId_editeur(Editeurs id_editeur) {
+	public void setId_editeur(Editeur id_editeur) {
 		this.id_editeur = id_editeur;
 	}
 	

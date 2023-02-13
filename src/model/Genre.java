@@ -1,11 +1,11 @@
 package model;
 
-public class Genres {
+public class Genre {
 	
 	private int id;
 	private String theme;
 	
-	public Genres(int id, String theme) {
+	public Genre(int id, String theme) {
 		super();
 		this.id = id;
 		this.theme = theme;

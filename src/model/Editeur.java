@@ -1,11 +1,11 @@
 package model;
 
-public class Editeurs {
+public class Editeur {
 	
 	private int id;
 	private String nomsocial;
 	
-	public Editeurs(int id, String nomsocial) {
+	public Editeur(int id, String nomsocial) {
 		this.id = id;
 		this.nomsocial = nomsocial;
 	}

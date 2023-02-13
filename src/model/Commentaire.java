@@ -2,16 +2,16 @@ package model;
 
 import java.sql.Date;
 
-public class Commentaires {
+public class Commentaire {
 	private int id;
 	private String contenu;
 	private Date dateCom;
 	
 	//FK
-	private Users id_user;
-	private Livres ISBN_livre;
+	private User id_user;
+	private Livre ISBN_livre;
 	
-	public Commentaires(int id, String contenu, Date dateCom, Users id_user, Livres iSBN_livre) {
+	public Commentaire(int id, String contenu, Date dateCom, User id_user, Livre iSBN_livre) {
 		super();
 		this.id = id;
 		this.contenu = contenu;
@@ -38,16 +38,16 @@ public class Commentaires {
 	public void setDateCom(Date dateCom) {
 		this.dateCom = dateCom;
 	}
-	public Users getId_user() {
+	public User getId_user() {
 		return id_user;
 	}
-	public void setId_user(Users id_user) {
+	public void setId_user(User id_user) {
 		this.id_user = id_user;
 	}
-	public Livres getISBN_livre() {
+	public Livre getISBN_livre() {
 		return ISBN_livre;
 	}
-	public void setISBN_livre(Livres iSBN_livre) {
+	public void setISBN_livre(Livre iSBN_livre) {
 		ISBN_livre = iSBN_livre;
 	}
 	

@@ -1,11 +1,11 @@
 package model;
 
-public class Roles {
+public class Role {
 	
 	private int id;
 	private String poste;
 	
-	public Roles(int id, String poste) {
+	public Role(int id, String poste) {
 		super();
 		this.id = id;
 		this.poste = poste;
