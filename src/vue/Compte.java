@@ -63,7 +63,7 @@ public class Compte extends JPanel {
 		panelInfoGen.setBackground(new Color(240, 227, 198));
 		panelInfoGen.setBorder(new MatteBorder(0, 0, 2, 2, (Color) new Color(199, 152, 50)));
 		panelInfoGen.setLayout(null);
-		panelInfoGen.setBounds(10, 10, 490, 265);
+		panelInfoGen.setBounds(10, 10, 490, 225);
 		add(panelInfoGen);
 	
 		JLabel titreInfoGen = new JLabel(" Informations générales");
@@ -201,7 +201,7 @@ public class Compte extends JPanel {
 		PanelMdp.setBackground(new Color(240, 227, 198));
 		PanelMdp.setBorder(new MatteBorder(0, 0, 0, 2, (Color) new Color(192, 152, 50)));
 		PanelMdp.setLayout(null);
-		PanelMdp.setBounds(10, 274, 490, 265);
+		PanelMdp.setBounds(10, 235, 490, 220);
 		add(PanelMdp);
 		
 		JLabel lblModific = new JLabel(" Modification mot de passe");
@@ -214,40 +214,40 @@ public class Compte extends JPanel {
 		JLabel lblAncienMdp = new JLabel("Ancien :");
 		lblAncienMdp.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		lblAncienMdp.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAncienMdp.setBounds(87, 78, 75, 30);
+		lblAncienMdp.setBounds(80, 51, 75, 30);
 		PanelMdp.add(lblAncienMdp);
 		
 		textAncienMdp = new JTextField();
 		textAncienMdp.setBackground(new Color(250, 243, 230));
 		lblAncienMdp.setLabelFor(textAncienMdp);
 		textAncienMdp.setColumns(10);
-		textAncienMdp.setBounds(184, 78, 200, 30);
+		textAncienMdp.setBounds(177, 51, 200, 30);
 		PanelMdp.add(textAncienMdp);
 		
 		JLabel labelNvMdp = new JLabel("Nouveau :");
 		labelNvMdp.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNvMdp.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelNvMdp.setBounds(87, 119, 75, 30);
+		labelNvMdp.setBounds(80, 92, 75, 30);
 		PanelMdp.add(labelNvMdp);
 		
 		textNvMdp = new JTextField();
 		textNvMdp.setBackground(new Color(250, 243, 230));
 		labelNvMdp.setLabelFor(textNvMdp);
 		textNvMdp.setColumns(10);
-		textNvMdp.setBounds(184, 119, 200, 30);
+		textNvMdp.setBounds(177, 92, 200, 30);
 		PanelMdp.add(textNvMdp);
 		
 		JLabel labelConfirmMdp = new JLabel("Confirmation :");
 		labelConfirmMdp.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelConfirmMdp.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelConfirmMdp.setBounds(62, 160, 100, 30);
+		labelConfirmMdp.setBounds(55, 133, 100, 30);
 		PanelMdp.add(labelConfirmMdp);
 		
 		textConfMdp = new JTextField();
 		textConfMdp.setBackground(new Color(250, 243, 230));
 		labelConfirmMdp.setLabelFor(textConfMdp);
 		textConfMdp.setColumns(10);
-		textConfMdp.setBounds(184, 160, 200, 30);
+		textConfMdp.setBounds(177, 133, 200, 30);
 		PanelMdp.add(textConfMdp);
 		
 		JButton btnModifMdp = new JButton("Validation");
@@ -256,7 +256,7 @@ public class Compte extends JPanel {
 				
 			}
 		});
-		btnModifMdp.setBounds(284, 201, 100, 30);
+		btnModifMdp.setBounds(277, 174, 100, 30);
 		PanelMdp.add(btnModifMdp);
 		
 		//###################
@@ -297,6 +297,31 @@ public class Compte extends JPanel {
 		table.getColumnModel().getColumn(2).setPreferredWidth(100);
 		table.getColumnModel().getColumn(3).setPreferredWidth(100);
 		scrollPane.setViewportView(table);
+		
+		//###################
+		// ### SUPPRESSION DU COMPTE ###
+		//###################
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(240, 227, 198));
+		panel.setBorder(new MatteBorder(2, 0, 0, 3, (Color) new Color(199, 152, 50)));
+		panel.setBounds(10, 455, 490, 85);
+		add(panel);
+		panel.setLayout(null);
+		
+		JLabel labelSuppCompte = new JLabel("Je supprime mon compte :");
+		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelSuppCompte.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelSuppCompte.setBounds(10, 11, 257, 45);
+		panel.add(labelSuppCompte);
+		
+		JButton btnNewButton = new JButton("Suppression");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnNewButton.setBounds(277, 20, 100, 30);
+		panel.add(btnNewButton);
 		
 		
 		
