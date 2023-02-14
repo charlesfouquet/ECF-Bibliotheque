@@ -16,8 +16,8 @@ public class LivreDAO implements IDAO<Livre> {
 	Connection connect = DBConnect.getConnect();
 
 	@Override
-	public void create(Livre object) {
-		// TODO Auto-generated method stub
+	public boolean create(Livre object) {
+		return false;
 		
 	}
 
