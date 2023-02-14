@@ -6,9 +6,11 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,7 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import sqlConnection.DBConnect;
+import controler.LivreDAO;
+import model.Livre;
 
 public class Accueil extends JPanel {
 
@@ -30,6 +33,7 @@ public class Accueil extends JPanel {
 	 */
 	private static final long serialVersionUID = -2798845607393016064L;
 	private JTextField searchField;
+	LivreDAO livreDAO = new LivreDAO();
 
 	/**
 	 * Create the panel.
@@ -66,6 +70,9 @@ public class Accueil extends JPanel {
 				menuBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 		});
+
+		JMenuItem menuCatalogue = new JMenuItem("Catalogue complet");
+		menuBtn.add(menuCatalogue);
 		
 		JMenuItem menuAuteurs = new JMenuItem("Auteurs");
 		menuBtn.add(menuAuteurs);
@@ -103,79 +110,63 @@ public class Accueil extends JPanel {
 		toCatalog.setBounds(350, 470, 300, 40);
 		body.add(toCatalog);
 		
-		JLabel newBook1 = new JLabel(new ImageIcon(new ImageIcon("src/images/bookcover1.jpg").getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
-		newBook1.setBounds(60, 120, 175, 245);
-		body.add(newBook1);
+		ArrayList<Livre> listeNewBooks = livreDAO.newestBooks();
 		
-		JLabel newBook2 = new JLabel(new ImageIcon(new ImageIcon("src/images/bookcover2.jpg").getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
-		newBook2.setBounds(295, 120, 175, 245);
-		body.add(newBook2);
-		
-		JLabel newBook3 = new JLabel(new ImageIcon(new ImageIcon("src/images/bookcover3.jpg").getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
-		newBook3.setBounds(530, 120, 175, 245);
-		body.add(newBook3);
-		
-		JLabel newBook4 = new JLabel(new ImageIcon(new ImageIcon("src/images/bookcover4.jpg").getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
-		newBook4.setBounds(765, 120, 175, 245);
-		body.add(newBook4);
-		
-		JLabel newBookTitle1 = new JLabel("Harry Potter à l'école des Sorciers");
-		newBookTitle1.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookTitle1.setVerticalAlignment(SwingConstants.CENTER);
-		newBookTitle1.setBounds(60, 375, 175, 20);
-		body.add(newBookTitle1);
-		
-		JLabel newBookTitle2 = new JLabel("Harry Potter et la Chambre des Secrets");
-		newBookTitle2.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookTitle2.setVerticalAlignment(SwingConstants.CENTER);
-		newBookTitle2.setBounds(295, 375, 175, 20);
-		body.add(newBookTitle2);
-		
-		JLabel newBookTitle3 = new JLabel("Harry Potter et le Prisonnier d'Azkaban");
-		newBookTitle3.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookTitle3.setVerticalAlignment(SwingConstants.CENTER);
-		newBookTitle3.setBounds(530, 375, 175, 20);
-		body.add(newBookTitle3);
-		
-		JLabel newBookTitle4 = new JLabel("Harry Potter et la Coupe de Feu");
-		newBookTitle4.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookTitle4.setVerticalAlignment(SwingConstants.CENTER);
-		newBookTitle4.setBounds(765, 375, 175, 20);
-		body.add(newBookTitle4);
-		
-		newBookTitle1.setFont(new Font("Noto Serif", Font.PLAIN, 13));
-		newBookTitle2.setFont(new Font("Noto Serif", Font.PLAIN, 13));
-		newBookTitle3.setFont(new Font("Noto Serif", Font.PLAIN, 13));
-		newBookTitle4.setFont(new Font("Noto Serif", Font.PLAIN, 13));
-		
-		JLabel newBookAuthor1 = new JLabel("J.K Rowling");
-		newBookAuthor1.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookAuthor1.setVerticalAlignment(SwingConstants.CENTER);
-		newBookAuthor1.setBounds(60, 405, 175, 20);
-		body.add(newBookAuthor1);
-		
-		JLabel newBookAuthor2 = new JLabel("J.K Rowling");
-		newBookAuthor2.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookAuthor2.setVerticalAlignment(SwingConstants.CENTER);
-		newBookAuthor2.setBounds(295, 405, 175, 20);
-		body.add(newBookAuthor2);
-		
-		JLabel newBookAuthor3 = new JLabel("J.K Rowling");
-		newBookAuthor3.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookAuthor3.setVerticalAlignment(SwingConstants.CENTER);
-		newBookAuthor3.setBounds(530, 405, 175, 20);
-		body.add(newBookAuthor3);
-		
-		JLabel newBookAuthor4 = new JLabel("J.K Rowling");
-		newBookAuthor4.setHorizontalAlignment(SwingConstants.CENTER);
-		newBookAuthor4.setVerticalAlignment(SwingConstants.CENTER);
-		newBookAuthor4.setBounds(765, 405, 175, 20);
-		body.add(newBookAuthor4);
-		
-		newBookAuthor1.setFont(new Font("Noto Serif", Font.PLAIN, 11));
-		newBookAuthor2.setFont(new Font("Noto Serif", Font.PLAIN, 11));
-		newBookAuthor3.setFont(new Font("Noto Serif", Font.PLAIN, 11));
-		newBookAuthor4.setFont(new Font("Noto Serif", Font.PLAIN, 11));
+		int newBookXPos = 60;
+		for (int i = 0; i < listeNewBooks.size(); i++) {
+			JLabel newBook = new JLabel(new ImageIcon(new ImageIcon("src/images/" + listeNewBooks.get(i).getCouverture()).getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
+			newBook.setBounds(newBookXPos, 120, 175, 245);
+			body.add(newBook);
+			newBook.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int selectedID = Integer.parseInt(new String(newBook.getName().substring(7))) - 1;
+					body.removeAll();
+					body.add(new FicheLivre(livreDAO.findByISBN(listeNewBooks.get(selectedID).getISBN())));
+					body.repaint();
+					body.revalidate();
+				}
+			});
+			newBook.setName("newBook"+(i+1));
+			
+			JLabel newBookTitle = new JLabel(listeNewBooks.get(i).getTitre());
+			newBookTitle.setHorizontalAlignment(SwingConstants.CENTER);
+			newBookTitle.setVerticalAlignment(SwingConstants.CENTER);
+			newBookTitle.setBounds(newBookXPos, 375, 175, 20);
+			newBookTitle.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+			body.add(newBookTitle);
+			newBookTitle.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int selectedID = Integer.parseInt(new String(newBookTitle.getName().substring(12))) - 1;
+					body.removeAll();
+					body.add(new Catalogue(listeNewBooks.get(selectedID).getISBN()));
+					body.repaint();
+					body.revalidate();
+				}
+			});
+			newBookTitle.setName("newBookTitle"+(i+1));
+			
+			JLabel newBookAuthor = new JLabel(listeNewBooks.get(i).getAuteur().getPrenom() + " " + listeNewBooks.get(i).getAuteur().getNom());
+			newBookAuthor.setHorizontalAlignment(SwingConstants.CENTER);
+			newBookAuthor.setVerticalAlignment(SwingConstants.CENTER);
+			newBookAuthor.setBounds(newBookXPos, 405, 175, 20);
+			newBookAuthor.setFont(new Font("Noto Serif", Font.PLAIN, 11));
+			body.add(newBookAuthor);
+			newBookAuthor.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int selectedID = Integer.parseInt(new String(newBookAuthor.getName().substring(13))) - 1;
+					body.removeAll();
+					body.add(new Catalogue(listeNewBooks.get(selectedID).getAuteur().getPrenom() + " " + listeNewBooks.get(selectedID).getAuteur().getNom()));
+					body.repaint();
+					body.revalidate();
+				}
+			});
+			newBookAuthor.setName("newBookAuthor"+(i+1));
+			
+			newBookXPos += 235;
+		}
 		
 		JPanel header = new JPanel();
 		header.setBackground(new Color(248, 243, 231));
@@ -222,6 +213,17 @@ public class Accueil extends JPanel {
 		});
 		
 		searchField = new JTextField();
+		searchField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					body.removeAll();
+					body.add(new Catalogue(searchField.getText()));
+					body.repaint();
+					body.revalidate();
+	            }
+			}
+		});
 		searchField.setBounds(435, 15, 300, 20);
 		header.add(searchField);
 		searchField.setColumns(10);
@@ -313,6 +315,14 @@ public class Accueil extends JPanel {
 				body.revalidate();
 			}
 		});
-
+		
+		menuCatalogue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				body.removeAll();
+				body.add(new Catalogue(null));
+				body.repaint();
+				body.revalidate();
+			}
+		});
 	}
 }
