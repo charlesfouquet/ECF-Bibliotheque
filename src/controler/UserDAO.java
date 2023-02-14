@@ -13,6 +13,8 @@ import sqlConnection.DBConnect;
 
 public class UserDAO implements IDAO<User>{
 	Connection connect = DBConnect.getConnect();
+	
+	public static User currentUser = null;
 
 	@Override
 	public boolean create(User user) {
@@ -49,7 +51,7 @@ public class UserDAO implements IDAO<User>{
 		
 	}
 	
-	//méthode vérification de mail
+	//méthode vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres
 	public boolean emailValidator(String email) {
 		String regex = "^[A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][@][A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][.][A-Za-z0-9]{2,3}$";
 		Pattern compilRegex = Pattern.compile(regex);
@@ -59,9 +61,9 @@ public class UserDAO implements IDAO<User>{
 		return mailCheck;
 	}
 	
+	//vérification de password : 8 caractères, 1 maj, 1 minus, 1 chiffre, 1 spécial
 	public boolean passValidator(String pass) {
 		String regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!$%-_]).{8,}$";
-//		String regex = "[a]";
 		Pattern compileRegex = Pattern.compile(regex);
 		Matcher verifPass = compileRegex.matcher(pass);
 		boolean passCheck = verifPass.matches();
@@ -72,7 +74,7 @@ public class UserDAO implements IDAO<User>{
 	//méthodes pour vérifié si mail déjà existant dans la bdd
 	public boolean isExist(String email) {
 		try {
-			PreparedStatement requete = (connect.prepareStatement("SELECT * FROM users WHERE email=?"));
+			PreparedStatement requete = connect.prepareStatement("SELECT * FROM users WHERE email=?");
 			requete.setString(1, email);
 			ResultSet rs = requete.executeQuery();
 			if (rs.next()) {
@@ -83,4 +85,37 @@ public class UserDAO implements IDAO<User>{
 		}
 		return false;
 	}
+	
+	//méthode connexion
+	public User connexion(String email, String password) {
+		try {
+			PreparedStatement requete = connect.prepareStatement("SELECT * FROM users WHERE email = ? AND password = PASSWORD(?)");
+			requete.setString(1, email);
+			requete.setString(2, password);
+			ResultSet rs = requete.executeQuery();
+			if (rs.next()) {
+				currentUser = new User(rs.getInt("id"), rs.getString("nom"), rs.getString("prenom"), rs.getString("email"), rs.getString("adresse"), rs.getInt("cp"), rs.getString("ville"), rs.getString("tel"), rs.getInt("id_role")); 
+				return currentUser;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
