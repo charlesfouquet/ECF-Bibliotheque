@@ -9,6 +9,10 @@ public class Editeur {
 		this.id = id;
 		this.nomsocial = nomsocial;
 	}
+	
+	public Editeur(String nomsocial) {
+		this.nomsocial = nomsocial;
+	}
 
 	public int getId() {
 		return id;

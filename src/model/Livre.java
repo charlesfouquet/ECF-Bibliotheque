@@ -15,9 +15,19 @@ public class Livre {
 	//FK
 	private Editeur editeur;
 	private Auteur auteur;
+	
+	public Livre(String ISBN, String couverture, String titre, Auteur auteur, String resume, Date datePubli, int nbPages, Editeur editeur) {
+		this.ISBN = ISBN;
+		this.couverture = couverture;
+		this.titre = titre;
+		this.auteur = auteur;
+		this.resume = resume;
+		this.datePubli = datePubli;
+		this.nbPages = nbPages;
+		this.editeur = editeur;
+	}
 
 	public Livre(int id, String ISBN, String titre, String resume, Date datePubli, int nbPages, String couverture, Editeur editeur) {
-		super();
 		this.id = id;
 		this.ISBN = ISBN;
 		this.titre = titre;

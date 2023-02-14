@@ -150,7 +150,7 @@ INSERT INTO users (nom, prenom, email, password, adresse, cp, ville, tel, id_rol
 ;
 
 INSERT INTO emprunts (dateSortie, dateRetour, id_user, id_exemplaire) VALUES
-    ('2022/3/26', '2022/8/1', 3, 1),
+    ('2022/3/26', null, 3, 1),
     ('2022/7/9', '2022/7/10', 2, 2),
     ('2022/7/1', '2022/11/12', 3, 3),
     ('2022/10/17', '2022/10/19', 4, 4),
@@ -159,7 +159,8 @@ INSERT INTO emprunts (dateSortie, dateRetour, id_user, id_exemplaire) VALUES
     ('2022/4/30', '2022/4/10', 5, 6),
     ('2022/1/26', '2022/2/15', 5, 7),
     ('2022/2/24', '2022/3/10', 3, 8),
-    ('2022/5/21', '2022/5/26', 1, 10)
+    ('2022/5/21', '2022/5/26', 1, 10),
+    ('2022/5/27', null, 1, 14)
 ;
 
 INSERT INTO commentaires (contenu, dateCom, id_user, ISBN_livre) VALUES
@@ -171,7 +172,7 @@ INSERT INTO commentaires (contenu, dateCom, id_user, ISBN_livre) VALUES
 ;
 
 CREATE VIEW catalogue_complet AS
-SELECT l.id idL, l.ISBN ISBN_livreL, l.titre titreL, l.resume resumeL, l.datePubli datePubliL, l.nbPages nbPagesL, l.couverture couvertureL, a.nom nomA, a.prenom prenomA, a.bio bioA, e.nomSocial nomSocialE, g.theme themeG, s.nomSerie nomSerieS, ls.position tomeLS
+SELECT l.id idL, l.ISBN ISBN_livreL, ex.id idEx, l.titre titreL, l.resume resumeL, l.datePubli datePubliL, l.nbPages nbPagesL, l.couverture couvertureL, a.nom nomA, a.prenom prenomA, a.bio bioA, e.nomSocial nomSocialE, g.theme themeG, s.nomSerie nomSerieS, ls.position tomeLS
 FROM livres l 
 JOIN livres_auteurs la ON l.ISBN = la.ISBN_livre 
 JOIN auteurs a ON la.id_auteur = a.id 
@@ -179,7 +180,9 @@ JOIN editeurs e ON l.id_editeur = e.id
 JOIN livres_genres lg ON l.ISBN = lg.ISBN_livre 
 JOIN genres g ON lg.id_genre = g.id 
 JOIN livres_series ls ON l.ISBN = ls.ISBN_livre 
-JOIN series s ON ls.id_serie = s.id;
+JOIN series s ON ls.id_serie = s.id
+JOIN exemplaires ex ON ex.ISBN_livre = l.ISBN
+ORDER BY `idL` DESC;
 
 DROP VIEW IF EXISTS livres_dispos;
 CREATE VIEW IF NOT EXISTS livres_dispos AS

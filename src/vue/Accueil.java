@@ -33,6 +33,7 @@ public class Accueil extends JPanel {
 	 */
 	private static final long serialVersionUID = -2798845607393016064L;
 	private JTextField searchField;
+	LivreDAO livreDAO = new LivreDAO();
 
 	/**
 	 * Create the panel.
@@ -69,6 +70,9 @@ public class Accueil extends JPanel {
 				menuBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 		});
+
+		JMenuItem menuCatalogue = new JMenuItem("Catalogue complet");
+		menuBtn.add(menuCatalogue);
 		
 		JMenuItem menuAuteurs = new JMenuItem("Auteurs");
 		menuBtn.add(menuAuteurs);
@@ -106,7 +110,6 @@ public class Accueil extends JPanel {
 		toCatalog.setBounds(350, 470, 300, 40);
 		body.add(toCatalog);
 		
-		LivreDAO livreDAO = new LivreDAO();
 		ArrayList<Livre> listeNewBooks = livreDAO.newestBooks();
 		
 		int newBookXPos = 60;
@@ -119,7 +122,7 @@ public class Accueil extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					int selectedID = Integer.parseInt(new String(newBook.getName().substring(7))) - 1;
 					body.removeAll();
-					body.add(new Catalogue(listeNewBooks.get(selectedID).getISBN()));
+					body.add(new FicheLivre(livreDAO.findByISBN(listeNewBooks.get(selectedID).getISBN())));
 					body.repaint();
 					body.revalidate();
 				}
@@ -312,6 +315,14 @@ public class Accueil extends JPanel {
 				body.revalidate();
 			}
 		});
-
+		
+		menuCatalogue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				body.removeAll();
+				body.add(new Catalogue(null));
+				body.repaint();
+				body.revalidate();
+			}
+		});
 	}
 }
