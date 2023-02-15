@@ -203,7 +203,7 @@ public class Tri extends JPanel {
 				break;
 			}
 			tableau.addRow(new Object[] {
-					new ImageIcon(new ImageIcon("src/images/" + livre.getCouverture()).getImage().getScaledInstance(53, 75, Image.SCALE_SMOOTH)),
+					new ImageIcon(new ImageIcon("src/resources/images/bookcovers/" + livre.getCouverture()).getImage().getScaledInstance(53, 75, Image.SCALE_SMOOTH)),
 					livre.getTitre(),
 					livre.getAuteur().getNom() + ", " + livre.getAuteur().getPrenom(),
 					livre.getNbPages(),

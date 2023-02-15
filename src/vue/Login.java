@@ -82,7 +82,7 @@ public class Login extends JPanel {
 		panelConnexion.add(textMdpC);
 		
 		// ### BTN CONNEXION
-		JButton btnConnexion = new JButton("je me connecte");
+		JButton btnConnexion = new JButton("Je me connecte");
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				User user = userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
@@ -99,6 +99,8 @@ public class Login extends JPanel {
 				
 			}
 		});
+		btnConnexion.setBackground(new Color(255, 255, 255));
+		btnConnexion.setForeground(new Color(199, 152, 50));
 		btnConnexion.setBounds(251, 194, 150, 30);
 		panelConnexion.add(btnConnexion);
 		
@@ -169,7 +171,7 @@ public class Login extends JPanel {
 		panelInscription.add(labelContrainte);
 		
 		/* ### EMAIL ICONE INFO */
-		JLabel labelIconeEmail = new JLabel("");
+		JLabel labelIconeEmail = new JLabel(new ImageIcon(new ImageIcon("src/resources/images/logos/info.png").getImage()));
 		labelIconeEmail.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -190,12 +192,11 @@ public class Login extends JPanel {
 		textMdpI.setBounds(222, 284, 200, 30);
 		panelInscription.add(textMdpI);
 		
-		labelIconeEmail.setIcon(new ImageIcon(Login.class.getResource("/images/info.png")));
 		labelIconeEmail.setBounds(432, 222, 31, 31);
 		panelInscription.add(labelIconeEmail);
 		
 		/* ### PASSWORD ICONE INFO */
-		JLabel labelIconeMdp = new JLabel("");
+		JLabel labelIconeMdp = new JLabel(new ImageIcon(new ImageIcon("src/resources/images/logos/info.png").getImage()));
 		labelIconeMdp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -203,7 +204,6 @@ public class Login extends JPanel {
 			}
 		});
 		
-		labelIconeMdp.setIcon(new ImageIcon(Login.class.getResource("/images/info.png")));
 		labelIconeMdp.setBounds(432, 284, 31, 31);
 		panelInscription.add(labelIconeMdp);
 		
@@ -257,6 +257,8 @@ public class Login extends JPanel {
 				}
 			}
 		});
+		btnInscription.setBackground(new Color(255, 255, 255));
+		btnInscription.setForeground(new Color(199, 152, 50));
 		btnInscription.setBounds(272, 425, 150, 30);
 		panelInscription.add(btnInscription);
 	}

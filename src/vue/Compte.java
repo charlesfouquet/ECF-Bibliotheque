@@ -67,7 +67,7 @@ public class Compte extends JPanel {
 		add(panelInfoGen);
 	
 		JLabel titreInfoGen = new JLabel(" Informations générales");
-		titreInfoGen.setIcon(new ImageIcon(Compte.class.getResource("/images/user.png")));
+		titreInfoGen.setIcon(new ImageIcon("src/resources/images/logos/user.png"));
 		titreInfoGen.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		titreInfoGen.setHorizontalAlignment(SwingConstants.LEFT);
 		titreInfoGen.setBounds(0, 0, 480, 35);
@@ -132,7 +132,7 @@ public class Compte extends JPanel {
 		add(panelAdresseDom);
 		
 		JLabel lblAdresseDeDomiciliation = new JLabel(" Adresse de domiciliation");
-		lblAdresseDeDomiciliation.setIcon(new ImageIcon(Compte.class.getResource("/images/house.png")));
+		lblAdresseDeDomiciliation.setIcon(new ImageIcon("src/resources/images/logos/house.png"));
 		lblAdresseDeDomiciliation.setHorizontalAlignment(SwingConstants.LEFT);
 		lblAdresseDeDomiciliation.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		lblAdresseDeDomiciliation.setBounds(10, 0, 480, 35);
@@ -205,7 +205,7 @@ public class Compte extends JPanel {
 		add(PanelMdp);
 		
 		JLabel lblModific = new JLabel(" Modification mot de passe");
-		lblModific.setIcon(new ImageIcon(Compte.class.getResource("/images/lock.png")));
+		lblModific.setIcon(new ImageIcon("src/resources/images/logos/lock.png"));
 		lblModific.setHorizontalAlignment(SwingConstants.LEFT);
 		lblModific.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		lblModific.setBounds(0, 10, 480, 35);
@@ -269,7 +269,7 @@ public class Compte extends JPanel {
 		add(panelEmprunt);
 		
 		JLabel lblListeDesEmprunts = new JLabel(" Liste des emprunts");
-		lblListeDesEmprunts.setIcon(new ImageIcon(Compte.class.getResource("/images/list.png")));
+		lblListeDesEmprunts.setIcon(new ImageIcon("src/resources/images/logos/list.png"));
 		lblListeDesEmprunts.setHorizontalAlignment(SwingConstants.LEFT);
 		lblListeDesEmprunts.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		lblListeDesEmprunts.setBounds(10, 10, 480, 35);

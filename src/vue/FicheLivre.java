@@ -44,7 +44,7 @@ public class FicheLivre extends JPanel {
 		add(authorLabel);
 		authorLabel.setText("Écrit par : " + livre.getAuteur().getPrenom() + " " + livre.getAuteur().getNom());
 		
-		JLabel bookCover = new JLabel(new ImageIcon(new ImageIcon("src/images/" + livre.getCouverture()).getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH)));
+		JLabel bookCover = new JLabel(new ImageIcon(new ImageIcon("src/resources/images/bookcovers/" + livre.getCouverture()).getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH)));
 		bookCover.setBounds(20, 50, 250, 350);
 		add(bookCover);
 		

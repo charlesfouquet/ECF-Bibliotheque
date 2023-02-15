@@ -106,7 +106,8 @@ public class Accueil extends JPanel {
 			}
 		});
 		toCatalog.setBackground(new Color(255, 255, 255));
-		toCatalog.setFont(new Font("Noto Serif", Font.PLAIN, 15));
+		toCatalog.setForeground(new Color(199, 152, 50));
+		toCatalog.setFont(new Font("Noto Serif", Font.BOLD, 15));
 		toCatalog.setBounds(350, 470, 300, 40);
 		body.add(toCatalog);
 		
@@ -114,7 +115,7 @@ public class Accueil extends JPanel {
 		
 		int newBookXPos = 60;
 		for (int i = 0; i < listeNewBooks.size(); i++) {
-			JLabel newBook = new JLabel(new ImageIcon(new ImageIcon("src/images/" + listeNewBooks.get(i).getCouverture()).getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
+			JLabel newBook = new JLabel(new ImageIcon(new ImageIcon("src/resources/images/bookcovers/" + listeNewBooks.get(i).getCouverture()).getImage().getScaledInstance(175, 245, Image.SCALE_SMOOTH)));
 			newBook.setBounds(newBookXPos, 120, 175, 245);
 			body.add(newBook);
 			newBook.addMouseListener(new MouseAdapter() {
@@ -174,7 +175,7 @@ public class Accueil extends JPanel {
 		add(header);
 		header.setLayout(null);
 		
-		JLabel logo = new JLabel(new ImageIcon("src/images/home_30x30.png"));
+		JLabel logo = new JLabel(new ImageIcon("src/resources/images/logos/home_30x30.png"));
 		logo.setBounds(10, 10, 32, 32);
 		header.add(logo);
 		
@@ -250,7 +251,7 @@ public class Accueil extends JPanel {
 		header.add(userAccount);
 		userAccount.setLayout(null);
 		
-		JLabel userIcon = new JLabel(new ImageIcon("src/images/user.png"));
+		JLabel userIcon = new JLabel(new ImageIcon("src/resources/images/logos/user.png"));
 		userIcon.setBounds(10, 10, 32, 32);
 		userAccount.add(userIcon);
 		
