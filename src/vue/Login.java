@@ -33,6 +33,7 @@ public class Login extends JPanel {
 	//instance pour utilisation méthode
 	UserDAO userDao = new UserDAO();
 	
+	
 	public Login() {
 		setBackground(new Color(240, 227, 198));
 		setLayout(null);
@@ -243,6 +244,11 @@ public class Login extends JPanel {
 									//si tous OK insert dans la bdd
 									if (userDao.create(userC)) {
 										JOptionPane.showMessageDialog(null, "Votre compte a bien été créé.","INSCRIPTION", JOptionPane.PLAIN_MESSAGE);
+										userDao.connexion(textEmailI.getText(), String.valueOf(textMdpI));
+										Main.frame.getContentPane().removeAll();
+										Main.frame.getContentPane().add(new Accueil());
+										Main.frame.getContentPane().repaint();
+										Main.frame.getContentPane().revalidate();
 									} else {
 										JOptionPane.showMessageDialog(null, "Votre compte n'a pas pu être créé !\n Verifier vos informations.","INSCRIPTION", JOptionPane.ERROR_MESSAGE);
 									}
