@@ -360,6 +360,29 @@ public class LivreDAO implements IDAO<Livre> {
 		}
 		return seriesInfo;
 	}
+	
+	public String getGenres(String ISBN) {
+		String genresInfo = "";
+		
+		try {
+			PreparedStatement req = connect.prepareStatement("SELECT theme FROM livres_genres lg JOIN genres g ON g.id = lg.id_genre WHERE ISBN_livre = ?");
+
+			req.setString(1, ISBN);
+			ResultSet rs = req.executeQuery();
+			
+			while(rs.next()) {
+				genresInfo += rs.getString("theme");
+				if (!rs.isLast()) {
+					genresInfo += ", ";
+				}
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return genresInfo;
+	}
 
 	@Override
 	public void update(Livre object) {

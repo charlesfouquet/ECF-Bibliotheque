@@ -40,7 +40,7 @@ public class Tri extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public Tri(String categoryString) {
+	public Tri(String[] categoryString) {
 		setBackground(new Color(240, 227, 198));
 		setBounds(0, 0, 1000, 550);
 		setLayout(null);
@@ -60,7 +60,7 @@ public class Tri extends JPanel {
 		add(sortPane);
 			
 		sortTable = new JTable();
-		sortTable.setModel(listeTri(categoryString));
+		sortTable.setModel(listeTri(categoryString[0]));
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 		sortTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -75,12 +75,24 @@ public class Tri extends JPanel {
 		sortTitle.setBounds(0, 120, 200, 30);
 		add(sortTitle);
 		
+		if (categoryString.length > 1) {
+			for (int i = 0; i < sortTable.getRowCount(); i++) {
+				if (sortTable.getValueAt(i, 0).equals(categoryString[1])) {
+					sortTable.setRowSelectionInterval(i, i);
+				}
+			}
+			selectedItem = categoryString[1];
+			resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, false));
+			reformatTable(resultsTable);
+			resultsPane.setViewportView(resultsTable);
+		}
+		
 		sortTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = sortTable.getSelectedRow();
 				selectedItem = (String) sortTable.getModel().getValueAt(row, 0);
-				resultsTable.setModel(listeViaTri(categoryString, selectedItem, false));
+				resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, false));
 				reformatTable(resultsTable);
 				resultsPane.setViewportView(resultsTable);
 			}
@@ -105,11 +117,11 @@ public class Tri extends JPanel {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
 					catalogTitle.setText("Livres disponibles à l'emprunt");
-					resultsTable.setModel(listeViaTri(categoryString, selectedItem, true));
+					resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, true));
 					reformatTable(resultsTable);
 		        } else {
 					catalogTitle.setText("Extrait du catalogue complet");
-		        	resultsTable.setModel(listeViaTri(categoryString, selectedItem, false));
+		        	resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, false));
 		    		reformatTable(resultsTable);
 		        };
 			}

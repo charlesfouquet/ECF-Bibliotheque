@@ -2,6 +2,7 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
@@ -20,6 +21,10 @@ import javax.swing.SwingUtilities;
 import controler.LivreDAO;
 import controler.UserDAO;
 import model.Livre;
+import utilities.DateTime;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FicheLivre extends JPanel {
 
@@ -38,6 +43,33 @@ public class FicheLivre extends JPanel {
 		setLayout(null);
 		
 		JLabel authorLabel = new JLabel("");
+		authorLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				authorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				authorLabel.setForeground(new Color(199, 152, 50));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String[] authorParts = authorLabel.getText().substring(12).split(" ");
+				String auteurParNom = "";
+				for (int i = authorParts.length - 1; i >= 0; i--) {
+					auteurParNom += authorParts[i];
+					if (i != 0) {
+						auteurParNom += ", ";
+					}
+				}
+				System.out.println(auteurParNom);
+				removeAll();
+				add(new Tri(new String[]{"Auteurs", auteurParNom}));
+				repaint();
+				revalidate();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				authorLabel.setForeground(new Color(120, 91, 31));
+			}
+		});
 		authorLabel.setVerticalAlignment(SwingConstants.TOP);
 		authorLabel.setBounds(282, 120, 378, 30);
 		authorLabel.setFont(new Font("Noto Serif", Font.PLAIN, 15));
@@ -64,6 +96,24 @@ public class FicheLivre extends JPanel {
 		add(backToSeries);
 		if (Integer.parseInt(livreDAO.getSeries(livre.getISBN()).get(0)) > 0) {
 			backToSeries.setText("Tome " + livreDAO.getSeries(livre.getISBN()).get(0) + " de la série " + livreDAO.getSeries(livre.getISBN()).get(1));
+			backToSeries.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					backToSeries.setCursor(new Cursor(Cursor.HAND_CURSOR));
+					backToSeries.setForeground(new Color(199, 152, 50));
+				}
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					removeAll();
+					add(new Tri(new String[]{"Series", backToSeries.getText().split("de la série ")[1]}));
+					repaint();
+					revalidate();
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					backToSeries.setForeground(new Color(0, 0, 0));
+				}
+			});
 		}
 		
 		JLabel commentsLabel = new JLabel("Commentaires");
@@ -110,6 +160,87 @@ public class FicheLivre extends JPanel {
 		btnNewButton.setFont(new Font("Noto Serif", Font.BOLD, 15));
 		btnNewButton.setBounds(20, 450, 250, 40);
 		add(btnNewButton);
+		
+		JLabel labelDate = new JLabel("");
+		labelDate.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelDate.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		labelDate.setForeground(new Color(0, 0, 0, 125));
+		labelDate.setBounds(280, 422, 380, 21);
+		add(labelDate);
+		labelDate.setText("Date de publication : " + DateTime.sdfDate.format(livre.getDatePubli()));
+		
+		JLabel labelPages = new JLabel("");
+		labelPages.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelPages.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		labelPages.setForeground(new Color(0, 0, 0, 125));
+		labelPages.setBounds(280, 443, 380, 21);
+		add(labelPages);
+		labelPages.setText("Nombre de pages : " + livre.getNbPages());
+		
+		JLabel labelISBN = new JLabel("");
+		labelISBN.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelISBN.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		labelISBN.setForeground(new Color(0, 0, 0, 125));
+		labelISBN.setBounds(280, 464, 380, 21);
+		add(labelISBN);
+		labelISBN.setText("ISBN : " + livre.getISBN());
+		
+		JLabel labelEditeur = new JLabel("");
+		labelEditeur.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelEditeur.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				labelEditeur.setForeground(new Color(0, 0, 0));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				removeAll();
+				add(new Catalogue(labelEditeur.getText().substring(10)));
+				repaint();
+				revalidate();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelEditeur.setForeground(new Color(0, 0, 0, 125));
+			}
+		});
+		labelEditeur.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelEditeur.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		labelEditeur.setForeground(new Color(0, 0, 0, 125));
+		labelEditeur.setBounds(280, 485, 380, 21);
+		add(labelEditeur);
+		labelEditeur.setText("Editeur : " + livre.getEditeur().getNomsocial());
+		
+		JLabel labelGenres = new JLabel("");
+		labelGenres.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelGenres.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				labelGenres.setForeground(new Color(0, 0, 0));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String genres = "";
+				String[] genresParts = labelGenres.getText().substring(9).split(", ");
+				for (String theme : genresParts) {
+					genres += theme + " ";
+				}
+				removeAll();
+				add(new Catalogue(genres));
+				repaint();
+				revalidate();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelGenres.setForeground(new Color(0, 0, 0, 125));
+			}
+		});
+		labelGenres.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelGenres.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		labelGenres.setForeground(new Color(0, 0, 0, 125));
+		labelGenres.setBounds(280, 506, 380, 21);
+		add(labelGenres);
+		labelGenres.setText("Genres : " + livreDAO.getGenres(livre.getISBN()));
 		
 		if (livreDAO.getStock(livre.getISBN()).get(0) == 0) {
 			stockInfo.setText("Ce livre est temporairement indisponible");
