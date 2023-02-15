@@ -8,6 +8,7 @@ import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,8 +18,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import controler.LivreDAO;
+import controler.UserDAO;
 import model.Livre;
-import javax.swing.JButton;
 
 public class FicheLivre extends JPanel {
 
@@ -36,7 +37,7 @@ public class FicheLivre extends JPanel {
 		setBounds(0, 0, 1000, 550);
 		setLayout(null);
 		
-		JLabel authorLabel = new JLabel("New label");
+		JLabel authorLabel = new JLabel("");
 		authorLabel.setVerticalAlignment(SwingConstants.TOP);
 		authorLabel.setBounds(282, 120, 378, 30);
 		authorLabel.setFont(new Font("Noto Serif", Font.PLAIN, 15));
@@ -57,10 +58,13 @@ public class FicheLivre extends JPanel {
 		commentsPane.setEditable(false);
 		commentsScrollPane.setViewportView(commentsPane);
 		
-		JLabel backToSeries = new JLabel("New label");
+		JLabel backToSeries = new JLabel("");
 		backToSeries.setBounds(20, 20, 660, 30);
-		backToSeries.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		backToSeries.setFont(new Font("Noto Serif", Font.ITALIC, 15));
 		add(backToSeries);
+		if (Integer.parseInt(livreDAO.getSeries(livre.getISBN()).get(0)) > 0) {
+			backToSeries.setText("Tome " + livreDAO.getSeries(livre.getISBN()).get(0) + " de la série " + livreDAO.getSeries(livre.getISBN()).get(1));
+		}
 		
 		JLabel commentsLabel = new JLabel("Commentaires");
 		commentsLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -94,7 +98,7 @@ public class FicheLivre extends JPanel {
 		bookTitlePane.add(bookTitle, BorderLayout.SOUTH);		
 		bookTitle.setText(livre.getTitre());
 		
-		JLabel stockInfo = new JLabel("New label");
+		JLabel stockInfo = new JLabel("");
 		stockInfo.setHorizontalAlignment(SwingConstants.CENTER);
 		stockInfo.setBounds(20, 400, 250, 50);
 		stockInfo.setFont(new Font("Noto Serif", Font.PLAIN, 13));
@@ -111,6 +115,10 @@ public class FicheLivre extends JPanel {
 			stockInfo.setText("Ce livre est temporairement indisponible");
 			stockInfo.setForeground(Color.RED);
 			btnNewButton.setText("Emprunt impossible");
+			btnNewButton.setEnabled(false);
+		} else if (UserDAO.currentUser == null) {
+			stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
+			btnNewButton.setText("Connexion requise");
 			btnNewButton.setEnabled(false);
 		} else {
 			stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
