@@ -6,26 +6,27 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import controler.CommentaireDAO;
 import controler.LivreDAO;
 import controler.UserDAO;
 import model.Livre;
 import utilities.DateTime;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JTextArea;
 
 public class FicheLivre extends JPanel {
 
@@ -34,6 +35,7 @@ public class FicheLivre extends JPanel {
 	 */
 	private static final long serialVersionUID = 3209269363955639051L;
 	LivreDAO livreDAO = new LivreDAO();
+	CommentaireDAO commentaireDAO = new CommentaireDAO();
 
 	/**
 	 * Create the panel.
@@ -255,6 +257,19 @@ public class FicheLivre extends JPanel {
 		ajoutCom.add(textAjoutCom);
 		
 		JButton ajoutComBtn = new JButton("Envoyer");
+		ajoutComBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (ajoutComBtn.isEnabled()) {
+					if (textAjoutCom.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Le commentaire est vide.\nVeuillez écrire un commentaire avant de l'envoyer.", "Commentaire vide", JOptionPane.WARNING_MESSAGE);											
+					} else if (!textAjoutCom.getText().equals("")) {
+						
+						JOptionPane.showMessageDialog(null, "Merci beaucoup pour votre commentaire !", "Commentaire envoyé", JOptionPane.INFORMATION_MESSAGE);											
+					}
+				}
+			}
+		});
 		ajoutComBtn.setBounds(10, 75, 280, 20);
 		ajoutComBtn.setBackground(new Color(255, 255, 255));
 		ajoutComBtn.setForeground(new Color(199, 152, 50));

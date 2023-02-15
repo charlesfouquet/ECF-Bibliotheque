@@ -336,7 +336,8 @@ public class Accueil extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				accountMenu.setVisible(false);
-				int choix = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.YES_NO_OPTION);
+				Object[] options = {"Oui", "Non"};
+				int choix = JOptionPane.showOptionDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 				if (choix == 0) {
 					UserDAO.currentUser = null;
 					Main.frame.getContentPane().removeAll();
