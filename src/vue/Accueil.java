@@ -301,30 +301,6 @@ public class Accueil extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				if (UserDAO.currentUser != null) {
 					accountMenu.setVisible(true);
-					toAccountButton.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							accountMenu.setVisible(false);
-							body.removeAll();
-							body.add(new Compte());
-							body.repaint();
-							body.revalidate();	
-						}
-					});
-					logoutButton.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							accountMenu.setVisible(false);
-							int choix = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.YES_NO_OPTION);
-							if (choix == 0) {
-								UserDAO.currentUser = null;
-								Main.frame.getContentPane().removeAll();
-								Main.frame.getContentPane().add(new Accueil());
-								Main.frame.getContentPane().repaint();
-								Main.frame.getContentPane().revalidate();
-							}
-						}
-					});
 				} else {
 					body.removeAll();
 					body.add(new Login());
@@ -345,10 +321,36 @@ public class Accueil extends JPanel {
 			}
 		});
 		
+		toAccountButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				accountMenu.setVisible(false);
+				body.removeAll();
+				body.add(new Compte());
+				body.repaint();
+				body.revalidate();	
+			}
+		});
+		
+		logoutButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				accountMenu.setVisible(false);
+				int choix = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.YES_NO_OPTION);
+				if (choix == 0) {
+					UserDAO.currentUser = null;
+					Main.frame.getContentPane().removeAll();
+					Main.frame.getContentPane().add(new Accueil());
+					Main.frame.getContentPane().repaint();
+					Main.frame.getContentPane().revalidate();
+				}
+			}
+		});
+		
 		menuAuteurs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				body.removeAll();
-				body.add(new Tri(menuAuteurs.getText()));
+				body.add(new Tri(new String[]{menuAuteurs.getText()}));
 				body.repaint();
 				body.revalidate();
 			}
@@ -357,7 +359,7 @@ public class Accueil extends JPanel {
 		menuGenres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				body.removeAll();
-				body.add(new Tri(menuGenres.getText()));
+				body.add(new Tri(new String[]{menuGenres.getText()}));
 				body.repaint();
 				body.revalidate();
 			}
@@ -366,7 +368,7 @@ public class Accueil extends JPanel {
 		menuSeries.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				body.removeAll();
-				body.add(new Tri(menuSeries.getText()));
+				body.add(new Tri(new String[]{menuSeries.getText()}));
 				body.repaint();
 				body.revalidate();
 			}
