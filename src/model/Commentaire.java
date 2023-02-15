@@ -8,16 +8,22 @@ public class Commentaire {
 	private Date dateCom;
 	
 	//FK
-	private User id_user;
-	private Livre ISBN_livre;
+	private User user;
+	private Livre livre;
 	
-	public Commentaire(int id, String contenu, Date dateCom, User id_user, Livre iSBN_livre) {
-		super();
+	public Commentaire(String contenu, Date dateCom, User user, Livre livre) {
+		this.contenu = contenu;
+		this.dateCom = dateCom;
+		this.user = user;
+		this.livre = livre;
+	}
+	
+	public Commentaire(int id, String contenu, Date dateCom, User user, Livre livre) {
 		this.id = id;
 		this.contenu = contenu;
 		this.dateCom = dateCom;
-		this.id_user = id_user;
-		ISBN_livre = iSBN_livre;
+		this.user = user;
+		this.livre = livre;
 	}
 
 	public int getId() {
@@ -38,18 +44,19 @@ public class Commentaire {
 	public void setDateCom(Date dateCom) {
 		this.dateCom = dateCom;
 	}
-	public User getId_user() {
-		return id_user;
+	public User getUser() {
+		return user;
 	}
-	public void setId_user(User id_user) {
-		this.id_user = id_user;
+	public void setUser(User user) {
+		this.user = user;
 	}
-	public Livre getISBN_livre() {
-		return ISBN_livre;
+	public Livre getLivre() {
+		return livre;
 	}
-	public void setISBN_livre(Livre iSBN_livre) {
-		ISBN_livre = iSBN_livre;
+	public void setLivre(Livre livre) {
+		this.livre = livre;
 	}
+
 	
 	
 	
