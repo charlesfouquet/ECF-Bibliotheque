@@ -339,6 +339,27 @@ public class LivreDAO implements IDAO<Livre> {
 		}
 		return stockInfo;
 	}
+	
+	public ArrayList<String> getSeries(String ISBN) {
+		ArrayList<String> seriesInfo = new ArrayList<>();
+		
+		try {
+			PreparedStatement req = connect.prepareStatement("SELECT position, nomSerie FROM livres_series ls JOIN series s ON s.id = ls.id_serie WHERE ISBN_livre = ?");
+
+			req.setString(1, ISBN);
+			ResultSet rs = req.executeQuery();
+			
+			while(rs.next()) {
+				seriesInfo.add(rs.getString("position"));
+				seriesInfo.add(rs.getString("nomSerie"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return seriesInfo;
+	}
 
 	@Override
 	public void update(Livre object) {

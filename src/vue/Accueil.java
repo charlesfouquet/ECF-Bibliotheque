@@ -18,12 +18,14 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import controler.LivreDAO;
+import controler.UserDAO;
 import model.Livre;
 
 public class Accueil extends JPanel {
@@ -46,6 +48,26 @@ public class Accueil extends JPanel {
 		UIManager.put("Menu.font", mf);
 		Font mif = new Font("Noto Serif", Font.PLAIN, 12);
 		UIManager.put("MenuItem.font", mif);
+		
+		JPanel accountMenu = new JPanel();
+		accountMenu.setBounds(850, 50, 150, 40);
+		accountMenu.setLayout(null);
+		add(accountMenu);
+		accountMenu.setVisible(false);
+		
+		JButton toAccountButton = new JButton("Mon compte");
+		toAccountButton.setBounds(0, 0, 150, 20);
+		toAccountButton.setBackground(new Color(255, 255, 255));
+		toAccountButton.setForeground(new Color(199, 152, 50));
+		toAccountButton.setFont(new Font("Noto Serif", Font.BOLD, 11));
+		accountMenu.add(toAccountButton);
+		
+		JButton logoutButton = new JButton("Déconnexion");
+		logoutButton.setBounds(0, 20, 150, 20);
+		logoutButton.setBackground(new Color(255, 255, 255));
+		logoutButton.setForeground(new Color(199, 152, 50));
+		logoutButton.setFont(new Font("Noto Serif", Font.BOLD, 11));
+		accountMenu.add(logoutButton);
 		
 		JPanel menu = new JPanel();
 		menu.setBounds(320, 0, 250, 300);
@@ -269,13 +291,46 @@ public class Accueil extends JPanel {
 		connectionStatus2.setBounds(52, 25, 90, 15);
 		userAccount.add(connectionStatus2);
 		
+		if (UserDAO.currentUser != null) {
+			connectionStatus1.setText(UserDAO.currentUser.getPrenom());
+			connectionStatus2.setText(UserDAO.currentUser.getNom());
+		}
+		
 		userAccount.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				body.removeAll();
-				body.add(new Login());
-				body.repaint();
-				body.revalidate();
+				if (UserDAO.currentUser != null) {
+					accountMenu.setVisible(true);
+					toAccountButton.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							accountMenu.setVisible(false);
+							body.removeAll();
+							body.add(new Compte());
+							body.repaint();
+							body.revalidate();	
+						}
+					});
+					logoutButton.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							accountMenu.setVisible(false);
+							int choix = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.YES_NO_OPTION);
+							if (choix == 0) {
+								UserDAO.currentUser = null;
+								Main.frame.getContentPane().removeAll();
+								Main.frame.getContentPane().add(new Accueil());
+								Main.frame.getContentPane().repaint();
+								Main.frame.getContentPane().revalidate();
+							}
+						}
+					});
+				} else {
+					body.removeAll();
+					body.add(new Login());
+					body.repaint();
+					body.revalidate();					
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
