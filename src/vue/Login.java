@@ -56,59 +56,63 @@ public class Login extends JPanel {
 		labelConnexion.setBounds(0, 0, 485, 50);
 		panelConnexion.add(labelConnexion);
 		
-		JLabel labelMdpConnexion = new JLabel("Mot de passe * :");
-		labelMdpConnexion.setFont(new Font("Noto Serif", Font.PLAIN, 14));
-		labelMdpConnexion.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelMdpConnexion.setBounds(59, 122, 130, 30);
-		panelConnexion.add(labelMdpConnexion);
-		
-		textEmailC = new JTextField();
-		textEmailC.setBackground(new Color(250, 243, 230));
-		textEmailC.setBounds(201, 61, 200, 30);
-		panelConnexion.add(textEmailC);
-		textEmailC.setColumns(10);
-		
 		JLabel labelEmailConnexion = new JLabel("E-Mail * :");
 		labelEmailConnexion.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailConnexion.setLabelFor(textEmailC);
 		labelEmailConnexion.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelEmailConnexion.setBounds(59, 61, 130, 30);
+		labelEmailConnexion.setBounds(58, 100, 130, 30);
 		panelConnexion.add(labelEmailConnexion);
+		
+		textEmailC = new JTextField();
+		textEmailC.setBackground(new Color(250, 243, 230));
+		textEmailC.setBounds(200, 100, 200, 30);
+		panelConnexion.add(textEmailC);
+		textEmailC.setColumns(10);
+		
+		JLabel labelMdpConnexion = new JLabel("Mot de passe * :");
+		labelMdpConnexion.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelMdpConnexion.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelMdpConnexion.setBounds(58, 160, 130, 30);
+		panelConnexion.add(labelMdpConnexion);
 		
 		textMdpC = new JPasswordField();
 		textMdpC.setBackground(new Color(250, 243, 230));
 		labelMdpConnexion.setLabelFor(textMdpC);
 		textMdpC.setColumns(10);
-		textMdpC.setBounds(201, 122, 200, 30);
+		textMdpC.setBounds(200, 160, 200, 30);
 		panelConnexion.add(textMdpC);
+		
+		JLabel labelContrainteC = new JLabel("* champs obligatoire !");
+		labelContrainteC.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelContrainteC.setBounds(200, 200, 200, 14);
+		panelConnexion.add(labelContrainteC);
 		
 		// ### BTN CONNEXION
 		JButton btnConnexion = new JButton("Je me connecte");
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				User user = userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
-				if(user != null) {
-				//login.currentuser = user;
-					JOptionPane.showMessageDialog(null,"Vous êtes connecté !","CONNEXION", JOptionPane.INFORMATION_MESSAGE);
-					Main.frame.getContentPane().removeAll();
-					Main.frame.getContentPane().add(new Accueil());
-					Main.frame.getContentPane().repaint();
-					Main.frame.getContentPane().revalidate();
-				}else {
-					JOptionPane.showMessageDialog(null,"Vérifier vos informations.\n ECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
-				}
-				
+//				if (userDao.emailValidator(textEmailC.getText())) {
+					//Vérif mail COnnexion
+					User userC = userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
+					if(userC != null) {
+						//login.currentuser = user;
+						JOptionPane.showMessageDialog(null,"Vous êtes connecté !","CONNEXION", JOptionPane.INFORMATION_MESSAGE);
+						Main.frame.getContentPane().removeAll();
+						Main.frame.getContentPane().add(new Accueil());
+						Main.frame.getContentPane().repaint();
+						Main.frame.getContentPane().revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null,"Vérifier vos informations.\n ECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
+					}
+//				}else {
+//					JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+//				}
 			}
 		});
 		btnConnexion.setBackground(new Color(255, 255, 255));
 		btnConnexion.setForeground(new Color(199, 152, 50));
-		btnConnexion.setBounds(251, 194, 150, 30);
+		btnConnexion.setBounds(250, 230, 150, 30);
 		panelConnexion.add(btnConnexion);
-		
-		JLabel labelContrainteC = new JLabel("* champs obligatoire !");
-		labelContrainteC.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelContrainteC.setBounds(201, 162, 200, 14);
-		panelConnexion.add(labelContrainteC);
 		
 		//##########################
 		//### INSCRIPTION ###
@@ -211,7 +215,7 @@ public class Login extends JPanel {
 		JLabel labelConfMdpInscription = new JLabel("Confirmation (mdp) * :");
 		labelConfMdpInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelConfMdpInscription.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelConfMdpInscription.setBounds(50, 345, 150, 30);
+		labelConfMdpInscription.setBounds(25, 345, 175, 30);
 		panelInscription.add(labelConfMdpInscription);
 		
 		textConfMdpI = new JPasswordField();
@@ -225,7 +229,7 @@ public class Login extends JPanel {
 		JButton btnInscription = new JButton("Je m'inscris");
 		btnInscription.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				User userC = new User(textNomI.getText(), textPrenomI.getText(), textEmailI.getText(), String.valueOf(textMdpI) );
+				User userI = new User(textNomI.getText(), textPrenomI.getText(), textEmailI.getText(), String.valueOf(textMdpI) );
 				//instance d'utilisateur
 				if(textNomI.getText().isEmpty() || textPrenomI.getText().isEmpty() || textEmailI.getText().isEmpty() || String.valueOf(textMdpI).isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Merci de remplir les champs vide.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
@@ -242,7 +246,7 @@ public class Login extends JPanel {
 									JOptionPane.showMessageDialog(null, "ATTENTION, vos mots de passe ne sont pas identique !", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 								} else {
 									//si tous OK insert dans la bdd
-									if (userDao.create(userC)) {
+									if (userDao.create(userI)) {
 										JOptionPane.showMessageDialog(null, "Votre compte a bien été créé.","INSCRIPTION", JOptionPane.PLAIN_MESSAGE);
 										userDao.connexion(textEmailI.getText(), String.valueOf(textMdpI));
 										Main.frame.getContentPane().removeAll();

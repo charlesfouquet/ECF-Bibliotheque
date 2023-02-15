@@ -46,9 +46,16 @@ public class UserDAO implements IDAO<User>{
 	}
 
 	@Override
-	public void delete(User object) {
-		// TODO Auto-generated method stub
-		
+	public boolean delete(User user) {
+		String requete = ("DETLETE FROM users WHERE id=(?)");
+		try {
+			PreparedStatement sql = connect.prepareStatement(requete);
+			sql.setInt(1, user.getId());
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	//méthode vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres

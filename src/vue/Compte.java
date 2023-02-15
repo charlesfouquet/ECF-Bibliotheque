@@ -16,6 +16,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Compte extends JPanel {
 	private static final long serialVersionUID = 6556442715550137983L;
@@ -60,6 +62,7 @@ public class Compte extends JPanel {
 		// ### INFORMATION MATION GENERALE ###
 		//###################
 		JPanel panelInfoGen = new JPanel();
+		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		panelInfoGen.setBackground(new Color(240, 227, 198));
 		panelInfoGen.setBorder(new MatteBorder(0, 0, 2, 2, (Color) new Color(199, 152, 50)));
 		panelInfoGen.setLayout(null);
@@ -67,6 +70,7 @@ public class Compte extends JPanel {
 		add(panelInfoGen);
 	
 		JLabel titreInfoGen = new JLabel(" Informations générales");
+		titreInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		titreInfoGen.setIcon(new ImageIcon("src/resources/images/logos/user.png"));
 		titreInfoGen.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		titreInfoGen.setHorizontalAlignment(SwingConstants.LEFT);
@@ -74,6 +78,7 @@ public class Compte extends JPanel {
 		panelInfoGen.add(titreInfoGen);
 		
 		JLabel labelNomInscription = new JLabel("Nom :");
+		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelNomInscription.setBounds(79, 64, 75, 30);
@@ -88,6 +93,7 @@ public class Compte extends JPanel {
 		
 		JLabel labelPrenomInscription = new JLabel("Prenom :");
 		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelPrenomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelPrenomInscription.setBounds(79, 105, 75, 30);
 		panelInfoGen.add(labelPrenomInscription);
@@ -101,6 +107,7 @@ public class Compte extends JPanel {
 		
 		JLabel labelEmailInscription = new JLabel("E-mail :");
 		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelEmailInscription.setBounds(79, 146, 75, 30);
 		panelInfoGen.add(labelEmailInscription);
@@ -113,12 +120,13 @@ public class Compte extends JPanel {
 		panelInfoGen.add(textEmail);
 		
 		JButton btnInfoGen = new JButton("Validation");
+		btnInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnInfoGen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
-		btnInfoGen.setBounds(276, 187, 100, 30);
+		btnInfoGen.setBounds(247, 187, 130, 30);
 		panelInfoGen.add(btnInfoGen);
 		
 		//###################
@@ -132,6 +140,7 @@ public class Compte extends JPanel {
 		add(panelAdresseDom);
 		
 		JLabel lblAdresseDeDomiciliation = new JLabel(" Adresse de domiciliation");
+		lblAdresseDeDomiciliation.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		lblAdresseDeDomiciliation.setIcon(new ImageIcon("src/resources/images/logos/house.png"));
 		lblAdresseDeDomiciliation.setHorizontalAlignment(SwingConstants.LEFT);
 		lblAdresseDeDomiciliation.setFont(new Font("Noto Serif", Font.BOLD, 16));
@@ -187,11 +196,12 @@ public class Compte extends JPanel {
 		panelAdresseDom.add(textTel);
 		
 		JButton btnAdrDom = new JButton("Validation");
+		btnAdrDom.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnAdrDom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnAdrDom.setBounds(284, 210, 100, 30);
+		btnAdrDom.setBounds(254, 210, 130, 30);
 		panelAdresseDom.add(btnAdrDom);
 		
 		//###################
@@ -205,6 +215,7 @@ public class Compte extends JPanel {
 		add(PanelMdp);
 		
 		JLabel lblModific = new JLabel(" Modification mot de passe");
+		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		lblModific.setIcon(new ImageIcon("src/resources/images/logos/lock.png"));
 		lblModific.setHorizontalAlignment(SwingConstants.LEFT);
 		lblModific.setFont(new Font("Noto Serif", Font.BOLD, 16));
@@ -251,12 +262,14 @@ public class Compte extends JPanel {
 		PanelMdp.add(textConfMdp);
 		
 		JButton btnModifMdp = new JButton("Validation");
+		btnModifMdp.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnModifMdp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
-		btnModifMdp.setBounds(277, 174, 100, 30);
+		btnModifMdp.setBounds(247, 174, 130, 30);
 		PanelMdp.add(btnModifMdp);
 		
 		//###################
@@ -269,6 +282,7 @@ public class Compte extends JPanel {
 		add(panelEmprunt);
 		
 		JLabel lblListeDesEmprunts = new JLabel(" Liste des emprunts");
+		lblListeDesEmprunts.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		lblListeDesEmprunts.setIcon(new ImageIcon("src/resources/images/logos/list.png"));
 		lblListeDesEmprunts.setHorizontalAlignment(SwingConstants.LEFT);
 		lblListeDesEmprunts.setFont(new Font("Noto Serif", Font.BOLD, 16));
@@ -276,6 +290,7 @@ public class Compte extends JPanel {
 		panelEmprunt.add(lblListeDesEmprunts);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		scrollPane.setViewportBorder(null);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(10, 66, 480, 188);
@@ -303,25 +318,40 @@ public class Compte extends JPanel {
 		//###################
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(240, 227, 198));
-		panel.setBorder(new MatteBorder(2, 0, 0, 3, (Color) new Color(199, 152, 50)));
+		panel.setBorder(new MatteBorder(2, 0, 0, 2, (Color) new Color(199, 152, 50)));
 		panel.setBounds(10, 455, 490, 85);
 		add(panel);
 		panel.setLayout(null);
 		
 		JLabel labelSuppCompte = new JLabel("Je supprime mon compte :");
 		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelSuppCompte.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelSuppCompte.setBounds(10, 11, 257, 45);
 		panel.add(labelSuppCompte);
 		
-		JButton btnNewButton = new JButton("Suppression");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+		JButton btnDelete = new JButton("Suppression");
+		btnDelete.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		btnDelete.setBackground(Color.LIGHT_GRAY);
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnDelete.setBackground(new Color(255, 0, 0));
+				btnDelete.setForeground(new Color(255, 255, 255));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnDelete.setBackground(new Color(240, 145, 145));
+				btnDelete.setForeground(new Color(0, 0, 0));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				btnDelete.setBackground(Color.GREEN);
+				btnDelete.setForeground(new Color(0, 0, 0));
 			}
 		});
-		btnNewButton.setBounds(277, 20, 100, 30);
-		panel.add(btnNewButton);
+		btnDelete.setBounds(277, 20, 120, 30);
+		panel.add(btnDelete);
 		
 		
 		
