@@ -28,7 +28,7 @@ public class User {
 		this.tel = tel;
 		this.id_role = id_role;
 	}
-	//Constructeur 3 param pour inscription
+	//Constructeur 4 param pour inscription
 	public User(String nom, String prenom, String email, String password) {
 		this.nom = nom;
 		this.prenom = prenom;
@@ -39,6 +39,12 @@ public class User {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
+	}
+	//Constructeur 3 param pour commentaires
+	public User(int id, String nom, String prenom) {
+		this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
 	}
 		//Constructeur 9 param SANS PASSWORD pour recupération lors de la connexion et possible update
 	public User(int id, String nom, String prenom, String email, String adresse, int cp, String ville, String tel, int id_role) {

@@ -1,24 +1,30 @@
 package model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Commentaire {
 	private int id;
 	private String contenu;
-	private Date dateCom;
+	private Timestamp dateCom;
 	
 	//FK
 	private User user;
 	private Livre livre;
 	
-	public Commentaire(String contenu, Date dateCom, User user, Livre livre) {
+	public Commentaire(String contenu, User user, Livre livre) {
+		this.contenu = contenu;
+		this.user = user;
+		this.livre = livre;
+	}
+	
+	public Commentaire(String contenu, Timestamp dateCom, User user, Livre livre) {
 		this.contenu = contenu;
 		this.dateCom = dateCom;
 		this.user = user;
 		this.livre = livre;
 	}
 	
-	public Commentaire(int id, String contenu, Date dateCom, User user, Livre livre) {
+	public Commentaire(int id, String contenu, Timestamp dateCom, User user, Livre livre) {
 		this.id = id;
 		this.contenu = contenu;
 		this.dateCom = dateCom;
@@ -38,10 +44,10 @@ public class Commentaire {
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
 	}
-	public Date getDateCom() {
+	public Timestamp getDateCom() {
 		return dateCom;
 	}
-	public void setDateCom(Date dateCom) {
+	public void setDateCom(Timestamp dateCom) {
 		this.dateCom = dateCom;
 	}
 	public User getUser() {

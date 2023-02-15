@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import controler.CommentaireDAO;
 import controler.LivreDAO;
 import controler.UserDAO;
+import model.Commentaire;
 import model.Livre;
 import utilities.DateTime;
 
@@ -62,7 +63,6 @@ public class FicheLivre extends JPanel {
 						auteurParNom += ", ";
 					}
 				}
-				System.out.println(auteurParNom);
 				removeAll();
 				add(new Tri(new String[]{"Auteurs", auteurParNom}));
 				repaint();
@@ -91,7 +91,10 @@ public class FicheLivre extends JPanel {
 		
 		JEditorPane commentsPane = new JEditorPane();
 		commentsPane.setEditable(false);
+		commentsPane.setContentType("text/html");
+		commentsPane.setBackground(new Color(248, 243, 231));
 		commentsScrollPane.setViewportView(commentsPane);
+		commentsPane.setText(listeCommentaires(livre));
 		
 		JLabel backToSeries = new JLabel("");
 		backToSeries.setBounds(20, 20, 660, 30);
@@ -252,9 +255,22 @@ public class FicheLivre extends JPanel {
 		add(ajoutCom);
 		ajoutCom.setLayout(null);
 		
+		JLabel labelAjoutCom = new JLabel("Ajouter un commentaire");
+		labelAjoutCom.setHorizontalAlignment(SwingConstants.CENTER);
+		labelAjoutCom.setFont(new Font("Noto Serif", Font.BOLD, 13));
+		labelAjoutCom.setBounds(0, 0, 300, 30);
+		ajoutCom.add(labelAjoutCom);
+		
+		JScrollPane ajoutComSubPanel = new JScrollPane();
+		ajoutComSubPanel.setBounds(10, 30, 280, 40);
+		ajoutComSubPanel.setBorder(BorderFactory.createEmptyBorder());
+		ajoutCom.add(ajoutComSubPanel);
+		
 		JTextArea textAjoutCom = new JTextArea();
 		textAjoutCom.setBounds(10, 30, 280, 40);
-		ajoutCom.add(textAjoutCom);
+		ajoutComSubPanel.setViewportView(textAjoutCom);
+		textAjoutCom.setLineWrap(true);
+		textAjoutCom.setWrapStyleWord(true);
 		
 		JButton ajoutComBtn = new JButton("Envoyer");
 		ajoutComBtn.addMouseListener(new MouseAdapter() {
@@ -264,8 +280,14 @@ public class FicheLivre extends JPanel {
 					if (textAjoutCom.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Le commentaire est vide.\nVeuillez écrire un commentaire avant de l'envoyer.", "Commentaire vide", JOptionPane.WARNING_MESSAGE);											
 					} else if (!textAjoutCom.getText().equals("")) {
-						
-						JOptionPane.showMessageDialog(null, "Merci beaucoup pour votre commentaire !", "Commentaire envoyé", JOptionPane.INFORMATION_MESSAGE);											
+						Commentaire commentaire = new Commentaire(textAjoutCom.getText(), UserDAO.currentUser, livre);
+						if (commentaireDAO.create(commentaire)) {
+							JOptionPane.showMessageDialog(null, "Merci beaucoup pour votre commentaire !", "Commentaire envoyé", JOptionPane.INFORMATION_MESSAGE);
+							textAjoutCom.setText("");
+							commentsPane.setText(listeCommentaires(livre));
+						} else {
+							JOptionPane.showMessageDialog(null, "Une erreur est survenue.\nVeuillez réessayer ultérieurement.", "Erreur lors de l'envoi", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
 			}
@@ -275,12 +297,6 @@ public class FicheLivre extends JPanel {
 		ajoutComBtn.setForeground(new Color(199, 152, 50));
 		ajoutComBtn.setFont(new Font("Noto Serif", Font.BOLD, 13));
 		ajoutCom.add(ajoutComBtn);
-		
-		JLabel labelAjoutCom = new JLabel("Ajouter un commentaire");
-		labelAjoutCom.setHorizontalAlignment(SwingConstants.CENTER);
-		labelAjoutCom.setFont(new Font("Noto Serif", Font.BOLD, 13));
-		labelAjoutCom.setBounds(0, 0, 300, 30);
-		ajoutCom.add(labelAjoutCom);
 		
 		if (livreDAO.getStock(livre.getISBN()).get(0) == 0) {
 			stockInfo.setText("Ce livre est temporairement indisponible");
@@ -302,5 +318,18 @@ public class FicheLivre extends JPanel {
 				resumeScrollPane.getViewport().setViewPosition(new Point(1, 1));				
 			}
 		});
+	}
+	
+	public String listeCommentaires(Livre livre) {
+		StringBuilder result = new StringBuilder("<html><head><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\r\n"
+				+ "<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\r\n"
+				+ "<link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif:ital@0;1&display=swap\" rel=\"stylesheet\"></head><body style=\"font-family:'Noto Serif', serif;margin:0, 10px;\">");
+		
+		for (Commentaire com : commentaireDAO.read(livre)) {
+			result.append("<div><h4 style=\"margin-bottom:0;font-size:11px;font-weight:unset;\">" + com.getContenu() + "</h4><p style=\"margin-top:0;font-size:8px;font-style:italic;color:#999999;text-align:right;border-bottom:1px dotted rgb(199, 152, 50);padding:5px 0 8px;\">Posté par " + com.getUser().getPrenom() + " " + com.getUser().getNom() + " le " + DateTime.sdfDate.format(com.getDateCom()) + " à " + DateTime.sdfTime.format(com.getDateCom()) + "</p></div>");
+		}
+		
+		result.append("</body></html>");
+		return result.toString();
 	}
 }
