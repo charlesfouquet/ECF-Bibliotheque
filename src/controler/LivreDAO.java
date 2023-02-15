@@ -391,9 +391,9 @@ public class LivreDAO implements IDAO<Livre> {
 	}
 
 	@Override
-	public void delete(Livre object) {
+	public boolean delete(Livre object) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 }

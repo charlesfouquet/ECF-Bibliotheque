@@ -25,6 +25,7 @@ import utilities.DateTime;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JTextArea;
 
 public class FicheLivre extends JPanel {
 
@@ -82,7 +83,7 @@ public class FicheLivre extends JPanel {
 		add(bookCover);
 		
 		JScrollPane commentsScrollPane = new JScrollPane();
-		commentsScrollPane.setBounds(680, 50, 300, 480);
+		commentsScrollPane.setBounds(680, 50, 300, 350);
 		commentsScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		add(commentsScrollPane);
 		
@@ -153,6 +154,7 @@ public class FicheLivre extends JPanel {
 		stockInfo.setBounds(20, 400, 250, 50);
 		stockInfo.setFont(new Font("Noto Serif", Font.PLAIN, 13));
 		add(stockInfo);
+		stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
 		
 		JButton btnNewButton = new JButton("Emprunter");
 		btnNewButton.setBackground(new Color(255, 255, 255));
@@ -242,6 +244,29 @@ public class FicheLivre extends JPanel {
 		add(labelGenres);
 		labelGenres.setText("Genres : " + livreDAO.getGenres(livre.getISBN()));
 		
+		JPanel ajoutCom = new JPanel();
+		ajoutCom.setBounds(680, 422, 300, 105);
+		ajoutCom.setBackground(new Color(248, 243, 231));
+		add(ajoutCom);
+		ajoutCom.setLayout(null);
+		
+		JTextArea textAjoutCom = new JTextArea();
+		textAjoutCom.setBounds(10, 30, 280, 40);
+		ajoutCom.add(textAjoutCom);
+		
+		JButton ajoutComBtn = new JButton("Envoyer");
+		ajoutComBtn.setBounds(10, 75, 280, 20);
+		ajoutComBtn.setBackground(new Color(255, 255, 255));
+		ajoutComBtn.setForeground(new Color(199, 152, 50));
+		ajoutComBtn.setFont(new Font("Noto Serif", Font.BOLD, 13));
+		ajoutCom.add(ajoutComBtn);
+		
+		JLabel labelAjoutCom = new JLabel("Ajouter un commentaire");
+		labelAjoutCom.setHorizontalAlignment(SwingConstants.CENTER);
+		labelAjoutCom.setFont(new Font("Noto Serif", Font.BOLD, 13));
+		labelAjoutCom.setBounds(0, 0, 300, 30);
+		ajoutCom.add(labelAjoutCom);
+		
 		if (livreDAO.getStock(livre.getISBN()).get(0) == 0) {
 			stockInfo.setText("Ce livre est temporairement indisponible");
 			stockInfo.setForeground(Color.RED);
@@ -250,11 +275,10 @@ public class FicheLivre extends JPanel {
 		} else if (UserDAO.currentUser == null) {
 			stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
 			btnNewButton.setText("Connexion requise");
+			ajoutComBtn.setText("Connexion requise");
 			btnNewButton.setEnabled(false);
-		} else {
-			stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
-			btnNewButton.setText("Emprunter");
-			btnNewButton.setEnabled(true);
+			ajoutComBtn.setEnabled(false);
+			textAjoutCom.setEnabled(false);
 		}
 				
 		SwingUtilities.invokeLater(new Runnable() {
