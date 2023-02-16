@@ -336,6 +336,7 @@ public class Compte extends JPanel {
 		JButton btnDelete = new JButton("Suppression");
 		btnDelete.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnDelete.setBackground(Color.LIGHT_GRAY);
+		btnDelete.setBackground(new Color(240, 145, 145));
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -349,16 +350,25 @@ public class Compte extends JPanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
 				Object[] options = {"Oui", "Non"};
-				int suppression = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement supprimer votre compte !", "SUPPRESSION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/delete.png"), options, options[0]);
-				if (suppression == 0) {
-					userDao.delete(UserDAO.currentUser);
-					UserDAO.currentUser = null;
-					Main.frame.getContentPane().removeAll();
-					Main.frame.getContentPane().add(new Accueil());
-					Main.frame.getContentPane().repaint();
-					Main.frame.getContentPane().revalidate();
-					} 
+				int supprimeCompte = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement supprimer votre compte !", "SUPPRESSION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/delete.png"), options, options[0]);
+				if (supprimeCompte == 0) {
+					String validPassSuppr = (String) JOptionPane.showInputDialog( null, "Pour finaliser la suppression de votre compte.\n Veuillez renseigner votre mot de passe :", "SUPPRESSION du compte !", JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/delete.png"), null, "Votre mot de passe ... !");
+					if ((validPassSuppr != null) && (validPassSuppr.equals(UserDAO.currentUser.getPassword()))) {
+						System.out.println("retour de l'input : "+validPassSuppr);
+						userDao.delete(UserDAO.currentUser);
+						UserDAO.currentUser = null;
+						Main.frame.getContentPane().removeAll();
+						Main.frame.getContentPane().add(new Accueil());
+						Main.frame.getContentPane().repaint();
+						Main.frame.getContentPane().revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null, "Votre mot de passe est incorrect !", "SUPPRESSION du compte !", JOptionPane.ERROR_MESSAGE);
+						System.out.println("retour de l'input : "+validPassSuppr);
+						System.out.println(UserDAO.currentUser.getPassword());
+					}
+				} 
 				btnDelete.setBackground(Color.GREEN);
 				btnDelete.setForeground(new Color(0, 0, 0));
 			}
