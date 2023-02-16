@@ -50,16 +50,16 @@ public class Main extends JFrame {
 					frame.setTitle("Bibliothèque");
 					
 					List<Image> icons = new ArrayList<Image>();
-					icons.add(new ImageIcon("src/images/home_16x16.png").getImage());
-					icons.add(new ImageIcon("src/images/home_32x32.png").getImage());
-					icons.add(new ImageIcon("src/images/home_64x64.png").getImage());
-					icons.add(new ImageIcon("src/images/home_128x128.png").getImage());
+					icons.add(new ImageIcon("src/resources/images/logos/home_16x16.png").getImage());
+					icons.add(new ImageIcon("src/resources/images/logos/home_32x32.png").getImage());
+					icons.add(new ImageIcon("src/resources/images/logos/home_64x64.png").getImage());
+					icons.add(new ImageIcon("src/resources/images/logos/home_128x128.png").getImage());
 					frame.setIconImages(icons);
 					
 					InputStream fontFile1 = null;
 					Font noto = null;
 					try {
-						fontFile1 = new BufferedInputStream(Files.newInputStream(Paths.get("src/font/NotoSerif-Regular.ttf")));
+						fontFile1 = new BufferedInputStream(Files.newInputStream(Paths.get("src/resources/font/NotoSerif-Regular.ttf")));
 						try {
 							noto = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
 							GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();

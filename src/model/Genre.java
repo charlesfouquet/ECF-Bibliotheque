@@ -6,8 +6,11 @@ public class Genre {
 	private String theme;
 	
 	public Genre(int id, String theme) {
-		super();
 		this.id = id;
+		this.theme = theme;
+	}
+	
+	public Genre(String theme) {
 		this.theme = theme;
 	}
 

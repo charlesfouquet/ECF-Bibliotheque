@@ -13,6 +13,11 @@ public class Auteur {
 		this.prenom = prenom;
 		this.bio = bio;
 	}
+	
+	public Auteur(String nom, String prenom) {
+		this.nom = nom;
+		this.prenom = prenom;
+	}
 
 	public int getId() {
 		return id;

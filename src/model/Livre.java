@@ -13,18 +13,44 @@ public class Livre {
 	private String couverture;
 	
 	//FK
-	private Editeur id_editeur;
+	private Editeur editeur;
+	private Auteur auteur;
+	
+	public Livre(String ISBN, String couverture, String titre, Auteur auteur, String resume, Date datePubli, int nbPages, Editeur editeur) {
+		this.ISBN = ISBN;
+		this.couverture = couverture;
+		this.titre = titre;
+		this.auteur = auteur;
+		this.resume = resume;
+		this.datePubli = datePubli;
+		this.nbPages = nbPages;
+		this.editeur = editeur;
+	}
 
-	public Livre(int id, String iSBN, String titre, String resume, Date datePubli, int nbPages, String couverture, Editeur id_editeur) {
-		super();
+	public Livre(int id, String ISBN, String titre, String resume, Date datePubli, int nbPages, String couverture, Editeur editeur) {
 		this.id = id;
-		ISBN = iSBN;
+		this.ISBN = ISBN;
 		this.titre = titre;
 		this.resume = resume;
 		this.datePubli = datePubli;
 		this.nbPages = nbPages;
 		this.couverture = couverture;
-		this.id_editeur = id_editeur;
+		this.editeur = editeur;
+	}
+	
+	public Livre(String couverture, String titre, Auteur auteur, int nbPages, String ISBN) {
+		this.couverture = couverture;
+		this.titre = titre;
+		this.auteur = auteur;
+		this.ISBN = ISBN;
+		this.nbPages = nbPages;
+	}
+	
+	public Livre(String couverture, String titre, Auteur auteur, String ISBN) {
+		this.couverture = couverture;
+		this.titre = titre;
+		this.auteur = auteur;
+		this.ISBN = ISBN;
 	}
 
 	public int getId() {
@@ -69,12 +95,19 @@ public class Livre {
 	public void setCouverture(String couverture) {
 		this.couverture = couverture;
 	}
-	public Editeur getId_editeur() {
-		return id_editeur;
+	public Editeur getEditeur() {
+		return editeur;
 	}
-	public void setId_editeur(Editeur id_editeur) {
-		this.id_editeur = id_editeur;
+	public void setEditeur(Editeur id_editeur) {
+		this.editeur = id_editeur;
 	}
+	public Auteur getAuteur() {
+		return auteur;
+	}
+	public void setAuteur(Auteur auteur) {
+		this.auteur = auteur;
+	}
+	
 	
 	
 	

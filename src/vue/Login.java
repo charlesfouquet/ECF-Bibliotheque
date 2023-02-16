@@ -2,6 +2,7 @@ package vue;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -11,22 +12,28 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
 
-public class Login extends JPanel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6571947288755605768L;
-	private JTextField textEmailConnexion;
-	private JTextField textMdpConnexion;
-	private JTextField textNomInscription;
-	private JTextField textPrenomInscription;
-	private JTextField textEmailInsription;
-	private JTextField textMdpInscription;
-	private JTextField textConfMdpInscription;
+import controler.UserDAO;
+import model.User;
+import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-	/**
-	 * Create the panel.
-	 */
+import javax.swing.JPasswordField;
+
+public class Login extends JPanel {
+	private static final long serialVersionUID = -6571947288755605768L;
+	private JTextField textEmailC;
+	private JPasswordField textMdpC;
+	private JTextField textNomI;
+	private JTextField textPrenomI;
+	private JTextField textEmailI;
+	private JPasswordField textMdpI;
+	private JPasswordField textConfMdpI;
+
+	//instance pour utilisation méthode
+	UserDAO userDao = new UserDAO();
+	
+	
 	public Login() {
 		setBackground(new Color(240, 227, 198));
 		setLayout(null);
@@ -49,40 +56,62 @@ public class Login extends JPanel {
 		labelConnexion.setBounds(0, 0, 485, 50);
 		panelConnexion.add(labelConnexion);
 		
-		JLabel labelMdpConnexion = new JLabel("Mot de passe :");
-		labelMdpConnexion.setFont(new Font("Noto Serif", Font.PLAIN, 14));
-		labelMdpConnexion.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelMdpConnexion.setBounds(91, 122, 100, 30);
-		panelConnexion.add(labelMdpConnexion);
-		
-		textEmailConnexion = new JTextField();
-		textEmailConnexion.setBackground(new Color(250, 243, 230));
-		textEmailConnexion.setBounds(201, 61, 200, 30);
-		panelConnexion.add(textEmailConnexion);
-		textEmailConnexion.setColumns(10);
-		
-		JLabel labelEmailConnexion = new JLabel("E-Mail :");
+		JLabel labelEmailConnexion = new JLabel("E-Mail * :");
 		labelEmailConnexion.setFont(new Font("Noto Serif", Font.PLAIN, 14));
-		labelEmailConnexion.setLabelFor(textEmailConnexion);
+		labelEmailConnexion.setLabelFor(textEmailC);
 		labelEmailConnexion.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelEmailConnexion.setBounds(91, 61, 100, 30);
+		labelEmailConnexion.setBounds(58, 100, 130, 30);
 		panelConnexion.add(labelEmailConnexion);
 		
-		textMdpConnexion = new JTextField();
-		textMdpConnexion.setBackground(new Color(250, 243, 230));
-		labelMdpConnexion.setLabelFor(textMdpConnexion);
-		textMdpConnexion.setColumns(10);
-		textMdpConnexion.setBounds(201, 122, 200, 30);
-		panelConnexion.add(textMdpConnexion);
+		textEmailC = new JTextField();
+		textEmailC.setBackground(new Color(250, 243, 230));
+		textEmailC.setBounds(200, 100, 200, 30);
+		panelConnexion.add(textEmailC);
+		textEmailC.setColumns(10);
+		
+		JLabel labelMdpConnexion = new JLabel("Mot de passe * :");
+		labelMdpConnexion.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelMdpConnexion.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelMdpConnexion.setBounds(58, 160, 130, 30);
+		panelConnexion.add(labelMdpConnexion);
+		
+		textMdpC = new JPasswordField();
+		textMdpC.setBackground(new Color(250, 243, 230));
+		labelMdpConnexion.setLabelFor(textMdpC);
+		textMdpC.setColumns(10);
+		textMdpC.setBounds(200, 160, 200, 30);
+		panelConnexion.add(textMdpC);
+		
+		JLabel labelContrainteC = new JLabel("* champs obligatoire !");
+		labelContrainteC.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelContrainteC.setBounds(200, 200, 200, 14);
+		panelConnexion.add(labelContrainteC);
 		
 		// ### BTN CONNEXION
-		JButton btnConnexion = new JButton("je me connecte");
+		JButton btnConnexion = new JButton("Je me connecte");
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				if (userDao.emailValidator(textEmailC.getText())) {
+					System.out.println(String.valueOf(textMdpC.getPassword()));
+					userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
+					if(UserDAO.currentUser != null) {
+						JOptionPane.showMessageDialog(null,"Vous êtes connecté !","CONNEXION", JOptionPane.INFORMATION_MESSAGE);
+						Main.frame.getContentPane().removeAll();
+						Main.frame.getContentPane().add(new Accueil());
+						Main.frame.getContentPane().repaint();
+						Main.frame.getContentPane().revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null,"Vérifier vos informations.\n ECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
+						System.out.println(textMdpC.getPassword());
+					}
+				}else {
+				JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
-		btnConnexion.setBounds(251, 187, 150, 30);
+		btnConnexion.setBackground(new Color(255, 255, 255));
+		btnConnexion.setForeground(new Color(199, 152, 50));
+		btnConnexion.setBounds(250, 230, 150, 30);
 		panelConnexion.add(btnConnexion);
 		
 		//##########################
@@ -102,79 +131,151 @@ public class Login extends JPanel {
 		labelInscription.setBounds(0, 0, 485, 50);
 		panelInscription.add(labelInscription);
 		
-		JLabel labelNomInscription = new JLabel("Nom :");
+		JLabel labelNomInscription = new JLabel("Nom * :");
 		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelNomInscription.setBounds(50, 100, 150, 30);
 		panelInscription.add(labelNomInscription);
 		
-		textNomInscription = new JTextField();
-		textNomInscription.setBackground(new Color(250, 243, 230));
-		labelNomInscription.setLabelFor(textNomInscription);
-		textNomInscription.setColumns(10);
-		textNomInscription.setBounds(222, 100, 200, 30);
-		panelInscription.add(textNomInscription);
+		textNomI = new JTextField();
+		textNomI.setBackground(new Color(250, 243, 230));
+		labelNomInscription.setLabelFor(textNomI);
+		textNomI.setColumns(10);
+		textNomI.setBounds(222, 100, 200, 30);
+		panelInscription.add(textNomI);
 		
-		JLabel labelPrenomInscription = new JLabel("Prenom :");
+		JLabel labelPrenomInscription = new JLabel("Prenom * :");
 		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelPrenomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelPrenomInscription.setBounds(50, 161, 150, 30);
 		panelInscription.add(labelPrenomInscription);
 		
-		textPrenomInscription = new JTextField();
-		textPrenomInscription.setBackground(new Color(250, 243, 230));
-		labelPrenomInscription.setLabelFor(textPrenomInscription);
-		textPrenomInscription.setColumns(10);
-		textPrenomInscription.setBounds(222, 161, 200, 30);
-		panelInscription.add(textPrenomInscription);
+		textPrenomI = new JTextField();
+		textPrenomI.setBackground(new Color(250, 243, 230));
+		labelPrenomInscription.setLabelFor(textPrenomI);
+		textPrenomI.setColumns(10);
+		textPrenomI.setBounds(222, 161, 200, 30);
+		panelInscription.add(textPrenomI);
 		
-		JLabel labelEmailInscription = new JLabel("E-mail");
+		JLabel labelEmailInscription = new JLabel("E-mail * :");
 		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailInscription.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelEmailInscription.setBounds(50, 222, 150, 30);
+		labelEmailInscription.setBounds(50, 220, 150, 30);
 		panelInscription.add(labelEmailInscription);
 		
-		textEmailInsription = new JTextField();
-		textEmailInsription.setBackground(new Color(250, 243, 230));
-		labelEmailInscription.setLabelFor(textEmailInsription);
-		textEmailInsription.setColumns(10);
-		textEmailInsription.setBounds(222, 222, 200, 30);
-		panelInscription.add(textEmailInsription);
+		textEmailI = new JTextField();
+		textEmailI.setBackground(new Color(250, 243, 230));
+		labelEmailInscription.setLabelFor(textEmailI);
+		textEmailI.setColumns(10);
+		textEmailI.setBounds(222, 222, 200, 30);
+		panelInscription.add(textEmailI);
 		
-		JLabel labelMdpInscription = new JLabel("Mot de pase :");
+		JLabel labelContrainte = new JLabel("* champs obligatoire !");
+		labelContrainte.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelContrainte.setBounds(222, 386, 200, 14);
+		panelInscription.add(labelContrainte);
+		
+		/* ### EMAIL ICONE INFO */
+		JLabel labelIconeEmail = new JLabel(new ImageIcon(new ImageIcon("src/resources/images/logos/info.png").getImage()));
+		labelIconeEmail.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JOptionPane.showMessageDialog(null, "Format e-mail obligatoire :\n exemple@domaine.fr","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		
+		JLabel labelMdpInscription = new JLabel("Mot de pase * :");
 		labelMdpInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelMdpInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelMdpInscription.setBounds(50, 284, 150, 30);
 		panelInscription.add(labelMdpInscription);
 		
-		textMdpInscription = new JTextField();
-		textMdpInscription.setBackground(new Color(250, 243, 230));
-		labelMdpInscription.setLabelFor(textMdpInscription);
-		textMdpInscription.setColumns(10);
-		textMdpInscription.setBounds(222, 284, 200, 30);
-		panelInscription.add(textMdpInscription);
+		textMdpI = new JPasswordField();
+		textMdpI.setBackground(new Color(250, 243, 230));
+		labelMdpInscription.setLabelFor(textMdpI);
+		textMdpI.setColumns(10);
+		textMdpI.setBounds(222, 284, 200, 30);
+		panelInscription.add(textMdpI);
 		
-		JLabel labelConfMdpInscription = new JLabel("Confirmation (mdp) :");
+		labelIconeEmail.setBounds(432, 222, 31, 31);
+		panelInscription.add(labelIconeEmail);
+		
+		/* ### PASSWORD ICONE INFO */
+		JLabel labelIconeMdp = new JLabel(new ImageIcon(new ImageIcon("src/resources/images/logos/info.png").getImage()));
+		labelIconeMdp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JOptionPane.showMessageDialog(null, "Format mot de passe oligatoire :\n 8 caractères minimum.\n dont :\n 1 majuscule.\n 1 minuscule.\n 1 chiffre.\n 1 caractère spécial.","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		
+		labelIconeMdp.setBounds(432, 284, 31, 31);
+		panelInscription.add(labelIconeMdp);
+		
+		JLabel labelConfMdpInscription = new JLabel("Confirmation (mdp) * :");
 		labelConfMdpInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelConfMdpInscription.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelConfMdpInscription.setBounds(50, 345, 150, 30);
+		labelConfMdpInscription.setBounds(25, 345, 175, 30);
 		panelInscription.add(labelConfMdpInscription);
 		
-		textConfMdpInscription = new JTextField();
-		textConfMdpInscription.setBackground(new Color(250, 243, 230));
-		labelConfMdpInscription.setLabelFor(textConfMdpInscription);
-		textConfMdpInscription.setColumns(10);
-		textConfMdpInscription.setBounds(222, 345, 200, 30);
-		panelInscription.add(textConfMdpInscription);
+		textConfMdpI = new JPasswordField();
+		textConfMdpI.setBackground(new Color(250, 243, 230));
+		labelConfMdpInscription.setLabelFor(textConfMdpI);
+		textConfMdpI.setColumns(10);
+		textConfMdpI.setBounds(222, 345, 200, 30);
+		panelInscription.add(textConfMdpI);
 		
-		// ### BTN CONNEXION
+		/* ### BTN CONNEXION ### */
 		JButton btnInscription = new JButton("Je m'inscris");
 		btnInscription.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				//instance d'utilisateur
+				User userI = new User(textNomI.getText(), textPrenomI.getText(), textEmailI.getText(), String.valueOf(textMdpI.getPassword()));
+				//vérif si aucun champs vide
+				if(textNomI.getText().isEmpty() || textPrenomI.getText().isEmpty() || textEmailI.getText().isEmpty() || String.valueOf(textMdpI.getPassword()).isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Merci de remplir les champs vide.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+				}else {
+					//verif regex mail
+					if (userDao.emailValidator(textEmailI.getText())) {
+						//verif si mail existe déjà bdd
+						if (userDao.isExist(textEmailI.getText())) {
+							JOptionPane.showMessageDialog(null, "Cet e-mail existe déjà !\n Veuillez en choisir un nouveaux.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+						} else {
+							//verif regex mdp
+							if (userDao.passValidator(String.valueOf(textMdpI.getPassword()))) {
+								System.out.println(textMdpI.getPassword());
+								System.out.println(textConfMdpI.getPassword());
+								//verif mdp confirmation
+								if (String.valueOf(textMdpI.getPassword()).equals(String.valueOf(textConfMdpI.getPassword()))) {
+									//si tous OK insert dans la bdd
+									if (userDao.create(userI)) {
+										//reprise des infos pour connexion direct en page d'accueil
+										userDao.connexion(textEmailI.getText(), String.valueOf(textMdpI.getPassword()));
+										JOptionPane.showMessageDialog(null, "Votre compte a bien été créé.","INSCRIPTION", JOptionPane.PLAIN_MESSAGE);
+										//redirection
+										Main.frame.getContentPane().removeAll();
+										Main.frame.getContentPane().add(new Accueil());
+										Main.frame.getContentPane().repaint();
+										Main.frame.getContentPane().revalidate();
+									} else {
+										JOptionPane.showMessageDialog(null, "Votre compte n'a pas pu être créé !\n Verifier vos informations.","INSCRIPTION", JOptionPane.ERROR_MESSAGE);
+									}
+								} else {
+									JOptionPane.showMessageDialog(null, "ATTENTION, vos mots de passe ne sont pas identique !", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+								}
+							} else {
+								JOptionPane.showMessageDialog(null, "Le format de votre mot de passe n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+							}
+						}
+					} else {
+						JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+					}
+				}
 			}
 		});
-		btnInscription.setBounds(272, 410, 150, 30);
+		btnInscription.setBackground(new Color(255, 255, 255));
+		btnInscription.setForeground(new Color(199, 152, 50));
+		btnInscription.setBounds(272, 425, 150, 30);
 		panelInscription.add(btnInscription);
 	}
 }
