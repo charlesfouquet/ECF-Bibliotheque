@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
 
 import model.User;
 import sqlConnection.DBConnect;
@@ -44,6 +47,102 @@ public class UserDAO implements IDAO<User>{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public boolean updateInfo(User user) {
+		try {
+			PreparedStatement req = connect.prepareStatement("UPDATE users SET nom = ?, prenom = ?, email = ? WHERE id = ?");
+			
+			req.setString(1, user.getNom());
+			req.setString(2, user.getPrenom());
+			req.setString(3, user.getEmail());
+			req.setInt(4, user.getId());
+			
+			req.execute();
+			
+			return true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean updateAddress(User user) {
+		try {
+			PreparedStatement req = connect.prepareStatement("UPDATE users SET adresse = ?, cp = ?, ville = ?, tel = ? WHERE id = ?");
+			
+			if (user.getAdresse().isEmpty()) {
+				req.setNull(1, Types.VARCHAR);			
+			} else {
+				req.setString(1, user.getAdresse());			
+			}
+
+			if (!(user.getCp() > 0)) {
+				req.setNull(2, Types.INTEGER);			
+			} else {
+				req.setInt(2, user.getCp());			
+			}
+			
+			if (user.getVille().isEmpty()) {
+				req.setNull(3, Types.VARCHAR);			
+			} else {			
+				req.setString(3, user.getVille());
+			}
+			
+			if (user.getTel().isEmpty()) {
+				req.setNull(4, Types.VARCHAR);			
+			} else {			
+				req.setString(4, user.getTel());
+			}
+			
+			req.setInt(5, user.getId());
+			
+			req.execute();
+			
+			return true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean updatePassword(int userID, User userIn, User userOut) {
+		try {
+			PreparedStatement req1 = connect.prepareStatement("SELECT id FROM users WHERE email = ? AND password = PASSWORD(?)");
+			
+			req1.setString(1, userIn.getEmail());
+			req1.setString(2, userIn.getPassword());
+			
+			ResultSet rs = req1.executeQuery();
+			
+			int checkedID = 0;
+			
+			while(rs.next()) {
+				checkedID = rs.getInt("id");
+			}
+			
+			if (userID == checkedID) {
+				PreparedStatement req2 = connect.prepareStatement("UPDATE users SET password = PASSWORD(?) WHERE id = ? AND email = ?");
+				req2.setString(1, userOut.getPassword());
+				req2.setInt(2, userID);
+				req2.setString(3, userOut.getEmail());
+				req2.execute();
+			} else {
+				JOptionPane.showMessageDialog(null,"Votre ancien mot de passe ne correspond pas à votre saisie.\nVeuillez réessayer.","Mise à jour du mot de passe", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			
+			return true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	@Override
 	public boolean delete(User user) {
@@ -70,7 +169,7 @@ public class UserDAO implements IDAO<User>{
 	
 	//vérification de password : 8 caractères, 1 maj, 1 minus, 1 chiffre, 1 spécial
 	public boolean passValidator(String pass) {
-		String regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!$%-_]).{8,}$";
+		String regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!$%\\-_]).{8,}$";
 		Pattern compileRegex = Pattern.compile(regex);
 		Matcher verifPass = compileRegex.matcher(pass);
 		boolean passCheck = verifPass.matches();
