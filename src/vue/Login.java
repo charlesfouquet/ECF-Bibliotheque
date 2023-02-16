@@ -91,11 +91,10 @@ public class Login extends JPanel {
 		JButton btnConnexion = new JButton("Je me connecte");
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				if (userDao.emailValidator(textEmailC.getText())) {
-					//Vérif mail COnnexion
-					User userC = userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
-					if(userC != null) {
-						//login.currentuser = user;
+				if (userDao.emailValidator(textEmailC.getText())) {
+					System.out.println(String.valueOf(textMdpC.getPassword()));
+					userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
+					if(UserDAO.currentUser != null) {
 						JOptionPane.showMessageDialog(null,"Vous êtes connecté !","CONNEXION", JOptionPane.INFORMATION_MESSAGE);
 						Main.frame.getContentPane().removeAll();
 						Main.frame.getContentPane().add(new Accueil());
@@ -103,10 +102,11 @@ public class Login extends JPanel {
 						Main.frame.getContentPane().revalidate();
 					}else {
 						JOptionPane.showMessageDialog(null,"Vérifier vos informations.\n ECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
+						System.out.println(textMdpC.getPassword());
 					}
-//				}else {
-//					JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
-//				}
+				}else {
+				JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnConnexion.setBackground(new Color(255, 255, 255));
@@ -229,26 +229,30 @@ public class Login extends JPanel {
 		JButton btnInscription = new JButton("Je m'inscris");
 		btnInscription.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				User userI = new User(textNomI.getText(), textPrenomI.getText(), textEmailI.getText(), String.valueOf(textMdpI) );
 				//instance d'utilisateur
-				if(textNomI.getText().isEmpty() || textPrenomI.getText().isEmpty() || textEmailI.getText().isEmpty() || String.valueOf(textMdpI).isEmpty()) {
+				User userI = new User(textNomI.getText(), textPrenomI.getText(), textEmailI.getText(), String.valueOf(textMdpI.getPassword()));
+				//vérif si aucun champs vide
+				if(textNomI.getText().isEmpty() || textPrenomI.getText().isEmpty() || textEmailI.getText().isEmpty() || String.valueOf(textMdpI.getPassword()).isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Merci de remplir les champs vide.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 				}else {
 					//verif regex mail
 					if (userDao.emailValidator(textEmailI.getText())) {
-						//verif si mail existe déjà, méthodes créé dans UserDAO
+						//verif si mail existe déjà bdd
 						if (userDao.isExist(textEmailI.getText())) {
 							JOptionPane.showMessageDialog(null, "Cet e-mail existe déjà !\n Veuillez en choisir un nouveaux.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 						} else {
 							//verif regex mdp
-							if (userDao.passValidator(String.valueOf(textMdpI))) {
-								if (!String.valueOf(textMdpI).equals(String.valueOf(textConfMdpI))) {
-									JOptionPane.showMessageDialog(null, "ATTENTION, vos mots de passe ne sont pas identique !", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
-								} else {
+							if (userDao.passValidator(String.valueOf(textMdpI.getPassword()))) {
+								System.out.println(textMdpI.getPassword());
+								System.out.println(textConfMdpI.getPassword());
+								//verif mdp confirmation
+								if (String.valueOf(textMdpI.getPassword()).equals(String.valueOf(textConfMdpI.getPassword()))) {
 									//si tous OK insert dans la bdd
 									if (userDao.create(userI)) {
+										//reprise des infos pour connexion direct en page d'accueil
+										userDao.connexion(textEmailI.getText(), String.valueOf(textMdpI.getPassword()));
 										JOptionPane.showMessageDialog(null, "Votre compte a bien été créé.","INSCRIPTION", JOptionPane.PLAIN_MESSAGE);
-										userDao.connexion(textEmailI.getText(), String.valueOf(textMdpI));
+										//redirection
 										Main.frame.getContentPane().removeAll();
 										Main.frame.getContentPane().add(new Accueil());
 										Main.frame.getContentPane().repaint();
@@ -256,6 +260,8 @@ public class Login extends JPanel {
 									} else {
 										JOptionPane.showMessageDialog(null, "Votre compte n'a pas pu être créé !\n Verifier vos informations.","INSCRIPTION", JOptionPane.ERROR_MESSAGE);
 									}
+								} else {
+									JOptionPane.showMessageDialog(null, "ATTENTION, vos mots de passe ne sont pas identique !", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 								}
 							} else {
 								JOptionPane.showMessageDialog(null, "Le format de votre mot de passe n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);

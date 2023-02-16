@@ -4,10 +4,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,8 +20,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import controler.UserDAO;
 
 public class Compte extends JPanel {
 	private static final long serialVersionUID = 6556442715550137983L;
@@ -34,9 +38,8 @@ public class Compte extends JPanel {
 	private JTextField textTel;
 	private JTable table;
 
-	/**
-	 * Create the panel.
-	 */
+	UserDAO userDao = new UserDAO();
+	
 	public Compte() {
 		setBackground(new Color(240, 227, 198));
 		setLayout(null);
@@ -324,7 +327,7 @@ public class Compte extends JPanel {
 		panel.setLayout(null);
 		
 		JLabel labelSuppCompte = new JLabel("Je supprime mon compte :");
-		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		labelSuppCompte.setIcon(new ImageIcon("src/resources/images/logos/delete.png"));
 		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelSuppCompte.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelSuppCompte.setBounds(10, 11, 257, 45);
@@ -346,6 +349,16 @@ public class Compte extends JPanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				Object[] options = {"Oui", "Non"};
+				int suppression = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement supprimer votre compte !", "SUPPRESSION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/delete.png"), options, options[0]);
+				if (suppression == 0) {
+					userDao.delete(UserDAO.currentUser);
+					UserDAO.currentUser = null;
+					Main.frame.getContentPane().removeAll();
+					Main.frame.getContentPane().add(new Accueil());
+					Main.frame.getContentPane().repaint();
+					Main.frame.getContentPane().revalidate();
+					} 
 				btnDelete.setBackground(Color.GREEN);
 				btnDelete.setForeground(new Color(0, 0, 0));
 			}
