@@ -141,7 +141,7 @@ INSERT INTO users (nom, prenom, email, password, adresse, cp, ville, tel) VALUES
     ('Hryniewicz', 'Quintus', 'qhryniewicz2@spiegel.de', PASSWORD('2NmGp8KcZG'), '7737 Havey Place', '13012', 'Marseille', '0298572645'),
     ('Neate', 'Jeramey', 'jneate3@domainmarket.com', PASSWORD('i9fd1OVdq6gG'), '73 Utah Hill', '77000', 'Melun', '0187451309'),
     ('Kalf', 'Violette', 'vkalf4@nature.com', PASSWORD('gZb9L42iHIY'), '5349 Jana Park', '64000', 'Hendaye', '0364897510'),
-    ('& Karim', 'Charles', 'a', PASSWORD('a'), null, null, null, null)
+    ('& Karim', 'Charles', 'aaa@aaa.fr', PASSWORD('aaaAAA111!'), null, null, null, null)
 ;
 INSERT INTO users (nom, prenom, email, password, adresse, cp, ville, tel, id_role) VALUES
     ('Simpson', 'Homer', 'hsimpson@bibli.fr', PASSWORD('test'), '111 Random Street', '75012', 'Paris', '0612345678', 943)
