@@ -303,8 +303,11 @@ public class FicheLivre extends JPanel {
 			stockInfo.setForeground(Color.RED);
 			btnNewButton.setText("Emprunt impossible");
 			btnNewButton.setEnabled(false);
-		} else if (UserDAO.currentUser == null) {
+		} else {
 			stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
+		}
+		
+		if (UserDAO.currentUser == null) {
 			btnNewButton.setText("Connexion requise");
 			ajoutComBtn.setText("Connexion requise");
 			btnNewButton.setEnabled(false);
