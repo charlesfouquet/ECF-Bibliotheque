@@ -91,9 +91,11 @@ public class Login extends JPanel {
 		JButton btnConnexion = new JButton("Je me connecte");
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//verif regex mail
 				if (userDao.emailValidator(textEmailC.getText())) {
-					System.out.println(String.valueOf(textMdpC.getPassword()));
+					//capture des champs text dans la methode UserDAO connexion
 					userDao.connexion(textEmailC.getText(), String.valueOf(textMdpC.getPassword()));
+					//message de connexion et redirection
 					if(UserDAO.currentUser != null) {
 						JOptionPane.showMessageDialog(null,"Vous êtes connecté !","CONNEXION", JOptionPane.INFORMATION_MESSAGE);
 						Main.frame.getContentPane().removeAll();
@@ -102,7 +104,6 @@ public class Login extends JPanel {
 						Main.frame.getContentPane().revalidate();
 					}else {
 						JOptionPane.showMessageDialog(null,"Vérifier vos informations.\n ECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
-						System.out.println(textMdpC.getPassword());
 					}
 				}else {
 				JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
@@ -180,7 +181,7 @@ public class Login extends JPanel {
 		labelIconeEmail.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JOptionPane.showMessageDialog(null, "Format e-mail obligatoire :\n exemple@domaine.fr","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Format e-mail obligatoire :\n exemple @ domaine . fr","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		
@@ -243,8 +244,6 @@ public class Login extends JPanel {
 						} else {
 							//verif regex mdp
 							if (userDao.passValidator(String.valueOf(textMdpI.getPassword()))) {
-								System.out.println(textMdpI.getPassword());
-								System.out.println(textConfMdpI.getPassword());
 								//verif mdp confirmation
 								if (String.valueOf(textMdpI.getPassword()).equals(String.valueOf(textConfMdpI.getPassword()))) {
 									//si tous OK insert dans la bdd
