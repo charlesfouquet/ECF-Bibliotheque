@@ -165,7 +165,7 @@ public class Accueil extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					int selectedID = Integer.parseInt(new String(newBookTitle.getName().substring(12))) - 1;
 					body.removeAll();
-					body.add(new Catalogue(listeNewBooks.get(selectedID).getISBN()));
+					body.add(new FicheLivre(livreDAO.findByISBN(listeNewBooks.get(selectedID).getISBN())));
 					body.repaint();
 					body.revalidate();
 				}
@@ -181,9 +181,16 @@ public class Accueil extends JPanel {
 			newBookAuthor.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					int selectedID = Integer.parseInt(new String(newBookAuthor.getName().substring(13))) - 1;
+					String[] authorParts = newBookAuthor.getText().split(" ");
+					String auteurParNom = "";
+					for (int i = authorParts.length - 1; i >= 0; i--) {
+						auteurParNom += authorParts[i];
+						if (i != 0) {
+							auteurParNom += ", ";
+						}
+					}
 					body.removeAll();
-					body.add(new Catalogue(listeNewBooks.get(selectedID).getAuteur().getPrenom() + " " + listeNewBooks.get(selectedID).getAuteur().getNom()));
+					body.add(new Tri(new String[]{"Auteurs", auteurParNom}));
 					body.repaint();
 					body.revalidate();
 				}
@@ -338,7 +345,8 @@ public class Accueil extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				accountMenu.setVisible(false);
-				int choix = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.YES_NO_OPTION);
+				Object[] options = {"Oui", "Non"};
+				int choix = JOptionPane.showOptionDialog(null, "Voulez-vous vraiment vous déconnecter ?", "Déconnexion", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 				if (choix == 0) {
 					UserDAO.currentUser = null;
 					Main.frame.getContentPane().removeAll();

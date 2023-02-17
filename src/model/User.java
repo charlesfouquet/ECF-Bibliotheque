@@ -40,6 +40,12 @@ public class User {
 		this.email = email;
 		this.password = password;
 	}
+	//Constructeur 3 param pour commentaires
+	public User(int id, String nom, String prenom) {
+		this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
+	}
 		//Constructeur 9 param SANS PASSWORD pour recupération lors de la connexion et possible update
 	public User(int id, String nom, String prenom, String email, String adresse, int cp, String ville, String tel, int id_role) {
 		this.id =id;
