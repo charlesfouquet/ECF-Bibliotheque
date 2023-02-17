@@ -144,19 +144,6 @@ public class UserDAO implements IDAO<User>{
 		}
 		return false;
 	}
-
-	@Override
-	public boolean delete(User user) {
-		String requete = ("DETLETE FROM users WHERE id=(?)");
-		try {
-			PreparedStatement sql = connect.prepareStatement(requete);
-			sql.setInt(1, user.getId());
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
 	
 	//vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres
 	public boolean emailValidator(String email) {
@@ -208,35 +195,6 @@ public class UserDAO implements IDAO<User>{
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	@Override
-	public boolean create(User user) {
-		String requete = ("INSERT INTO users (nom, prenom, email, password) VALUES (?, ?, ?, PASSWORD(?))");
-		try {
-			PreparedStatement sql = connect.prepareStatement(requete);
-			sql.setString(1, user.getNom());
-			sql.setString(2, user.getPrenom());
-			sql.setString(3, user.getEmail());
-			sql.setString(4, user.getPassword());
-			sql.execute();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	@Override
-	public ArrayList<User> read() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void update(User object) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
