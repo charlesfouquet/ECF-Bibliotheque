@@ -17,6 +17,7 @@ import sqlConnection.DBConnect;
 public class UserDAO implements IDAO<User>{
 	Connection connect = DBConnect.getConnect();
 	
+	//déclaration d'un currentUser en static pour appel a différent endroit
 	public static User currentUser = null;
 
 	@Override
@@ -157,13 +158,13 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
-	//méthode vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres
+	//vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres
 	public boolean emailValidator(String email) {
 		String regex = "^[A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][@][A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][.][A-Za-z0-9]{2,3}$";
 		Pattern compilRegex = Pattern.compile(regex);
 		Matcher verifEmail = compilRegex.matcher(email);
 		boolean mailCheck = verifEmail.matches();
-		System.out.println("email : "+mailCheck);
+		System.out.println("email valide : "+mailCheck);
 		return mailCheck;
 	}
 	
@@ -177,7 +178,7 @@ public class UserDAO implements IDAO<User>{
 		return passCheck;
 	}
 	
-	//méthodes pour vérifié si mail déjà existant dans la bdd
+	//vérification si mail déjà existant dans la bdd
 	public boolean isExist(String email) {
 		try {
 			PreparedStatement requete = connect.prepareStatement("SELECT * FROM users WHERE email=?");
@@ -192,7 +193,7 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
-	//méthode connexion
+	//connexion sur la page login
 	public User connexion(String email, String password) {
 		try {
 			PreparedStatement requete = connect.prepareStatement("SELECT * FROM users WHERE email = ? AND password = PASSWORD(?)");
@@ -208,6 +209,51 @@ public class UserDAO implements IDAO<User>{
 		}
 		return null;
 	}
+	
+	@Override
+	public boolean create(User user) {
+		String requete = ("INSERT INTO users (nom, prenom, email, password) VALUES (?, ?, ?, PASSWORD(?))");
+		try {
+			PreparedStatement sql = connect.prepareStatement(requete);
+			sql.setString(1, user.getNom());
+			sql.setString(2, user.getPrenom());
+			sql.setString(3, user.getEmail());
+			sql.setString(4, user.getPassword());
+			sql.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public ArrayList<User> read() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update(User object) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean delete(User user) {
+		String requete = ("DELETE FROM users WHERE id=(?)");
+		try {
+			PreparedStatement sql = connect.prepareStatement(requete);
+			sql.setInt(1, user.getId());
+			sql.execute();
+			System.out.println("suppression de : "+currentUser.getEmail());
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	
 	
 	
