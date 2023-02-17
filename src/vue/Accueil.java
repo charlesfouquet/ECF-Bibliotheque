@@ -35,6 +35,8 @@ public class Accueil extends JPanel {
 	 */
 	private static final long serialVersionUID = -2798845607393016064L;
 	private JTextField searchField;
+	private static JLabel connectionStatus1 = new JLabel("Connexion");
+	private static JLabel connectionStatus2 = new JLabel("Inscription");
 	LivreDAO livreDAO = new LivreDAO();
 
 	/**
@@ -277,14 +279,14 @@ public class Accueil extends JPanel {
 		userIcon.setBounds(10, 10, 32, 32);
 		userAccount.add(userIcon);
 		
-		JLabel connectionStatus1 = new JLabel("Connexion");
+		connectionStatus1 = new JLabel("Connexion");
 		connectionStatus1.setHorizontalAlignment(SwingConstants.CENTER);
 		connectionStatus1.setFont(new Font("Noto Serif", Font.BOLD, 13));
 		connectionStatus1.setForeground(new Color(199, 152, 50));
 		connectionStatus1.setBounds(52, 10, 90, 15);
 		userAccount.add(connectionStatus1);
 		
-		JLabel connectionStatus2 = new JLabel("Inscription");
+		connectionStatus2 = new JLabel("Inscription");
 		connectionStatus2.setHorizontalAlignment(SwingConstants.CENTER);
 		connectionStatus2.setFont(new Font("Noto Serif", Font.BOLD, 13));
 		connectionStatus2.setForeground(new Color(199, 152, 50));
@@ -382,5 +384,10 @@ public class Accueil extends JPanel {
 				body.revalidate();
 			}
 		});
+	}
+	
+	public static void updateConnectionStatus(String prenom, String nom) {
+		connectionStatus1.setText(prenom);
+		connectionStatus2.setText(nom);
 	}
 }

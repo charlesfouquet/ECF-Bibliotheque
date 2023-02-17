@@ -7,12 +7,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -22,6 +22,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controler.UserDAO;
+import model.User;
 
 public class Compte extends JPanel {
 	private static final long serialVersionUID = 6556442715550137983L;
@@ -29,9 +30,9 @@ public class Compte extends JPanel {
 	private JTextField textNom;
 	private JTextField textPrenom;
 	private JTextField textEmail;
-	private JTextField textAncienMdp;
-	private JTextField textNvMdp;
-	private JTextField textConfMdp;
+	private JPasswordField textAncienMdp;
+	private JPasswordField textNvMdp;
+	private JPasswordField textConfMdp;
 	private JTextField textAdr;
 	private JTextField textCp;
 	private JTextField textVille;
@@ -62,7 +63,7 @@ public class Compte extends JPanel {
 		
 		
 		//###################
-		// ### INFORMATION MATION GENERALE ###
+		// ### INFORMATIONS GENERALES ###
 		//###################
 		JPanel panelInfoGen = new JPanel();
 		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
@@ -126,11 +127,37 @@ public class Compte extends JPanel {
 		btnInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnInfoGen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				if ((!textNom.getText().isEmpty()) && (!textPrenom.getText().isEmpty()) && (!textEmail.getText().isEmpty())) {
+					if (userDao.emailValidator(textEmail.getText())) {
+						if (userDao.updateInfo(new User(UserDAO.currentUser.getId(), textNom.getText(), textPrenom.getText(), textEmail.getText(), null, null, 0, null, null, 0))) {
+							JOptionPane.showMessageDialog(null,"Mise à jour de vos informations personnelles effectuée !","Mise à jour du compte", JOptionPane.INFORMATION_MESSAGE);
+							UserDAO.currentUser.setNom(textNom.getText());
+							UserDAO.currentUser.setPrenom(textPrenom.getText());
+							UserDAO.currentUser.setEmail(textEmail.getText());
+							Accueil.updateConnectionStatus(textPrenom.getText(), textNom.getText());
+							removeAll();
+							add(new Compte());
+							repaint();
+							revalidate();
+						} else {
+							JOptionPane.showMessageDialog(null,"Une erreur est survenue lors de la mise à jour de vos informations personnelles.\nVeuillez réessayer ultérieurement.","Mise à jour du compte", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\nMerci de le modifier.", "Mise à jour du compte", JOptionPane.WARNING_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null,"Certaines informations sont manquantes.\nVeuillez les renseigner, s'il vous plaît.","Mise à jour du compte", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnInfoGen.setBounds(247, 187, 130, 30);
 		panelInfoGen.add(btnInfoGen);
+		
+		if (UserDAO.currentUser != null) {
+			textNom.setText(UserDAO.currentUser.getNom());
+			textPrenom.setText(UserDAO.currentUser.getPrenom());
+			textEmail.setText(UserDAO.currentUser.getEmail());
+		}
 		
 		//###################
 		// ### ADRESSE DE DOMICILIATION ###
@@ -202,10 +229,63 @@ public class Compte extends JPanel {
 		btnAdrDom.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnAdrDom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int postCode;
+				if (textCp.getText().isEmpty()) {
+					postCode = 0;
+				} else {
+					postCode = Integer.parseInt(textCp.getText());
+				}
+				if (userDao.updateAddress(new User(UserDAO.currentUser.getId(), null, null, null, null, textAdr.getText(), postCode, textVille.getText(), textTel.getText(), 0))) {
+					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
+					if (textAdr.getText().isEmpty()) {
+						UserDAO.currentUser.setAdresse(null);		
+					} else {
+						UserDAO.currentUser.setAdresse(textAdr.getText());	
+					}
+
+					if (!(postCode > 0)) {
+						UserDAO.currentUser.setCp(0);
+					} else {
+						UserDAO.currentUser.setCp(postCode);	
+					}
+					
+					if (textVille.getText().isEmpty()) {
+						UserDAO.currentUser.setVille(null);	
+					} else {			
+						UserDAO.currentUser.setVille(textVille.getText());
+					}
+					
+					if (textTel.getText().isEmpty()) {
+						UserDAO.currentUser.setTel(null);			
+					} else {			
+						UserDAO.currentUser.setTel(textTel.getText());
+					}
+					removeAll();
+					add(new Compte());
+					repaint();
+					revalidate();
+				} else {
+					JOptionPane.showMessageDialog(null,"Une erreur est survenue lors de la mise à jour de votre adresse.\nVeuillez réessayer ultérieurement.","Mise à jour de l'adresse", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnAdrDom.setBounds(254, 210, 130, 30);
 		panelAdresseDom.add(btnAdrDom);
+		
+		if (UserDAO.currentUser != null) {
+			if (UserDAO.currentUser.getAdresse() != null) {
+				textAdr.setText(UserDAO.currentUser.getAdresse());				
+			}
+			if (UserDAO.currentUser.getCp() > 0) {
+				textCp.setText(String.valueOf(UserDAO.currentUser.getCp()));				
+			}
+			if (UserDAO.currentUser.getVille() != null) {
+				textVille.setText(UserDAO.currentUser.getVille());				
+			}
+			if (UserDAO.currentUser.getTel() != null) {
+				textTel.setText(UserDAO.currentUser.getTel());				
+			}
+		}
 		
 		//###################
 		// ### MODIFICATION MOT DE PASSE ###
@@ -231,7 +311,7 @@ public class Compte extends JPanel {
 		lblAncienMdp.setBounds(80, 51, 75, 30);
 		PanelMdp.add(lblAncienMdp);
 		
-		textAncienMdp = new JTextField();
+		textAncienMdp = new JPasswordField();
 		textAncienMdp.setBackground(new Color(250, 243, 230));
 		lblAncienMdp.setLabelFor(textAncienMdp);
 		textAncienMdp.setColumns(10);
@@ -244,7 +324,7 @@ public class Compte extends JPanel {
 		labelNvMdp.setBounds(80, 92, 75, 30);
 		PanelMdp.add(labelNvMdp);
 		
-		textNvMdp = new JTextField();
+		textNvMdp = new JPasswordField();
 		textNvMdp.setBackground(new Color(250, 243, 230));
 		labelNvMdp.setLabelFor(textNvMdp);
 		textNvMdp.setColumns(10);
@@ -257,7 +337,7 @@ public class Compte extends JPanel {
 		labelConfirmMdp.setBounds(55, 133, 100, 30);
 		PanelMdp.add(labelConfirmMdp);
 		
-		textConfMdp = new JTextField();
+		textConfMdp = new JPasswordField();
 		textConfMdp.setBackground(new Color(250, 243, 230));
 		labelConfirmMdp.setLabelFor(textConfMdp);
 		textConfMdp.setColumns(10);
@@ -269,7 +349,27 @@ public class Compte extends JPanel {
 		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnModifMdp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				if ((!String.valueOf(textAncienMdp.getPassword()).isEmpty()) && (!String.valueOf(textNvMdp.getPassword()).isEmpty()) && (!String.valueOf(textConfMdp.getPassword()).isEmpty())) {
+					if (String.valueOf(textNvMdp.getPassword()).equals(String.valueOf(textConfMdp.getPassword()))) {
+						if (userDao.passValidator(String.valueOf(textNvMdp.getPassword()))) {
+							if (userDao.updatePassword(UserDAO.currentUser.getId(), new User(textEmail.getText(), String.valueOf(textAncienMdp.getPassword())), new User(textEmail.getText(), String.valueOf(textNvMdp.getPassword())))) {
+								JOptionPane.showMessageDialog(null,"Mise à jour de votre mot de passe effectuée !","Mise à jour du mot de passe", JOptionPane.INFORMATION_MESSAGE);
+								removeAll();
+								add(new Compte());
+								repaint();
+								revalidate();
+							} else {
+								JOptionPane.showMessageDialog(null,"Une erreur est survenue lors de la mise à jour de votre mot de passe.\nVeuillez réessayer ultérieurement.","Mise à jour du mot de passe", JOptionPane.ERROR_MESSAGE);
+							}
+						} else {
+							JOptionPane.showMessageDialog(null,  "Le format de votre nouveau mot de passe n'est pas correct !\nMerci de le modifier.", "Mise à jour du mot de passe", JOptionPane.WARNING_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null,"ATTENTION, vos mots de passe ne sont pas identiques !","Mise à jour du mot de passe", JOptionPane.WARNING_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null,"Certaines informations sont manquantes.\nVeuillez les renseigner, s'il vous plaît.","Mise à jour du mot de passe", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnModifMdp.setBounds(247, 174, 130, 30);
