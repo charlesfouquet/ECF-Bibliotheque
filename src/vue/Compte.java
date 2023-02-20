@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,8 +25,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controler.EmpruntDAO;
 import controler.UserDAO;
+import model.Emprunt;
 import model.User;
+import utilities.DateTime;
 
 public class Compte extends JPanel {
 	private static final long serialVersionUID = 6556442715550137983L;
@@ -38,8 +45,10 @@ public class Compte extends JPanel {
 	private JTextField textVille;
 	private JTextField textTel;
 	private JTable table;
+	private boolean histoState = false;
 
 	UserDAO userDao = new UserDAO();
+	EmpruntDAO empruntDAO = new EmpruntDAO();
 	
 	public Compte() {
 		setBackground(new Color(240, 227, 198));
@@ -52,14 +61,18 @@ public class Compte extends JPanel {
 		JPanel panelBackOffice = new JPanel();
 		panelBackOffice.setBounds(900, 0, 100, 30);
 		panelBackOffice.setBackground(new Color(233, 215, 171));
-		add(panelBackOffice);
 		panelBackOffice.setLayout(null);
 		
+		if (UserDAO.currentUser.getId_role() != 1) {
+			add(panelBackOffice);
+		}
+		
 		JButton btnBackOffice = new JButton("Back-Office");
-		btnBackOffice.setForeground(new Color(128, 64, 0));
+		btnBackOffice.setForeground(new Color(255, 255, 255));
 		btnBackOffice.setBackground(new Color(128, 64, 0));
+		btnBackOffice.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		btnBackOffice.setBounds(0, 0, 100, 30);
-		panelBackOffice.add(btnBackOffice);
+		panelBackOffice.add(btnBackOffice);			
 		
 		
 		//###################
@@ -150,6 +163,9 @@ public class Compte extends JPanel {
 				}
 			}
 		});
+		btnInfoGen.setBackground(new Color(255, 255, 255));
+		btnInfoGen.setForeground(new Color(199, 152, 50));
+		btnInfoGen.setFont(new Font("Noto Serif", Font.BOLD, 14));
 		btnInfoGen.setBounds(247, 187, 130, 30);
 		panelInfoGen.add(btnInfoGen);
 		
@@ -269,6 +285,9 @@ public class Compte extends JPanel {
 				}
 			}
 		});
+		btnAdrDom.setBackground(new Color(255, 255, 255));
+		btnAdrDom.setForeground(new Color(199, 152, 50));
+		btnAdrDom.setFont(new Font("Noto Serif", Font.BOLD, 14));
 		btnAdrDom.setBounds(254, 210, 130, 30);
 		panelAdresseDom.add(btnAdrDom);
 		
@@ -372,6 +391,9 @@ public class Compte extends JPanel {
 				}
 			}
 		});
+		btnModifMdp.setBackground(new Color(255, 255, 255));
+		btnModifMdp.setForeground(new Color(199, 152, 50));
+		btnModifMdp.setFont(new Font("Noto Serif", Font.BOLD, 14));
 		btnModifMdp.setBounds(247, 174, 130, 30);
 		PanelMdp.add(btnModifMdp);
 		
@@ -389,7 +411,7 @@ public class Compte extends JPanel {
 		lblListeDesEmprunts.setIcon(new ImageIcon("src/resources/images/logos/list.png"));
 		lblListeDesEmprunts.setHorizontalAlignment(SwingConstants.LEFT);
 		lblListeDesEmprunts.setFont(new Font("Noto Serif", Font.BOLD, 16));
-		lblListeDesEmprunts.setBounds(10, 10, 480, 35);
+		lblListeDesEmprunts.setBounds(10, 10, 240, 35);
 		panelEmprunt.add(lblListeDesEmprunts);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -400,21 +422,49 @@ public class Compte extends JPanel {
 		panelEmprunt.add(scrollPane);
 		
 		table = new JTable();
-		table.setBackground(new Color(250, 243, 230));
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-			},
-			new String[] {
-				"Référence", "Titre", "Emprunté le  :", "A rendre le :"
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				if (!histoState) {
+					Object[] options = {"Oui", "Non"};
+					int livreRendu = JOptionPane.showOptionDialog(null, "Souhaitez-vous rendre \"" + (String) table.getValueAt(row, 1) + "\" (Livre #" + (String) table.getValueAt(row, 0) + ") ?", "Retourner un livre", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+					if (livreRendu == 0) {
+						if (empruntDAO.rendreLivre(UserDAO.currentUser, Integer.parseInt((String) table.getValueAt(row, 0)))) {
+							JOptionPane.showConfirmDialog(null, "Merci d'avoir rendu \"" + (String) table.getValueAt(row, 1) + "\"", "Livre retourné", JOptionPane.WARNING_MESSAGE);							
+						} else {
+							JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Retourner un livre", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				table.setModel(listeEmprunts(UserDAO.currentUser, histoState));
+				reformatTable(table);
 			}
-		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table.getColumnModel().getColumn(0).setMinWidth(30);
-		table.getColumnModel().getColumn(1).setPreferredWidth(100);
-		table.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		});
+		table.setBackground(new Color(250, 243, 230));
+		table.setModel(listeEmprunts(UserDAO.currentUser, histoState));
+		reformatTable(table);
 		scrollPane.setViewportView(table);
+		
+		JButton histoBtn = new JButton("Afficher l'historique des commandes");
+		histoBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				histoState = !histoState;
+				if (histoState) {
+					histoBtn.setText("Afficher les emprunts en cours");
+				} else {
+					histoBtn.setText("Afficher l'historique des commandes");					
+				}
+				table.setModel(listeEmprunts(UserDAO.currentUser, histoState));
+				reformatTable(table);
+			}
+		});
+		histoBtn.setBackground(new Color(255, 255, 255));
+		histoBtn.setForeground(new Color(199, 152, 50));
+		histoBtn.setFont(new Font("Noto Serif", Font.BOLD, 11));
+		histoBtn.setBounds(240, 15, 250, 25);
+		panelEmprunt.add(histoBtn);
 		
 		//###################
 		// ### SUPPRESSION DU COMPTE ###
@@ -477,11 +527,69 @@ public class Compte extends JPanel {
 		});
 		btnDelete.setBounds(277, 20, 120, 30);
 		panel.add(btnDelete);
+	}
+	
+	public void reformatTable(JTable tableInput) {
+		tableInput.getColumnModel().getColumn(0).setPreferredWidth(0);
+		tableInput.getColumnModel().getColumn(1).setPreferredWidth(250);
+		tableInput.getColumnModel().getColumn(2).setPreferredWidth(50);
+		tableInput.getColumnModel().getColumn(3).setPreferredWidth(50);
+	}
+	
+	public DefaultTableModel listeEmprunts(User user, Boolean histoState) {
+		String col [] = new String[4];
+		col[0] = "Ref.";
+		col[1] = "Titre";
+		col[2] = "Emprunté le";
+		if (histoState) {
+			col[3] = "Rendu le";					
+		} else {
+			col[3] = "A rendre le";											
+		}
 		
-		
-		
-		
-		
+		DefaultTableModel tableau = new DefaultTableModel(null, col)
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2767358890848023063L;
 
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		
+		ArrayList<Emprunt> emprunts = empruntDAO.read(user, histoState);
+		
+		for (Emprunt emp : emprunts) {
+			String finalDateRetour = "";
+			Date dateSortie = emp.getDateSortie();
+			LocalDate dateRetour = dateSortie.toLocalDate().plusMonths(1);
+			LocalDate today = LocalDate.now();
+			
+			if (histoState == false) {				
+				Period difference = Period.between(dateRetour, today);
+				
+				Date dateRetourD = Date.valueOf(dateRetour);
+				if (difference.getDays() > 0) {
+					finalDateRetour = "<html><body style=\"color:red;\">✖<span style=\"font-weight:bold;\">" + DateTime.sdfShortDate.format(dateRetourD) + "</span></body></html>";					
+				} else {
+					finalDateRetour = DateTime.sdfShortDate.format(dateRetourD);
+				}
+			} else {
+				finalDateRetour = DateTime.sdfShortDate.format(emp.getDateRetour());
+			}
+			
+			tableau.addRow(new Object[] {
+					String.format("%05d", emp.getExemplaire()),
+					emp.getTitre(),
+					DateTime.sdfShortDate.format(dateSortie),
+					finalDateRetour
+			});
+			
+		}
+		return tableau;
 	}
 }
