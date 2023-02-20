@@ -463,36 +463,31 @@ public class Compte extends JPanel {
 					Object[] options = {"Oui", "Non"};
 					int supprimeCompte = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement désactivez votre compte !", "DESACTIVATION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), options, options[0]);
 					if (supprimeCompte == 0) {
-						String validPassSuppr = (String) JOptionPane.showInputDialog( null, "Pour finaliser la désactivation de votre compte.\n Veuillez renseigner votre mot de passe :", "DESACTIVATION du compte !", JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), null, "Votre mot de passe ... !");
-						System.out.println("pass du user : "+UserDAO.currentUser.getPassword());
-						if ((validPassSuppr != null) && (validPassSuppr.equals(UserDAO.currentUser.getPassword()))) {
-							System.out.println("retour de l'input de valid pass : "+validPassSuppr);
-							userDao.delete(UserDAO.currentUser);
-//							UserDAO.currentUser = null;
-							Main.frame.getContentPane().removeAll();
-							Main.frame.getContentPane().add(new Accueil());
-							Main.frame.getContentPane().repaint();
-							Main.frame.getContentPane().revalidate();
+						JPasswordField jpass = new JPasswordField();
+						int reponse = JOptionPane.showConfirmDialog(null, jpass, "Saisissez votre mot de passe !", JOptionPane.OK_CANCEL_OPTION );
+						if(reponse >= 0) {
+							//String validPassSuppr = (String) JOptionPane.showInputDialog( null, "Pour finaliser la désactivation de votre compte.\n Veuillez renseigner votre mot de passe :", "DESACTIVATION du compte !", JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), null, "Votre mot de passe ... !");
+							System.out.println("pass du user : "+String.valueOf(jpass.getPassword()));
+							if(userDao.deactivate(UserDAO.currentUser, String.valueOf(jpass.getPassword() ))) {
+								JOptionPane.showMessageDialog(null, "Votre compte a était désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
+								UserDAO.currentUser = null;
+								Main.frame.getContentPane().removeAll();
+								Main.frame.getContentPane().add(new Accueil());
+								Main.frame.getContentPane().repaint();
+								Main.frame.getContentPane().revalidate();
+							}
 						}else {
 							JOptionPane.showMessageDialog(null, "Votre mot de passe est incorrect !", "DESACTIVATION du compte !", JOptionPane.ERROR_MESSAGE);
-							System.out.println("retour de l'input : "+validPassSuppr);
-							System.out.println("pass du user : "+UserDAO.currentUser.getPassword());
+							System.out.println("retour de l'input : "+reponse);
 						}
 					} 
-					btnDelete.setBackground(Color.GREEN);
-					btnDelete.setForeground(new Color(0, 0, 0));
 				}else {
-					JOptionPane.showConfirmDialog(null, "Vous ne pouvez pas supprimer votre compte.\n Il vous reste : "+nbrDeLivre+" livres à rendre", "DESACTIVATION du compte", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showConfirmDialog(null, "Vous ne pouvez pas désactiver votre compte.\n Il vous reste : "+nbrDeLivre+" livres à rendre", "DESACTIVATION du compte", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
 		btnDelete.setBounds(233, 20, 145, 30);
 		panel.add(btnDelete);
 		
-		
-		
-		
-		
-
 	}
 }
