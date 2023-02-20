@@ -146,7 +146,6 @@ public class UserDAO implements IDAO<User>{
 		Pattern compilRegex = Pattern.compile(regex);
 		Matcher verifEmail = compilRegex.matcher(email);
 		boolean mailCheck = verifEmail.matches();
-		System.out.println("email valide : "+mailCheck);
 		return mailCheck;
 	}
 	
@@ -156,7 +155,6 @@ public class UserDAO implements IDAO<User>{
 		Pattern compileRegex = Pattern.compile(regex);
 		Matcher verifPass = compileRegex.matcher(pass);
 		boolean passCheck = verifPass.matches();
-		System.out.println("password : "+passCheck);
 		return passCheck;
 	}
 	
@@ -199,7 +197,6 @@ public class UserDAO implements IDAO<User>{
 			PreparedStatement sql = connect.prepareStatement(requete);
 			sql.setInt(1, user.getId());
 			sql.execute();
-			System.out.println("suppression de : "+currentUser.getEmail());
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -220,7 +217,6 @@ public class UserDAO implements IDAO<User>{
 			while(rs.next()) {
 				checkedID = rs.getInt("id");
 			}
-			System.out.println("user get id : "+userIn.getId()+" - check : "+checkedID+" - pass : "+pass);
 			if (userIn.getId() == checkedID) {
 				PreparedStatement req2 = connect.prepareStatement("UPDATE users SET nom=?, prenom=?, email=?, password=?, adresse=?, cp=?, ville=?, tel=?, id_role=? WHERE id = ? AND email = ?");
 				req2.setString(1, "utilisateur");

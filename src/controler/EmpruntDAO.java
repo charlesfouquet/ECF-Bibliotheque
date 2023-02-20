@@ -120,10 +120,8 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 		try {
 			PreparedStatement sql = connect.prepareStatement(requete);
 			sql.setInt(1, user.getId());
-			System.out.println("id de l'user : "+user.getId());
 			ResultSet rs = sql.executeQuery();
 			if(rs.next()) {
-				System.out.println("nombre de livre : "+rs.getInt("qtLivreARendre"));
 				return rs.getInt("qtLivreARendre");
 			}
 		} catch (SQLException e) {
