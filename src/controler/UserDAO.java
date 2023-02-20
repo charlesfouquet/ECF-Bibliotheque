@@ -145,6 +145,42 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
+	//vérifiacation du password et mise a jour du user pour stokage non utilisé
+	public boolean desactivate(int userID, User userIn, User userOut) {
+		try {
+			PreparedStatement req1 = connect.prepareStatement("SELECT id FROM users WHERE email = ? AND password = PASSWORD(?)");
+			
+			req1.setString(1, userIn.getEmail());
+			req1.setString(2, userIn.getPassword());
+			
+			ResultSet rs = req1.executeQuery();
+			
+			int checkedID = 0;
+			
+			while(rs.next()) {
+				checkedID = rs.getInt("id");
+			}
+			
+			if (userID == checkedID) {
+				PreparedStatement req2 = connect.prepareStatement("UPDATE users SET password = PASSWORD(?) WHERE id = ? AND email = ?");
+				req2.setString(1, userOut.getPassword());
+				req2.setInt(2, userID);
+				req2.setString(3, userOut.getEmail());
+				req2.execute();
+			} else {
+				JOptionPane.showMessageDialog(null,"Votre ancien mot de passe ne correspond pas à votre saisie.\nVeuillez réessayer.","Mise à jour du mot de passe", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			
+			return true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	//vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres
 	public boolean emailValidator(String email) {
 		String regex = "^[A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][@][A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][.][A-Za-z0-9]{2,3}$";
