@@ -39,7 +39,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivres;
@@ -95,7 +94,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivres;
@@ -118,7 +116,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivresDispos;
@@ -174,7 +171,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivresDispos;
@@ -197,7 +193,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeNewBooks;
@@ -231,7 +226,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeTri;
@@ -280,7 +274,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivresDispos;
@@ -301,7 +294,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return livre;
@@ -334,7 +326,6 @@ public class LivreDAO implements IDAO<Livre> {
 			stockInfo.add(stockTotal);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return stockInfo;
@@ -355,7 +346,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return seriesInfo;
@@ -378,7 +368,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return genresInfo;
@@ -386,13 +375,11 @@ public class LivreDAO implements IDAO<Livre> {
 
 	@Override
 	public void update(Livre object) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public boolean delete(Livre object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

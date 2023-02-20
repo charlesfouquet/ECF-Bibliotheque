@@ -27,7 +27,6 @@ public class CommentaireDAO implements IDAO<Commentaire> {
 			sql.execute();
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -35,7 +34,6 @@ public class CommentaireDAO implements IDAO<Commentaire> {
 
 	@Override
 	public ArrayList<Commentaire> read() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -52,12 +50,10 @@ public class CommentaireDAO implements IDAO<Commentaire> {
 				User user = new User(rs.getInt("u.id"), rs.getString("nom"), rs.getString("prenom"));
 				
 				Commentaire commentaire = new Commentaire(rs.getString("contenu"), rs.getTimestamp("dateCom"), user, livre);
-               
 				listeCommentaires.add(commentaire);
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeCommentaires;
@@ -65,13 +61,11 @@ public class CommentaireDAO implements IDAO<Commentaire> {
 
 	@Override
 	public void update(Commentaire object) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public boolean delete(Commentaire object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

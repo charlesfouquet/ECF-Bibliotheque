@@ -48,7 +48,6 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeEmprunts;
@@ -77,7 +76,6 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -94,7 +92,6 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -130,7 +127,6 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 				return rs.getInt("qtLivreARendre");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -138,13 +134,11 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 
 	@Override
 	public void update(Emprunt object) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public boolean delete(Emprunt object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

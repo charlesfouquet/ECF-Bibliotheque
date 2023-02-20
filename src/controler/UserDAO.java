@@ -39,13 +39,11 @@ public class UserDAO implements IDAO<User>{
 
 	@Override
 	public ArrayList<User> read() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void update(User object) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -63,7 +61,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -104,7 +101,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -139,7 +135,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -248,7 +243,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;

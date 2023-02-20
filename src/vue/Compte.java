@@ -516,8 +516,6 @@ public class Compte extends JPanel {
 						JPasswordField jpass = new JPasswordField();
 						int reponse = JOptionPane.showConfirmDialog(null, jpass, "Saisissez votre mot de passe !", JOptionPane.OK_CANCEL_OPTION );
 						if(reponse >= 0) {
-							//String validPassSuppr = (String) JOptionPane.showInputDialog( null, "Pour finaliser la désactivation de votre compte.\n Veuillez renseigner votre mot de passe :", "DESACTIVATION du compte !", JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), null, "Votre mot de passe ... !");
-							System.out.println("pass du user : "+String.valueOf(jpass.getPassword()));
 							if(userDao.deactivate(UserDAO.currentUser, String.valueOf(jpass.getPassword() ))) {
 								JOptionPane.showMessageDialog(null, "Votre compte a était désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
 								UserDAO.currentUser = null;
@@ -528,7 +526,6 @@ public class Compte extends JPanel {
 							}
 						}else {
 							JOptionPane.showMessageDialog(null, "Votre mot de passe est incorrect !", "DESACTIVATION du compte !", JOptionPane.ERROR_MESSAGE);
-							System.out.println("retour de l'input : "+reponse);
 						}
 					} 
 				}else {
@@ -553,9 +550,9 @@ public class Compte extends JPanel {
 		col[1] = "Titre";
 		col[2] = "Emprunté le";
 		if (histoState) {
-			col[3] = "Rendu le";					
+			col[3] = "Rendu le";
 		} else {
-			col[3] = "A rendre le";											
+			col[3] = "A rendre le";
 		}
 		
 		DefaultTableModel tableau = new DefaultTableModel(null, col)
