@@ -255,7 +255,7 @@ public class LivreDAO implements IDAO<Livre> {
 					break;
 				}
 			}
-			PreparedStatement req = connect.prepareStatement("SELECT DISTINCT " + triString + " FROM catalogue_complet ORDER BY " + triString + " ASC");
+			PreparedStatement req = connect.prepareStatement("SELECT DISTINCT " + triString + " FROM catalogue_complet WHERE " + triString + " IS NOT NULL ORDER BY " + triString + " ASC");
 			
 			ResultSet rs = req.executeQuery();
 			
