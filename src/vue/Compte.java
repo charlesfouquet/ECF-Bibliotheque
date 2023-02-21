@@ -60,7 +60,7 @@ public class Compte extends JPanel {
 		//###################
 		JPanel panelBackOffice = new JPanel();
 		panelBackOffice.setBounds(900, 0, 100, 30);
-		panelBackOffice.setBackground(new Color(233, 215, 171));
+		panelBackOffice.setBackground(new Color(233, 215, 170));
 		panelBackOffice.setLayout(null);
 		
 		if (UserDAO.currentUser.getId_role() != 1) {
@@ -72,8 +72,15 @@ public class Compte extends JPanel {
 		btnBackOffice.setBackground(new Color(128, 64, 0));
 		btnBackOffice.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		btnBackOffice.setBounds(0, 0, 100, 30);
-		panelBackOffice.add(btnBackOffice);			
-		
+		panelBackOffice.add(btnBackOffice);
+		btnBackOffice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				add(new BackOffice());
+				repaint();
+				revalidate();;
+			}
+		});
 		
 		//###################
 		// ### INFORMATIONS GENERALES ###
@@ -255,7 +262,7 @@ public class Compte extends JPanel {
 					postCode = Integer.parseInt(textCp.getText());
 				}
 				if (userDao.updateAddress(new User(UserDAO.currentUser.getId(), null, null, null, null, textAdr.getText(), postCode, textVille.getText(), textTel.getText(), 0))) {
-					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
+ 					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
 					if (textAdr.getText().isEmpty()) {
 						UserDAO.currentUser.setAdresse(null);		
 					} else {
@@ -369,7 +376,6 @@ public class Compte extends JPanel {
 		// ### BTN VALIDATION MODIFICATION MOT DE PASSE ###
 		JButton btnModifMdp = new JButton("Validation");
 		btnModifMdp.setFont(new Font("Noto Serif", Font.PLAIN, 14));
-		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnModifMdp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if ((!String.valueOf(textAncienMdp.getPassword()).isEmpty()) && (!String.valueOf(textNvMdp.getPassword()).isEmpty()) && (!String.valueOf(textConfMdp.getPassword()).isEmpty())) {
@@ -474,22 +480,23 @@ public class Compte extends JPanel {
 		//###################
 		// ### SUPPRESSION DU COMPTE ###
 		//###################
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(240, 227, 198));
-		panel.setBorder(new MatteBorder(2, 0, 0, 2, (Color) new Color(199, 152, 50)));
-		panel.setBounds(10, 455, 490, 85);
-		add(panel);
-		panel.setLayout(null);
+		JPanel panelDesactivez = new JPanel();
+		panelDesactivez.setBackground(new Color(240, 227, 198));
+		panelDesactivez.setBorder(new MatteBorder(2, 0, 0, 2, (Color) new Color(199, 152, 50)));
+		panelDesactivez.setBounds(10, 455, 490, 85);
+		add(panelDesactivez);
+		panelDesactivez.setLayout(null);
 		
 		JLabel labelSuppCompte = new JLabel("Desactivez mon compte :");
 		labelSuppCompte.setIcon(new ImageIcon("src/resources/images/logos/userDesactivate.png"));
 		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelSuppCompte.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelSuppCompte.setBounds(0, 10, 210, 45);
-		panel.add(labelSuppCompte);
+		panelDesactivez.add(labelSuppCompte);
 		
 		JButton btnDelete = new JButton("Désactivation");
-		btnDelete.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		btnDelete.setForeground(new Color(255, 255, 255));
+		btnDelete.setFont(new Font("Dialog", Font.ITALIC, 14));
 		btnDelete.setBackground(Color.LIGHT_GRAY);
 		btnDelete.setBackground(new Color(240, 145, 145));
 		btnDelete.addMouseListener(new MouseAdapter() {
@@ -502,7 +509,7 @@ public class Compte extends JPanel {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				btnDelete.setBackground(new Color(240, 145, 145));
-				btnDelete.setForeground(new Color(0, 0, 0));
+				btnDelete.setForeground(new Color(255, 255, 255));
 			}
 			
 			// ### BTN VALIDATION SUPPRESSION DU COMPTE ###
@@ -515,7 +522,8 @@ public class Compte extends JPanel {
 					if (supprimeCompte == 0) {
 						JPasswordField jpass = new JPasswordField();
 						int reponse = JOptionPane.showConfirmDialog(null, jpass, "Saisissez votre mot de passe !", JOptionPane.OK_CANCEL_OPTION );
-						if(reponse >= 0) {
+						System.out.println(reponse);
+						if(reponse == 0) {
 							if(userDao.deactivate(UserDAO.currentUser, String.valueOf(jpass.getPassword() ))) {
 								JOptionPane.showMessageDialog(null, "Votre compte a était désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
 								UserDAO.currentUser = null;
@@ -534,9 +542,12 @@ public class Compte extends JPanel {
 			}
 		});
 		btnDelete.setBounds(233, 20, 145, 30);
-		panel.add(btnDelete);
+		panelDesactivez.add(btnDelete);
 	}
 	
+	//###################
+	// ### LISTE DES EMPRUNTS ###
+	//###################
 	public void reformatTable(JTable tableInput) {
 		tableInput.getColumnModel().getColumn(0).setPreferredWidth(0);
 		tableInput.getColumnModel().getColumn(1).setPreferredWidth(250);
