@@ -262,7 +262,7 @@ public class Compte extends JPanel {
 					postCode = Integer.parseInt(textCp.getText());
 				}
 				if (userDao.updateAddress(new User(UserDAO.currentUser.getId(), null, null, null, null, textAdr.getText(), postCode, textVille.getText(), textTel.getText(), 0))) {
-					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
+ 					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
 					if (textAdr.getText().isEmpty()) {
 						UserDAO.currentUser.setAdresse(null);		
 					} else {
@@ -522,7 +522,8 @@ public class Compte extends JPanel {
 					if (supprimeCompte == 0) {
 						JPasswordField jpass = new JPasswordField();
 						int reponse = JOptionPane.showConfirmDialog(null, jpass, "Saisissez votre mot de passe !", JOptionPane.OK_CANCEL_OPTION );
-						if(reponse >= 0) {
+						System.out.println(reponse);
+						if(reponse == 0) {
 							if(userDao.deactivate(UserDAO.currentUser, String.valueOf(jpass.getPassword() ))) {
 								JOptionPane.showMessageDialog(null, "Votre compte a était désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
 								UserDAO.currentUser = null;
