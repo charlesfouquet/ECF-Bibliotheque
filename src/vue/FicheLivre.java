@@ -102,26 +102,28 @@ public class FicheLivre extends JPanel {
 		backToSeries.setBounds(20, 20, 660, 30);
 		backToSeries.setFont(new Font("Noto Serif", Font.ITALIC, 15));
 		add(backToSeries);
-		if (Integer.parseInt(livreDAO.getSeries(livre.getISBN()).get(0)) > 0) {
-			backToSeries.setText("Tome " + livreDAO.getSeries(livre.getISBN()).get(0) + " de la série " + livreDAO.getSeries(livre.getISBN()).get(1));
-			backToSeries.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					backToSeries.setCursor(new Cursor(Cursor.HAND_CURSOR));
-					backToSeries.setForeground(new Color(199, 152, 50));
-				}
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					removeAll();
-					add(new Tri(new String[]{"Series", backToSeries.getText().split("de la série ")[1]}));
-					repaint();
-					revalidate();
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					backToSeries.setForeground(new Color(0, 0, 0));
-				}
-			});
+		if (livreDAO.getSeries(livre.getISBN()).size() != 0) {
+			if (Integer.parseInt(livreDAO.getSeries(livre.getISBN()).get(0)) > 0) {
+				backToSeries.setText("Tome " + livreDAO.getSeries(livre.getISBN()).get(0) + " de la série " + livreDAO.getSeries(livre.getISBN()).get(1));
+				backToSeries.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						backToSeries.setCursor(new Cursor(Cursor.HAND_CURSOR));
+						backToSeries.setForeground(new Color(199, 152, 50));
+					}
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						removeAll();
+						add(new Tri(new String[]{"Series", backToSeries.getText().split("de la série ")[1]}));
+						repaint();
+						revalidate();
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						backToSeries.setForeground(new Color(0, 0, 0));
+					}
+				});
+			}
 		}
 		
 		JLabel commentsLabel = new JLabel("Commentaires");
@@ -255,13 +257,14 @@ public class FicheLivre extends JPanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String genres = "";
-				String[] genresParts = labelGenres.getText().substring(9).split(", ");
-				for (String theme : genresParts) {
-					genres += theme + " ";
-				}
+				String genres = labelGenres.getText().substring(9);
+//				String genres = "";
+//				String[] genresParts = labelGenres.getText().substring(9).split(", ");
+//				for (String theme : genresParts) {
+//					genres += theme + " ";
+//				}
 				removeAll();
-				add(new Catalogue(genres));
+				add(new Tri(new String[]{"Genres", genres}));
 				repaint();
 				revalidate();
 			}

@@ -12,7 +12,7 @@ import model.User;
 import sqlConnection.DBConnect;
 
 public class CommentaireDAO implements IDAO<Commentaire> {
-	
+	 
 	Connection connect = DBConnect.getConnect();
 
 	@Override

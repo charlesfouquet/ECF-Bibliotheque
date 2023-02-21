@@ -47,14 +47,33 @@ public class LivreDAO implements IDAO<Livre> {
 	public ArrayList<Livre> read(String searchString) {
 		ArrayList<Livre> listeLivres = new ArrayList<>();
 		
-		try {			
-			String[] searchStringParts = searchString.split(" ");
+		try {
+			ArrayList<String> listeEditeurs = getEditeurs();
+			boolean searchIsEditeur = false;
+			for (String string : listeEditeurs) {
+				if (string.equals(searchString)) {
+					searchIsEditeur = true;
+				}
+			}
+			
+			String[] searchStringParts = searchString.split(" ");							
+			
+			if (searchIsEditeur) {
+				for (int i = 0; i < searchStringParts.length; i++) {
+					if (i==0) {
+						searchStringParts[i] = searchString;
+					} else {
+						searchStringParts[i] = "zzzzzz";
+					}
+				}
+			}
+			
 			ArrayList<String> queryFilters = new ArrayList<>();
 			queryFilters.add("titreL");
 			queryFilters.add("resumeL");
 			queryFilters.add("nomA");
 			queryFilters.add("prenomA");
-			queryFilters.add("bioA");
+//			queryFilters.add("bioA");
 			queryFilters.add("nomSocialE");
 			queryFilters.add("themeG");
 			queryFilters.add("nomSerieS");
@@ -125,13 +144,32 @@ public class LivreDAO implements IDAO<Livre> {
 		ArrayList<Livre> listeLivresDispos = new ArrayList<>();
 		
 		try {			
-			String[] searchStringParts = searchString.split(" ");
+			ArrayList<String> listeEditeurs = getEditeurs();
+			boolean searchIsEditeur = false;
+			for (String string : listeEditeurs) {
+				if (string.equals(searchString)) {
+					searchIsEditeur = true;
+				}
+			}
+			
+			String[] searchStringParts = searchString.split(" ");							
+			
+			if (searchIsEditeur) {
+				for (int i = 0; i < searchStringParts.length; i++) {
+					if (i==0) {
+						searchStringParts[i] = searchString;
+					} else {
+						searchStringParts[i] = "zzzzzz";
+					}
+				}
+			}
+			
 			ArrayList<String> queryFilters = new ArrayList<>();
 			queryFilters.add("titreL");
 			queryFilters.add("resumeL");
 			queryFilters.add("nomA");
 			queryFilters.add("prenomA");
-			queryFilters.add("bioA");
+//			queryFilters.add("bioA");
 			queryFilters.add("nomSocialE");
 			queryFilters.add("themeG");
 			queryFilters.add("nomSerieS");
@@ -371,6 +409,23 @@ public class LivreDAO implements IDAO<Livre> {
 			e.printStackTrace();
 		}
 		return genresInfo;
+	}
+	
+	public ArrayList<String> getEditeurs() {
+		ArrayList<String> listeEditeurs = new ArrayList<>();
+		
+		try {
+			PreparedStatement req = connect.prepareStatement("SELECT nomSocial FROM editeurs");
+			ResultSet rs = req.executeQuery();
+			
+			while(rs.next()) {
+				listeEditeurs.add(rs.getString("nomSocial"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listeEditeurs;
 	}
 
 	@Override
