@@ -550,9 +550,9 @@ public class Compte extends JPanel {
 		col[1] = "Titre";
 		col[2] = "Emprunté le";
 		if (histoState) {
-			col[3] = "Rendu le";
+			col[3] = "Rendu le";					
 		} else {
-			col[3] = "A rendre le";
+			col[3] = "A rendre le";											
 		}
 		
 		DefaultTableModel tableau = new DefaultTableModel(null, col)
