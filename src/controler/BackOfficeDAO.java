@@ -289,7 +289,7 @@ public class BackOfficeDAO {
 				PreparedStatement insRelSerie = connect.prepareStatement("INSERT INTO livres_series (ISBN_livre, id_serie, position) VALUES (?, ?, ?)");
 				insRelSerie.setString(1, livre.getISBN());
 				insRelSerie.setInt(2, serie);
-				insRelSerie.setInt(2, position);
+				insRelSerie.setInt(3, position);
 				insRelSerie.execute();
 			}
 			
