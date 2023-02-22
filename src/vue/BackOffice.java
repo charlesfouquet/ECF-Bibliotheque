@@ -72,16 +72,16 @@ public class BackOffice extends JPanel {
 		/* ### PANEL ETAPE 1 ### */
 		/*######################*/
 		JPanel panel1 = new JPanel();
-		panel1.setBounds(10, 41, 485, 50);
+		panel1.setBounds(10, 41, 485, 78);
 		add(panel1);
 		panel1.setLayout(null);
 		
 		JLabel titreLabelZone1 = new JLabel("<html><b style=\"color:red\">1 -</b> Création ou modification ?</html>");
 		titreLabelZone1.setFont(new Font("Noto serif", Font.PLAIN, 16));
-		titreLabelZone1.setBounds(10, 15, 215, 20);
+		titreLabelZone1.setBounds(10, 11, 465, 24);
 		panel1.add(titreLabelZone1);
 
-		comboBoxPrincipale.setBounds(224, 11, 251, 28);
+		comboBoxPrincipale.setBounds(10, 39, 465, 28);
 		panel1.add(comboBoxPrincipale);
 		
 		/*######################*/
@@ -89,27 +89,27 @@ public class BackOffice extends JPanel {
 		/*######################*/
 		JPanel panel2 = new JPanel();
 		panel2.setBackground(new Color(250, 243, 230));
-		panel2.setBounds(10, 100, 485, 223);
+		panel2.setBounds(10, 130, 485, 193);
 		add(panel2);
 		panel2.setLayout(null);
 		
 		JLabel titreLabelZone2 = new JLabel("<html><b style=\"color:red\">2 -</b> Création des éléments :</html>");
 		titreLabelZone2.setFont(new Font("Noto Serif", Font.PLAIN, 16));
 		titreLabelZone2.setHorizontalAlignment(SwingConstants.LEFT);
-		titreLabelZone2.setBounds(10, 11, 200, 30);
+		titreLabelZone2.setBounds(10, 11, 465, 30);
 		panel2.add(titreLabelZone2);
 		
 		JLabel auteurs= new JLabel("<html><b>Auteur :</b><br> <i>nom, prénom</i></html>");
 		auteurs.setFont(new Font("Noto Serif", Font.PLAIN, 10));
-		auteurs.setBounds(10, 52, 95, 30);
+		auteurs.setBounds(10, 48, 95, 30);
 		panel2.add(auteurs);
 		
 		nom = new JTextField();
-		nom.setBounds(103, 52, 140, 30);
+		nom.setBounds(103, 48, 140, 30);
 		panel2.add(nom);
 		
 		prenom = new JTextField();
-		prenom.setBounds(248, 52, 140, 30);
+		prenom.setBounds(248, 48, 140, 30);
 		panel2.add(prenom);
 			
 		JButton btnAuteur = new JButton("Ajouter");
@@ -131,17 +131,17 @@ public class BackOffice extends JPanel {
 			}
 		});
 		btnAuteur.setBackground(new Color(90, 205, 25));
-		btnAuteur.setBounds(398, 56, 77, 23);
+		btnAuteur.setBounds(398, 52, 77, 23);
 		panel2.add(btnAuteur);
 		btnAuteur.setFont(new Font("Noto Serif", Font.PLAIN, 10));
 		
 		JLabel genres = new JLabel("<html><b>Genre :</b><br> <i>thème</i></html>");
 		genres.setFont(new Font("Noto Serif", Font.PLAIN, 10));
-		genres.setBounds(10, 92, 83, 30);
+		genres.setBounds(10, 83, 83, 30);
 		panel2.add(genres);
 		
 		theme = new JTextField();
-		theme.setBounds(103, 92, 285, 30);
+		theme.setBounds(103, 83, 285, 30);
 		panel2.add(theme);
 		theme.setColumns(10);
 		
@@ -152,17 +152,17 @@ public class BackOffice extends JPanel {
 			}
 		});
 		btnGenre.setBackground(new Color(90, 205, 25));
-		btnGenre.setBounds(398, 96, 77, 23);
+		btnGenre.setBounds(398, 87, 77, 23);
 		panel2.add(btnGenre);
 		btnGenre.setFont(new Font("Noto Serif", Font.PLAIN, 10));
 		
 		JLabel series = new JLabel("<html><b>Serie :</b><br> <i>nomSerie</i></html>");
 		series.setFont(new Font("Noto Serif", Font.PLAIN, 10));
-		series.setBounds(10, 132, 83, 30);
+		series.setBounds(10, 118, 83, 30);
 		panel2.add(series);
 		
 		nomSerie = new JTextField();
-		nomSerie.setBounds(103, 132, 285, 30);
+		nomSerie.setBounds(103, 118, 285, 30);
 		panel2.add(nomSerie);
 		nomSerie.setColumns(10);
 
@@ -174,16 +174,16 @@ public class BackOffice extends JPanel {
 		});
 		btnSerie.setBackground(new Color(90, 205, 25));
 		btnSerie.setFont(new Font("Noto Serif", Font.PLAIN, 10));
-		btnSerie.setBounds(398, 136, 77, 23);
+		btnSerie.setBounds(398, 122, 77, 23);
 		panel2.add(btnSerie);
 		
 		JLabel editeurs = new JLabel("<html><b>Editeur :</b><br> <i>nomSocial</i></html>");
 		editeurs.setFont(new Font("Noto Serif", Font.PLAIN, 10));
-		editeurs.setBounds(10, 172, 83, 30);
+		editeurs.setBounds(10, 153, 83, 30);
 		panel2.add(editeurs);
 		
 		nomSocial = new JTextField();
-		nomSocial.setBounds(103, 172, 285, 30);
+		nomSocial.setBounds(103, 153, 285, 30);
 		panel2.add(nomSocial);
 		nomSocial.setColumns(10);
 									
@@ -195,7 +195,7 @@ public class BackOffice extends JPanel {
 		});
 		btnEditeur.setBackground(new Color(90, 205, 25));
 		btnEditeur.setFont(new Font("Noto Serif", Font.PLAIN, 10));
-		btnEditeur.setBounds(398, 176, 77, 23);
+		btnEditeur.setBounds(398, 157, 77, 23);
 		panel2.add(btnEditeur);
 		
 		/*######################*/
@@ -266,7 +266,7 @@ public class BackOffice extends JPanel {
 		JLabel titreLabelZone4 = new JLabel("<html><b style=\"color:red\">4 -</b> Création ou Modification d'un livre :");
 		titreLabelZone4.setFont(new Font("Noto Serif", Font.PLAIN, 16));
 		titreLabelZone4.setHorizontalAlignment(SwingConstants.LEFT);
-		titreLabelZone4.setBounds(10, 11, 275, 30);
+		titreLabelZone4.setBounds(10, 11, 465, 30);
 		panel4.add(titreLabelZone4);
 		
 		JLabel ISBNLivre = new JLabel("ISBN : ");
@@ -299,7 +299,7 @@ public class BackOffice extends JPanel {
 		resumeCm.setBounds(145, 134, 319, 30);
 		panel4.add(resumeCm);
 		
-		JLabel datePubliLivre = new JLabel("Datede publication : ");
+		JLabel datePubliLivre = new JLabel("Date de sortie : ");
 		datePubliLivre.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		datePubliLivre.setBounds(20, 175, 115, 30);
 		panel4.add(datePubliLivre);
@@ -395,27 +395,27 @@ public class BackOffice extends JPanel {
 	    switch (i) {
 	        case 0: {
 	            liste.add(0, "Créer un nouveau livre");
-	            comboBoxPrincipale.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            comboBoxPrincipale.setModel(new DefaultComboBoxModel(liste.toArray()));
 	            break;
 	        }
 	        case 1: {
 	            liste.add(0, "Choisir un auteur");
-	            comboBoxAuteurCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            comboBoxAuteurCm.setModel(new DefaultComboBoxModel(liste.toArray()));
 	            break;
 	        }
 	        case 2: {
 	            liste.add(0, "Choisir un thème");
-	            comboBoxGenreCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            comboBoxGenreCm.setModel(new DefaultComboBoxModel(liste.toArray()));
 	            break;
 	        }
 	        case 3: {
 	            liste.add(0, "Choisir une série");
-	            comboBoxSerieCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            comboBoxSerieCm.setModel(new DefaultComboBoxModel(liste.toArray()));
 	            break;
 	        }
 	        case 4: {
 	            liste.add(0, "Choisir un éditeur");
-	            comboBoxEditeurCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            comboBoxEditeurCm.setModel(new DefaultComboBoxModel(liste.toArray()));
 	            break;
 	        }
 	    };
