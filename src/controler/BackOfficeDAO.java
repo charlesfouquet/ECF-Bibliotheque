@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import sqlConnection.DBConnect;
 
@@ -97,6 +99,118 @@ public class BackOfficeDAO {
 		}
 
 	    return liste;
+	}
+	
+	public String getISBN(String selectedBook) {
+		String regExISBN = "(?<=ISBN: )[^)]*";
+		Pattern compilRegex = Pattern.compile(regExISBN);
+		Matcher ISBN = compilRegex.matcher(selectedBook);
+		ISBN.find();
+		return ISBN.group();
+	}
+	
+	public String getItemID(String selectedItem) {
+		String regExID = "(?<=#)[^)]*";
+		Pattern compilRegex = Pattern.compile(regExID);
+		Matcher item = compilRegex.matcher(selectedItem);
+		item.find();
+		return item.group();
+	}
+	
+	public int readRelation(String ISBN, String type) {
+		int relationID = 0;
+		String requete = "";
+		
+		switch (type) {
+			case "Auteur": {
+				requete = "SELECT id_auteur FROM livres_auteurs WHERE ISBN_livre = ?";
+				break;
+			}
+			case "Genre": {
+				requete = "SELECT id_genre FROM livres_genres WHERE ISBN_livre = ?";
+				break;
+			}
+			case "Serie": {			
+				requete = "SELECT id_serie FROM livres_series WHERE ISBN_livre = ?";
+				break;
+			}
+			case "Editeur": {				
+				requete = "SELECT id_editeur FROM livres WHERE ISBN = ?";
+				break;
+			}
+		}
+		
+		PreparedStatement req;
+		try {
+			req = connect.prepareStatement(requete);
+			req.setString(1, ISBN);
+			ResultSet rs = req.executeQuery();
+			
+			if (rs.next()) {
+				switch (type) {
+					case "Auteur": {
+						relationID = rs.getInt("id_auteur");
+						break;
+					}
+					case "Genre": {
+						relationID = rs.getInt("id_genre");
+						break;
+					}
+					case "Serie": {	
+						relationID = rs.getInt("id_serie");
+						break;
+					}
+					case "Editeur": {	
+						relationID = rs.getInt("id_editeur");
+						break;
+					}
+				};
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return relationID;
+	}
+	
+	public int getPositionInSeries(String ISBN) {
+		int position = 0;
+		
+		PreparedStatement req;
+		try {
+			req = connect.prepareStatement("SELECT position FROM livres_series WHERE ISBN_livre = ?");
+			req.setString(1, ISBN);
+			ResultSet rs = req.executeQuery();
+			if (rs.next()) {
+				position = rs.getInt("position");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return position;
+	}
+	
+	public ArrayList<String[]> getExemplaires(String ISBN) {
+		ArrayList<String[]> listeExemplaires = new ArrayList<String[]>();
+		
+		try {
+			PreparedStatement req = connect.prepareStatement("SELECT DISTINCT idEx, ISBN_LivreL, titreL FROM catalogue_complet WHERE ISBN_livreL = ?");
+
+			req.setString(1, ISBN);
+			ResultSet rs = req.executeQuery();
+			
+			while(rs.next()) {
+				listeExemplaires.add(new String[]{String.format("%05d", rs.getInt("idEx")), rs.getString("ISBN_livreL"), rs.getString("titreL")});
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listeExemplaires;
 	}
 
 }

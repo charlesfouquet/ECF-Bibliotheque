@@ -4,28 +4,37 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.SqlDateModel;
+
 import controler.BackOfficeDAO;
+import controler.LivreDAO;
+import model.Livre;
 
 public class BackOffice extends JPanel {
 	BackOfficeDAO backOfficeDAO = new BackOfficeDAO();
+	LivreDAO livreDAO = new LivreDAO();
 
 	/**
 	 * 
@@ -41,11 +50,17 @@ public class BackOffice extends JPanel {
 	private JTextField resumeCm;
 	private JTextField couvCm;
 	private JTable tableExemplaire;
+	private JFrame frame = new JFrame();
 	private JComboBox<String> comboBoxEditeurCm = new JComboBox<String>();
 	private JComboBox<String> comboBoxSerieCm = new JComboBox<String>();
 	private JComboBox<String> comboBoxGenreCm = new JComboBox<String>();
 	private JComboBox<String> comboBoxAuteurCm = new JComboBox<String>();
 	private JComboBox<String> comboBoxPrincipale = new JComboBox<String>();
+	private JSpinner nbPageCm = new JSpinner();
+	private JTextField dateCm;
+	private JButton datePanelBtn = new JButton("Choisir");
+	private JSpinner volNumCm = new JSpinner();
+	private JButton btnPlus1 = new JButton("ajouter un exemplaire");
 
 	/**
 	 * Create the panel.
@@ -54,6 +69,35 @@ public class BackOffice extends JPanel {
 		setBackground(new Color(240, 227, 198));
 		setBounds(0, 0, 1000, 550);
 		setLayout(null);
+		
+		/*######################*/
+		/* ### CODE DU JDATEPICKER ### */
+		/*######################*/
+		
+		frame.setSize(300, 250);
+		SqlDateModel model = new SqlDateModel();
+		model.setDate(2000, 1, 1);
+		model.setSelected(true);
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+		
+		frame.getContentPane().add(datePanel);
+		frame.setLocationRelativeTo(null);
+		
+		frame.addWindowListener(new WindowAdapter()
+		{
+		    @Override
+		    public void windowClosing(WindowEvent e)
+		    {
+		      e.getWindow().dispose();
+		      java.sql.Date selectedDate = (java.sql.Date) datePanel.getModel().getValue();
+		      dateCm.setText(String.valueOf(selectedDate));
+		    }
+		});
+		
 		
 		/*######################*/
 		/* ### PANEL TITRE ### */
@@ -80,7 +124,34 @@ public class BackOffice extends JPanel {
 		titreLabelZone1.setFont(new Font("Noto serif", Font.PLAIN, 16));
 		titreLabelZone1.setBounds(10, 11, 465, 24);
 		panel1.add(titreLabelZone1);
-
+		comboBoxPrincipale.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (comboBoxPrincipale.getSelectedItem().toString() != "Créer un nouveau livre") {
+					Livre selectedBook = livreDAO.findByISBN(backOfficeDAO.getISBN(comboBoxPrincipale.getSelectedItem().toString()));
+					ISBNCm.setText(selectedBook.getISBN());
+					ISBNCm.setEditable(false);
+					titreCm.setText(selectedBook.getTitre());
+					resumeCm.setText(selectedBook.getResume());
+					resumeCm.setCaretPosition(0);
+					dateCm.setText(selectedBook.getDatePubli().toString());
+					couvCm.setText(selectedBook.getCouverture());
+					comboBoxAuteurCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Auteur"));
+					comboBoxGenreCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Genre"));
+					comboBoxSerieCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Serie"));
+					volNumCm.setValue(backOfficeDAO.getPositionInSeries(selectedBook.getISBN()));
+					comboBoxEditeurCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Editeur"));
+					nbPageCm.setValue(selectedBook.getNbPages());
+					tableExemplaire.setModel(listeExemplaires(selectedBook.getISBN()));
+					reformatTable(tableExemplaire);
+					btnPlus1.setEnabled(true);
+				} else {
+					removeAll();
+					add(new BackOffice());
+					repaint();
+					revalidate();
+				}
+			}
+		});
 		comboBoxPrincipale.setBounds(10, 39, 465, 28);
 		panel1.add(comboBoxPrincipale);
 		
@@ -214,10 +285,13 @@ public class BackOffice extends JPanel {
 		titreabelZone3.setBounds(10, 12, 224, 48);
 		panel3.add(titreabelZone3);
 
-		JButton btnPlus1 = new JButton("ajouter un exemplaire");
+		btnPlus1.setEnabled(false);
 		btnPlus1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO ajout d'un exemplaire selon ISBN dans le comboBox
+				if (btnPlus1.isEnabled()) {
+					
+				}
 			}
 		});
 		btnPlus1.setFont(new Font("Noto Serif", Font.PLAIN, 10));
@@ -231,27 +305,6 @@ public class BackOffice extends JPanel {
 		panel3.add(scrollPaneExemplaire);
 		
 		tableExemplaire = new JTable();
-		tableExemplaire.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null},
-			},
-			new String[] {
-				"id exemplaire", "ISBN", "Titre"
-			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -6218395721389455182L;
-			boolean[] columnEditables = new boolean[] {
-				false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		tableExemplaire.getColumnModel().getColumn(0).setPreferredWidth(20);
-		tableExemplaire.getColumnModel().getColumn(1).setPreferredWidth(60);
 		scrollPaneExemplaire.setViewportView(tableExemplaire);
 		
 		/*######################*/
@@ -303,19 +356,14 @@ public class BackOffice extends JPanel {
 		datePubliLivre.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		datePubliLivre.setBounds(20, 175, 115, 30);
 		panel4.add(datePubliLivre);
-
-		JSpinner dateCm = new JSpinner();
-		dateCm.setModel(new SpinnerDateModel(new Date(-2208992400000L), new Date(-2208992400000L), new Date(4133890800000L), Calendar.DAY_OF_WEEK_IN_MONTH));
-		dateCm.setBounds(145, 175, 319, 30);
-		panel4.add(dateCm);
 		
 		JLabel nbrPagesLivre = new JLabel("Nbr de pages :");
 		nbrPagesLivre.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		nbrPagesLivre.setBounds(20, 216, 115, 30);
 		panel4.add(nbrPagesLivre);
 		
-		JSpinner nbPageCm = new JSpinner();
 		nbPageCm.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+		((JSpinner.DefaultEditor)nbPageCm.getEditor()).getTextField().setHorizontalAlignment(JTextField.LEFT);
 		nbPageCm.setBounds(145, 216, 319, 26);
 		panel4.add(nbPageCm);
 		
@@ -350,15 +398,14 @@ public class BackOffice extends JPanel {
 		serieLivre.setBounds(20, 380, 59, 30);
 		panel4.add(serieLivre);
 
-		comboBoxSerieCm.setBounds(89, 380, 214, 30);
+		comboBoxSerieCm.setBounds(89, 380, 266, 30);
 		panel4.add(comboBoxSerieCm);
 		
-		JLabel labelVolumeCm = new JLabel("+ son Volume N° :");
+		JLabel labelVolumeCm = new JLabel("Tome :");
 		labelVolumeCm.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelVolumeCm.setBounds(313, 380, 87, 30);
 		panel4.add(labelVolumeCm);
 		
-		JSpinner volNumCm = new JSpinner();
 		volNumCm.setBounds(410, 380, 54, 30);
 		panel4.add(volNumCm);
 		
@@ -380,12 +427,36 @@ public class BackOffice extends JPanel {
 		btnValideLIvre.setBounds(314, 462, 150, 30);
 		panel4.add(btnValideLIvre);
 		
+		dateCm = new JTextField();
+		dateCm.setEditable(false);
+		dateCm.setBounds(145, 175, 225, 30);
+		panel4.add(dateCm);
+		dateCm.setColumns(10);
+		
+		datePanelBtn.setBounds(380, 175, 84, 30);
+		panel4.add(datePanelBtn);
+		datePanelBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frame.setVisible(true);
+			}
+		});
+		datePanelBtn.setBackground(new Color(255, 255, 255));
+		datePanelBtn.setForeground(new Color(199, 152, 50));
+		datePanelBtn.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		
 		populateComboBoxes();
 		
 	}
 	
+	public void reformatTable(JTable table) {
+		table.getColumnModel().getColumn(0).setPreferredWidth(0);
+		table.getColumnModel().getColumn(1).setPreferredWidth(50);
+		table.getColumnModel().getColumn(2).setPreferredWidth(250);
+	}
+	
 	public void populateComboBoxes() {
-	    for (int i = 0; i < 6; i++) {
+	    for (int i = 0; i < 5; i++) {
 	        setComboModel(i);
 	    }
 	}
@@ -419,5 +490,68 @@ public class BackOffice extends JPanel {
 	            break;
 	        }
 	    };
+	}
+	
+	public int getComboItem(String ISBN, String type) {
+		
+		JComboBox<String> selectedBox = new JComboBox<String>();
+		int id = backOfficeDAO.readRelation(ISBN, type);
+		
+		switch (type) {
+			case "Auteur": {
+				selectedBox = comboBoxAuteurCm;
+				break;
+			}
+			case "Genre": {
+				selectedBox = comboBoxGenreCm;
+				break;
+			}
+			case "Serie": {			
+				selectedBox = comboBoxSerieCm;
+				break;
+			}
+			case "Editeur": {				
+				selectedBox = comboBoxEditeurCm;
+				break;
+			}
+		}
+		
+		for (int i = 0; i < selectedBox.getItemCount(); i++) {
+			if (selectedBox.getItemAt(i).toString().contains("#"+String.valueOf(id)+")")) 
+			{ 
+				return i;
+			}
+		}
+		return 0;
+	}
+	
+	public DefaultTableModel listeExemplaires(String ISBN) {
+		String col [] =  {"Exemp n°", "ISBN", "Titre"};
+		
+		DefaultTableModel tableau = new DefaultTableModel(null, col)
+		{
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6015414029794944436L;
+			
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		
+		ArrayList<String[]> listeExemplaires = backOfficeDAO.getExemplaires(ISBN);
+		
+		for (String[] exemplaire : listeExemplaires) {
+			tableau.addRow(new Object[] {
+					exemplaire[0],
+					exemplaire[1],
+					exemplaire[2],
+			});
+		}
+		return tableau;
 	}
 }
