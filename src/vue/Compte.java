@@ -25,6 +25,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controler.BackOfficeDAO;
 import controler.EmpruntDAO;
 import controler.UserDAO;
 import model.Emprunt;
@@ -75,6 +76,7 @@ public class Compte extends JPanel {
 		panelBackOffice.add(btnBackOffice);
 		btnBackOffice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				BackOfficeDAO.ISBNOnLoad = null;
 				removeAll();
 				add(new BackOffice());
 				repaint();

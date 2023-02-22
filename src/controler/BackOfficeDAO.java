@@ -13,6 +13,7 @@ import sqlConnection.DBConnect;
 
 public class BackOfficeDAO {
 	Connection connect = DBConnect.getConnect();
+	public static String ISBNOnLoad = null;
 
 //	public boolean create(String table, String args, Object values, String condition ) {
 //		try {
@@ -305,6 +306,48 @@ public class BackOfficeDAO {
 		return false;
 	}
 	
+	public boolean bigUpdateToDB(Livre livre, String date, int auteur, int genre, int serie, int position, int editeur) {
+		
+		try {
+			PreparedStatement updLivre = connect.prepareStatement("UPDATE livres SET titre = ?, resume = ?, datePubli = ?, nbPages = ?, id_editeur = ? WHERE ISBN = ?");
+			updLivre.setString(1, livre.getTitre());
+			updLivre.setString(2, livre.getResume());
+			updLivre.setString(3, date);
+			updLivre.setInt(4, livre.getNbPages());
+			updLivre.setInt(5, editeur);
+			updLivre.setString(6, livre.getISBN());
+			updLivre.execute();
+			
+			PreparedStatement updRelAuteur = connect.prepareStatement("UPDATE livres_auteurs SET id_auteur = ? WHERE ISBN_livre = ?");
+			updRelAuteur.setInt(1, auteur);
+			updRelAuteur.setString(2, livre.getISBN());
+			updRelAuteur.execute();
+			
+			PreparedStatement updRelGenre = connect.prepareStatement("UPDATE livres_genres SET id_genre = ? WHERE ISBN_livre = ?");
+			updRelGenre.setInt(1, genre);
+			updRelGenre.setString(2, livre.getISBN());
+			updRelGenre.execute();
+			
+			if ((serie > 0) && (position > 0)) {
+				PreparedStatement updRelSerie = connect.prepareStatement("UPDATE livres_series SET id_serie = ?, position = ? WHERE ISBN_livre = ?");
+				updRelSerie.setInt(1, serie);
+				updRelSerie.setInt(2, position);
+				updRelSerie.setString(3, livre.getISBN());
+				updRelSerie.execute();
+			} else {
+				PreparedStatement updRelSerie = connect.prepareStatement("DELETE FROM livres_series WHERE ISBN_livre = ?");
+				updRelSerie.setString(1, livre.getISBN());
+				updRelSerie.execute();
+			}
+			
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public boolean deleteExemplaire(String idEx, String ISBN) {
 		try {
 			PreparedStatement upd = connect.prepareStatement("DELETE FROM emprunts WHERE id_exemplaire = ?");
@@ -321,5 +364,30 @@ public class BackOfficeDAO {
 		}
 		return false;
 	}
-
+	
+	public boolean setOrUpdateBookcover(String ISBN, String couverture) {
+		try {
+			PreparedStatement req = connect.prepareStatement("UPDATE livres SET couverture = ? WHERE ISBN = ?");
+			req.setString(1, couverture);
+			req.setString(2, ISBN);
+			req.execute();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void deleteBookcoverDB(String ISBN) {
+		PreparedStatement req;
+		try {
+			req = connect.prepareStatement("UPDATE livres SET couverture = null WHERE ISBN = ?");
+			req.setString(1, ISBN);
+			req.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

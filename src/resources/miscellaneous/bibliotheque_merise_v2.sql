@@ -111,7 +111,7 @@ CREATE OR REPLACE TRIGGER autoCouverture
 DELIMITER ;
 
 INSERT INTO livres (ISBN, titre, resume, datePubli, nbPages, id_editeur) VALUES 
-("018474911-5", "Harry Potter à l'Ecole des Sorciers", "Le jour de ses onze ans, Harry Potter, un orphelin élevé par un oncle et une tante qui le détestent, voit son existence bouleversée. Un géant vient le chercher pour l'emmener à Poudlard, une école de sorcellerie ! Voler en balai, jeter des sorts, combattre les trolls : Harry se révèle un sorcier doué. Mais un mystère entoure sa naissance et l'effroyable V., le mage dont personne n'ose prononcer le nom.", "1998-10-09", 305, 1),
+("018474911-5", "Harie Peauteur à l'Ecole", "J'ai pas trouvé le résumé", "2001-11-16", 2, 13),
 ("177134993-X", "Harry Potter et la Chambre des Secrets", "Une rentrée fracassante en voiture volante, une étrange malédiction qui s'abat sur les élèves, cette deuxième année à l'école des sorciers ne s'annonce pas de tout repos ! Entre les cours de potions magiques, les matches de Quidditch et les combats de mauvais sorts, Harry et ses amis Ron et Hermione trouveront-ils le temps de percer le mystère de la Chambre des Secrets ?", "1999-03-23", 364, 1),
 ("708828225-9", "Harry Potter et le Prisonnier d'Azkaban", "Sirius Black, le dangereux criminel qui s'est échappé de la forteresse d'Azkaban, recherche Harry Potter. C'est donc sous bonne garde que l'apprenti sorcier fait sa troisième rentrée. Au programme : des cours de divination, la fabrication d'une potion de Ratatinage, le dressage des hippogriffes... Mais Harry est-il vraiment à l'abri du danger qui le menace ?", "1999-10-19", 474, 1),
 ("706256141-X", "Harry Potter et la Coupe de Feu", "Harry Potter a quatorze ans et entre en quatrième année au collège de Poudlard. Une grande nouvelle attend Harry, Ron et Hermione à leur arrivée : la tenue d'un tournoi de magie exceptionnel entre les plus célèbres écoles de sorcellerie. Déjà les délégations étrangères font leur entrée. Harry se réjouit... Trop vite. Il va se trouver plongé au coeur des événements les plus dramatiques qu'il ait jamais eu à affronter.", "2000-11-29", 656, 1),
@@ -245,7 +245,7 @@ INSERT INTO exemplaires (ISBN_livre) VALUES ("018474911-5"),("018474911-5"),("01
 ("057453797-X");
 INSERT INTO series (nomSerie) VALUES ("Harry Potter"),("Les Animaux Fantastiques"),("L'Héritage"),("Idéalis"),("Les Chroniques de Narnia"),("Le Donjon de Naheulbeuk"),("Hunger Games"),("Incarceron"),("Skyward"),("Avant Toi"),("Kaleb"),("La Servante Ecarlate"),("Crazy Rich Asians"),("Le Seigneur des Anneaux");
 
-INSERT INTO livres_series (ISBN_livre, id_serie, position) VALUES ("018474911-5", 1, 1),
+INSERT INTO livres_series (ISBN_livre, id_serie, position) VALUES ("018474911-5", 5, 4),
 ("177134993-X", 1, 2),
 ("708828225-9", 1, 3),
 ("706256141-X", 1, 4),
@@ -293,7 +293,7 @@ INSERT INTO livres_series (ISBN_livre, id_serie, position) VALUES ("018474911-5"
 ("998528293-0", 14, 2),
 ("057453797-X", 14, 3);
 
-INSERT INTO livres_auteurs (ISBN_livre, id_auteur) VALUES ("018474911-5", 1),
+INSERT INTO livres_auteurs (ISBN_livre, id_auteur) VALUES ("018474911-5", 20),
 ("177134993-X", 1),
 ("708828225-9", 1),
 ("706256141-X", 1),
@@ -359,7 +359,7 @@ INSERT INTO livres_auteurs (ISBN_livre, id_auteur) VALUES ("018474911-5", 1),
 ("998528293-0", 25),
 ("057453797-X", 25);
 
-INSERT INTO livres_genres (ISBN_livre, id_genre) VALUES ("018474911-5", 1),
+INSERT INTO livres_genres (ISBN_livre, id_genre) VALUES ("018474911-5", 4),
 ("177134993-X", 1),
 ("708828225-9", 1),
 ("706256141-X", 1),

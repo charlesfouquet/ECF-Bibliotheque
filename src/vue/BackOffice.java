@@ -8,12 +8,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -62,9 +67,13 @@ public class BackOffice extends JPanel {
 	private JSpinner nbPageCm = new JSpinner();
 	private JTextField dateCm;
 	private JButton datePanelBtn = new JButton("Choisir");
+	private JButton bookCoverBtn = new JButton("Choisir");
+	private JButton bookCoverDelete = new JButton("Retirer");
 	private JSpinner volNumCm = new JSpinner();
 	private JButton btnPlus1 = new JButton("Ajouter un exemplaire");
 	private Livre selectedBook = null;
+	private 	String bookCoverFilePath = "";
+	private String bookCoversDestination = "src/resources/images/bookcovers/";
 
 	/**
 	 * Create the panel.
@@ -131,23 +140,7 @@ public class BackOffice extends JPanel {
 		comboBoxPrincipale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (comboBoxPrincipale.getSelectedItem().toString() != "Créer un nouveau livre") {
-					selectedBook = livreDAO.findByISBN(backOfficeDAO.getISBN(comboBoxPrincipale.getSelectedItem().toString()));
-					ISBNCm.setText(selectedBook.getISBN());
-					ISBNCm.setEditable(false);
-					titreCm.setText(selectedBook.getTitre());
-					resumeCm.setText(selectedBook.getResume());
-					resumeCm.setCaretPosition(0);
-					dateCm.setText(selectedBook.getDatePubli().toString());
-					couvCm.setText(selectedBook.getCouverture());
-					comboBoxAuteurCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Auteur"));
-					comboBoxGenreCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Genre"));
-					comboBoxSerieCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Serie"));
-					volNumCm.setValue(backOfficeDAO.getPositionInSeries(selectedBook.getISBN()));
-					comboBoxEditeurCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Editeur"));
-					nbPageCm.setValue(selectedBook.getNbPages());
-					tableExemplaire.setModel(listeExemplaires(selectedBook.getISBN()));
-					reformatTable(tableExemplaire);
-					btnPlus1.setEnabled(true);
+					loadSelectedBook();
 				} else {
 					removeAll();
 					add(new BackOffice());
@@ -193,6 +186,7 @@ public class BackOffice extends JPanel {
 				if(!nom.getText().isEmpty() && !prenom.getText().isEmpty()) {
 					if(backOfficeDAO.smallAddToDB("Auteur", nom.getText(), prenom.getText())) {
 						JOptionPane.showMessageDialog(null,"Auteur correctement créé", "AUTEUR", JOptionPane.INFORMATION_MESSAGE);
+						BackOfficeDAO.ISBNOnLoad = null;
 						removeAll();
 						add(new BackOffice());
 						repaint();
@@ -226,6 +220,7 @@ public class BackOffice extends JPanel {
 				if(!theme.getText().isEmpty()) {
 					if(backOfficeDAO.smallAddToDB("Genre", theme.getText(), null)) {
 						JOptionPane.showMessageDialog(null,"Genre correctement créé", "GENRE", JOptionPane.INFORMATION_MESSAGE);
+						BackOfficeDAO.ISBNOnLoad = null;
 						removeAll();
 						add(new BackOffice());
 						repaint();
@@ -259,6 +254,7 @@ public class BackOffice extends JPanel {
 				if(!nomSerie.getText().isEmpty()) {
 					if(backOfficeDAO.smallAddToDB("Serie", nomSerie.getText(), null)) {
 						JOptionPane.showMessageDialog(null,"Série correctement créée", "SERIE", JOptionPane.INFORMATION_MESSAGE);
+						BackOfficeDAO.ISBNOnLoad = null;
 						removeAll();
 						add(new BackOffice());
 						repaint();
@@ -292,6 +288,7 @@ public class BackOffice extends JPanel {
 				if(!nomSocial.getText().isEmpty()) {
 					if(backOfficeDAO.smallAddToDB("Editeur", nomSocial.getText(), null)) {
 						JOptionPane.showMessageDialog(null,"Editeur correctement créé", "EDITEUR", JOptionPane.INFORMATION_MESSAGE);
+						BackOfficeDAO.ISBNOnLoad = null;
 						removeAll();
 						add(new BackOffice());
 						repaint();
@@ -437,8 +434,9 @@ public class BackOffice extends JPanel {
 		panel4.add(couvLivre);
 
 		couvCm = new JTextField();
+		couvCm.setEditable(false);
 		couvCm.setColumns(10);
-		couvCm.setBounds(145, 257, 319, 30);
+		couvCm.setBounds(145, 257, 225, 30);
 		panel4.add(couvCm);
 		
 		JLabel auteurLivre = new JLabel("Auteur :");
@@ -481,6 +479,26 @@ public class BackOffice extends JPanel {
 		comboBoxEditeurCm.setBounds(89, 421, 375, 30);
 		panel4.add(comboBoxEditeurCm);
 		
+		bookCoverBtn.setBounds(380, 243, 84, 30);
+		bookCoverBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JFileChooser file = new JFileChooser();
+				file.showOpenDialog(file);
+				File fileSelected = file.getSelectedFile();
+				bookCoverFilePath = fileSelected.getAbsolutePath();
+				couvCm.setText(bookCoverFilePath);
+				File folder = new File(bookCoversDestination);
+				if (!folder.exists()) {
+					folder.mkdirs();
+				}
+			}
+		});
+		bookCoverBtn.setBackground(new Color(255, 255, 255));
+		bookCoverBtn.setForeground(new Color(199, 152, 50));
+		bookCoverBtn.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		panel4.add(bookCoverBtn);
+		
 		JButton btnValideLIvre = new JButton("Je valide mon livre !");
 		btnValideLIvre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -489,15 +507,86 @@ public class BackOffice extends JPanel {
 						try {
 							Livre bookToCreate = new Livre(ISBNCm.getText(), "", titreCm.getText(), new Auteur(null, null), resumeCm.getText(), null, Integer.parseInt(nbPageCm.getValue().toString()), new Editeur(null));
 							if (comboBoxSerieCm.getSelectedItem().toString() != "Choisir une série") {
-								backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxSerieCm.getSelectedItem().toString())), Integer.parseInt(volNumCm.getValue().toString()), Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())));								
+								if (backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxSerieCm.getSelectedItem().toString())), Integer.parseInt(volNumCm.getValue().toString()), Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
+									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToCreate.getTitre() + "\" a bien été créé !", "Nouveau livre ajouté", JOptionPane.WARNING_MESSAGE);
+									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToCreate.getISBN()).getCouverture())) {
+										if (!getOrUpdateBookcover(bookToCreate)) {
+											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										}
+									}
+									BackOfficeDAO.ISBNOnLoad = bookToCreate.getISBN();
+									removeAll();
+									add(new BackOffice());
+									repaint();
+									revalidate();
+								} else {
+									JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Ajout de livre", JOptionPane.ERROR_MESSAGE);
+								}							
 							} else {
-								backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), 0, 0, Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())));		
+								if (backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), 0, 0, Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
+									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToCreate.getTitre() + "\" a bien été créé !", "Nouveau livre ajouté", JOptionPane.WARNING_MESSAGE);
+									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToCreate.getISBN()).getCouverture())) {
+										if (!getOrUpdateBookcover(bookToCreate)) {
+											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										}
+									}
+									BackOfficeDAO.ISBNOnLoad = bookToCreate.getISBN();
+									removeAll();
+									add(new BackOffice());
+									repaint();
+									revalidate();
+								} else {
+									JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Ajout de livre", JOptionPane.ERROR_MESSAGE);
+								}	
+							}
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					} else {
+						try {
+							Livre bookToUpdate = new Livre(ISBNCm.getText(), "", titreCm.getText(), new Auteur(null, null), resumeCm.getText(), null, Integer.parseInt(nbPageCm.getValue().toString()), new Editeur(null));
+							getOrUpdateBookcover(bookToUpdate);
+							if (comboBoxSerieCm.getSelectedItem().toString() != "Choisir une série") {
+								if (backOfficeDAO.bigUpdateToDB(bookToUpdate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxSerieCm.getSelectedItem().toString())), Integer.parseInt(volNumCm.getValue().toString()), Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
+									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToUpdate.getTitre() + "\" a bien été mis à jour !", "Livre mis à jour", JOptionPane.WARNING_MESSAGE);
+									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToUpdate.getISBN()).getCouverture())) {
+										if (!getOrUpdateBookcover(bookToUpdate)) {
+											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										}
+									}
+									BackOfficeDAO.ISBNOnLoad = bookToUpdate.getISBN();
+									removeAll();
+									add(new BackOffice());
+									repaint();
+									revalidate();
+								} else {
+									JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Mise à jour de livre", JOptionPane.ERROR_MESSAGE);
+								}								
+							} else {
+								if (backOfficeDAO.bigUpdateToDB(bookToUpdate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), 0, 0, Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
+									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToUpdate.getTitre() + "\" a bien été mis à jour !", "Livre mis à jour", JOptionPane.WARNING_MESSAGE);
+									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToUpdate.getISBN()).getCouverture())) {
+										if (!getOrUpdateBookcover(bookToUpdate)) {
+											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										}
+									}
+									BackOfficeDAO.ISBNOnLoad = bookToUpdate.getISBN();
+									removeAll();
+									add(new BackOffice());
+									repaint();
+									revalidate();
+								} else {
+									JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Mise à jour de livre", JOptionPane.ERROR_MESSAGE);
+								}			
 							}
 						} catch (NumberFormatException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Certains champs sont vides, veuillez réessayer", "Ajout ou mise à jour de livre", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -505,6 +594,32 @@ public class BackOffice extends JPanel {
 		btnValideLIvre.setBackground(new Color(90, 205, 25));
 		btnValideLIvre.setBounds(314, 462, 150, 30);
 		panel4.add(btnValideLIvre);
+		
+		bookCoverDelete.setBackground(new Color(255, 255, 255));
+		bookCoverDelete.setForeground(new Color(255, 0, 0));
+		bookCoverDelete.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		bookCoverDelete.setBounds(380, 270, 84, 30);
+		bookCoverDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (!couvCm.getText().isEmpty()) {
+					File fileToDelete = new File(bookCoversDestination + couvCm.getText());
+					Object[] options = {"Oui", "Non"};
+					int imageDel = JOptionPane.showOptionDialog(null, "Souhaitez-vous supprimer la couverture \"" + fileToDelete.getPath() + "\") ?", "Supprimer une couverture", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+					if (imageDel == 0) {
+						if (fileToDelete.delete()) {
+							backOfficeDAO.deleteBookcoverDB(backOfficeDAO.getISBN(comboBoxPrincipale.getSelectedItem().toString()));
+							selectedBook.setCouverture(null);
+							couvCm.setText("");
+							JOptionPane.showConfirmDialog(null, "La couverture a bien été supprimée", "Couverture supprimée", JOptionPane.WARNING_MESSAGE);							
+						} else {
+							JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Supprimer une couverture", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			}
+		});
+		panel4.add(bookCoverDelete);
 		
 		dateCm = new JTextField();
 		dateCm.setEditable(false);
@@ -522,10 +637,39 @@ public class BackOffice extends JPanel {
 		});
 		datePanelBtn.setBackground(new Color(255, 255, 255));
 		datePanelBtn.setForeground(new Color(199, 152, 50));
-		datePanelBtn.setFont(new Font("Noto Serif", Font.PLAIN, 13));
+		datePanelBtn.setFont(new Font("Noto Serif", Font.PLAIN, 13));		
 		
 		populateComboBoxes();
 		
+		if (BackOfficeDAO.ISBNOnLoad != null) {
+			comboBoxPrincipale.setSelectedIndex(getBookComboItem(BackOfficeDAO.ISBNOnLoad));
+			loadSelectedBook();
+		}
+		
+	}
+	
+	public void loadSelectedBook() {
+		selectedBook = livreDAO.findByISBN(backOfficeDAO.getISBN(comboBoxPrincipale.getSelectedItem().toString()));
+		ISBNCm.setText(selectedBook.getISBN());
+		ISBNCm.setEditable(false);
+		titreCm.setText(selectedBook.getTitre());
+		resumeCm.setText(selectedBook.getResume());
+		resumeCm.setCaretPosition(0);
+		dateCm.setText(selectedBook.getDatePubli().toString());
+		if (selectedBook.getCouverture() != null) {
+			couvCm.setText(selectedBook.getCouverture());			
+		} else {
+			couvCm.setText("");
+		}
+		comboBoxAuteurCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Auteur"));
+		comboBoxGenreCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Genre"));
+		comboBoxSerieCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Serie"));
+		volNumCm.setValue(backOfficeDAO.getPositionInSeries(selectedBook.getISBN()));
+		comboBoxEditeurCm.setSelectedIndex(getComboItem(selectedBook.getISBN(), "Editeur"));
+		nbPageCm.setValue(selectedBook.getNbPages());
+		tableExemplaire.setModel(listeExemplaires(selectedBook.getISBN()));
+		reformatTable(tableExemplaire);
+		btnPlus1.setEnabled(true);
 	}
 	
 	public void reformatTable(JTable table) {
@@ -569,6 +713,16 @@ public class BackOffice extends JPanel {
 	            break;
 	        }
 	    };
+	}
+	
+	public int getBookComboItem(String ISBN) {		
+		for (int i = 0; i < comboBoxPrincipale.getItemCount(); i++) {
+			if (comboBoxPrincipale.getItemAt(i).toString().contains(ISBN)) 
+			{ 
+				return i;
+			}
+		}
+		return 0;
 	}
 	
 	public int getComboItem(String ISBN, String type) {
@@ -632,5 +786,21 @@ public class BackOffice extends JPanel {
 			});
 		}
 		return tableau;
+	}
+	
+	public boolean getOrUpdateBookcover(Livre livre) {
+		File copyStart = new File(bookCoverFilePath);
+		File copyEnd = new File(bookCoversDestination + livre.getISBN()+"."+bookCoverFilePath.substring(bookCoverFilePath.lastIndexOf(".")+1));
+		try {
+			Files.copy(copyStart.toPath(), copyEnd.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			if (!backOfficeDAO.setOrUpdateBookcover(livre.getISBN(), livre.getISBN()+"."+bookCoverFilePath.substring(bookCoverFilePath.lastIndexOf(".")+1))) {
+				return false;
+			}
+			return true;
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return false;
 	}
 }
