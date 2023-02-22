@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import model.Livre;
 import sqlConnection.DBConnect;
 
 public class BackOfficeDAO {
@@ -254,6 +255,65 @@ public class BackOfficeDAO {
 		try {
 			PreparedStatement req = connect.prepareStatement("INSERT INTO " + table + " " + valuesSet + " VALUES " + values);
 			req.execute();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean bigAddToDB(Livre livre, String date, int auteur, int genre, int serie, int position, int editeur) {
+		
+		try {
+			PreparedStatement insLivre = connect.prepareStatement("INSERT INTO livres (ISBN, titre, resume, datePubli, nbPages, id_editeur) VALUES (?, ?, ?, ?, ?, ?)");
+			insLivre.setString(1, livre.getISBN());
+			insLivre.setString(2, livre.getTitre());
+			insLivre.setString(3, livre.getResume());
+			insLivre.setString(4, date);
+			insLivre.setInt(5, livre.getNbPages());
+			insLivre.setInt(6, editeur);
+			insLivre.execute();
+			
+			PreparedStatement insRelAuteur = connect.prepareStatement("INSERT INTO livres_auteurs (ISBN_livre, id_auteur) VALUES (?, ?)");
+			insRelAuteur.setString(1, livre.getISBN());
+			insRelAuteur.setInt(2, auteur);
+			insRelAuteur.execute();
+			
+			PreparedStatement insRelGenre = connect.prepareStatement("INSERT INTO livres_genres (ISBN_livre, id_genre) VALUES (?, ?)");
+			insRelGenre.setString(1, livre.getISBN());
+			insRelGenre.setInt(2, genre);
+			insRelGenre.execute();
+			
+			if ((serie > 0) && (position > 0)) {
+				PreparedStatement insRelSerie = connect.prepareStatement("INSERT INTO livres_series (ISBN_livre, id_serie, position) VALUES (?, ?, ?)");
+				insRelSerie.setString(1, livre.getISBN());
+				insRelSerie.setInt(2, serie);
+				insRelSerie.setInt(2, position);
+				insRelSerie.execute();
+			}
+			
+			PreparedStatement addOneBook = connect.prepareStatement("INSERT INTO exemplaires (ISBN_livre) VALUES (?)");
+			addOneBook.setString(1, livre.getISBN());
+			addOneBook.execute();
+			
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean deleteExemplaire(String idEx, String ISBN) {
+		try {
+			PreparedStatement upd = connect.prepareStatement("DELETE FROM emprunts WHERE id_exemplaire = ?");
+			PreparedStatement del = connect.prepareStatement("DELETE FROM exemplaires WHERE id = ? AND ISBN_livre = ?");
+			upd.setInt(1, Integer.parseInt(idEx));
+			del.setInt(1, Integer.parseInt(idEx));
+			del.setString(2, ISBN);
+			upd.execute();
+			del.execute();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

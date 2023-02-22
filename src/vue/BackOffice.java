@@ -31,6 +31,8 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import controler.BackOfficeDAO;
 import controler.LivreDAO;
+import model.Auteur;
+import model.Editeur;
 import model.Livre;
 
 public class BackOffice extends JPanel {
@@ -351,6 +353,24 @@ public class BackOffice extends JPanel {
 		tableExemplaire = new JTable();
 		scrollPaneExemplaire.setViewportView(tableExemplaire);
 		
+		tableExemplaire.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = tableExemplaire.getSelectedRow();
+				Object[] options = {"Oui", "Non"};
+				int exemplaireSupprime = JOptionPane.showOptionDialog(null, "Souhaitez-vous supprimer l'exemplaire " + (String) tableExemplaire.getValueAt(row, 0) + " ?", "Supprimer un exemplaire", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				if (exemplaireSupprime == 0) {
+					if (backOfficeDAO.deleteExemplaire((String) tableExemplaire.getValueAt(row, 0), (String) tableExemplaire.getValueAt(row, 1))) {
+						JOptionPane.showConfirmDialog(null, "L'exemplaire " + (String) tableExemplaire.getValueAt(row, 0) + " a bien été supprimé !", "Exemplaire supprimé", JOptionPane.WARNING_MESSAGE);							
+					} else {
+						JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Supprimer un exemplaire", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				tableExemplaire.setModel(listeExemplaires(selectedBook.getISBN()));
+				reformatTable(tableExemplaire);
+			}
+		});
+		
 		/*######################*/
 		/* ### PANEL ETAPE 4 ### */
 		/*######################*/
@@ -464,6 +484,21 @@ public class BackOffice extends JPanel {
 		JButton btnValideLIvre = new JButton("Je valide mon livre !");
 		btnValideLIvre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if ((!ISBNCm.getText().isEmpty()) && (!titreCm.getText().isEmpty()) && (!resumeCm.getText().isEmpty()) && (!dateCm.getText().isEmpty()) && ((int) nbPageCm.getValue() >= 1) && (comboBoxAuteurCm.getSelectedItem().toString() != "Choisir un auteur") && (comboBoxGenreCm.getSelectedItem().toString() != "Choisir un thème") && (comboBoxEditeurCm.getSelectedItem().toString() != "Choisir un éditeur")) {
+					if (comboBoxPrincipale.getSelectedItem().toString().equals("Créer un nouveau livre")) {
+						try {
+							Livre bookToCreate = new Livre(ISBNCm.getText(), "", titreCm.getText(), new Auteur(null, null), resumeCm.getText(), null, Integer.parseInt(nbPageCm.getValue().toString()), new Editeur(null));
+							if (comboBoxSerieCm.getSelectedItem().toString() != "Choisir une série") {
+								backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxSerieCm.getSelectedItem().toString())), Integer.parseInt(volNumCm.getValue().toString()), Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())));								
+							} else {
+								backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), 0, 0, Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())));		
+							}
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
 			}
 		});
 		btnValideLIvre.setFont(new Font("Noto Serif", Font.PLAIN, 12));

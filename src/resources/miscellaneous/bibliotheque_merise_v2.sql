@@ -243,7 +243,6 @@ INSERT INTO exemplaires (ISBN_livre) VALUES ("018474911-5"),("018474911-5"),("01
 ("628715773-9"),("628715773-9"),
 ("998528293-0"),
 ("057453797-X");
-
 INSERT INTO series (nomSerie) VALUES ("Harry Potter"),("Les Animaux Fantastiques"),("L'Héritage"),("Idéalis"),("Les Chroniques de Narnia"),("Le Donjon de Naheulbeuk"),("Hunger Games"),("Incarceron"),("Skyward"),("Avant Toi"),("Kaleb"),("La Servante Ecarlate"),("Crazy Rich Asians"),("Le Seigneur des Anneaux");
 
 INSERT INTO livres_series (ISBN_livre, id_serie, position) VALUES ("018474911-5", 1, 1),
