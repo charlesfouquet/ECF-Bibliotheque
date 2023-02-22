@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import controler.BackOfficeDAO;
 
 public class BackOffice extends JPanel {
-	BackOfficeDAO backOffice = new BackOfficeDAO();
+	BackOfficeDAO backOfficeDAO = new BackOfficeDAO();
 
 	/**
 	 * 
@@ -40,6 +41,11 @@ public class BackOffice extends JPanel {
 	private JTextField resumeCm;
 	private JTextField couvCm;
 	private JTable tableExemplaire;
+	private JComboBox<String> comboBoxEditeurCm = new JComboBox<String>();
+	private JComboBox<String> comboBoxSerieCm = new JComboBox<String>();
+	private JComboBox<String> comboBoxGenreCm = new JComboBox<String>();
+	private JComboBox<String> comboBoxAuteurCm = new JComboBox<String>();
+	private JComboBox<String> comboBoxPrincipale = new JComboBox<String>();
 
 	/**
 	 * Create the panel.
@@ -75,10 +81,8 @@ public class BackOffice extends JPanel {
 		titreLabelZone1.setBounds(10, 15, 215, 20);
 		panel1.add(titreLabelZone1);
 
-		JComboBox comboBoxPrincipale = new JComboBox();
 		comboBoxPrincipale.setBounds(224, 11, 251, 28);
 		panel1.add(comboBoxPrincipale);
-		comboBoxPrincipale.setModel(new DefaultComboBoxModel(new String[] {"Je créer un nouveau livre !", "ISBN N° 1", "ISBN N° 2", "ISBN N° 3", "ISBN N° 4"}));
 		
 		/*######################*/
 		/* ### PANEL ETAPE 2 ### */
@@ -330,18 +334,14 @@ public class BackOffice extends JPanel {
 		auteurLivre.setBounds(20, 298, 59, 30);
 		panel4.add(auteurLivre);
 
-		JComboBox comboBoxauteurCm = new JComboBox();
-		comboBoxauteurCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un auteur", "auteur 1", "auteur 2"}));
-		comboBoxauteurCm.setBounds(89, 298, 375, 30);
-		panel4.add(comboBoxauteurCm);
+		comboBoxAuteurCm.setBounds(89, 298, 375, 30);
+		panel4.add(comboBoxAuteurCm);
 		
 		JLabel genreLivre = new JLabel("Genre :");
 		genreLivre.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		genreLivre.setBounds(20, 339, 59, 30);
 		panel4.add(genreLivre);
 		
-		JComboBox comboBoxGenreCm = new JComboBox();
-		comboBoxGenreCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un thème", "thème 1", "thème 2"}));
 		comboBoxGenreCm.setBounds(89, 339, 375, 30);
 		panel4.add(comboBoxGenreCm);
 		
@@ -350,8 +350,6 @@ public class BackOffice extends JPanel {
 		serieLivre.setBounds(20, 380, 59, 30);
 		panel4.add(serieLivre);
 
-		JComboBox comboBoxSerieCm = new JComboBox();
-		comboBoxSerieCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez une serie", "null (Livre ne faisant as partie d'une série)", "serie 1", "serie 2"}));
 		comboBoxSerieCm.setBounds(89, 380, 214, 30);
 		panel4.add(comboBoxSerieCm);
 		
@@ -369,8 +367,6 @@ public class BackOffice extends JPanel {
 		editeurLivre.setBounds(20, 421, 59, 30);
 		panel4.add(editeurLivre);
 		
-		JComboBox comboBoxEditeurCm = new JComboBox();
-		comboBoxEditeurCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un éditeur", "editeur 1", "editeur 2"}));
 		comboBoxEditeurCm.setBounds(89, 421, 375, 30);
 		panel4.add(comboBoxEditeurCm);
 		
@@ -384,5 +380,44 @@ public class BackOffice extends JPanel {
 		btnValideLIvre.setBounds(314, 462, 150, 30);
 		panel4.add(btnValideLIvre);
 		
+		populateComboBoxes();
+		
+	}
+	
+	public void populateComboBoxes() {
+	    for (int i = 0; i < 6; i++) {
+	        setComboModel(i);
+	    }
+	}
+	
+	public void setComboModel(int i) {
+	    ArrayList<String> liste = backOfficeDAO.getList(i);
+	    switch (i) {
+	        case 0: {
+	            liste.add(0, "Créer un nouveau livre");
+	            comboBoxPrincipale.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            break;
+	        }
+	        case 1: {
+	            liste.add(0, "Choisir un auteur");
+	            comboBoxAuteurCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            break;
+	        }
+	        case 2: {
+	            liste.add(0, "Choisir un thème");
+	            comboBoxGenreCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            break;
+	        }
+	        case 3: {
+	            liste.add(0, "Choisir une série");
+	            comboBoxSerieCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            break;
+	        }
+	        case 4: {
+	            liste.add(0, "Choisir un éditeur");
+	            comboBoxEditeurCm.setModel(new DefaultComboBoxModel<String>((String[]) liste.toArray()));
+	            break;
+	        }
+	    };
 	}
 }
