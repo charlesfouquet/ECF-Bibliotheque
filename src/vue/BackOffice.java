@@ -75,10 +75,10 @@ public class BackOffice extends JPanel {
 		titreLabelZone1.setBounds(10, 15, 215, 20);
 		panel1.add(titreLabelZone1);
 
-		JComboBox comboBox1 = new JComboBox();
-		comboBox1.setBounds(224, 11, 251, 28);
-		panel1.add(comboBox1);
-		comboBox1.setModel(new DefaultComboBoxModel(new String[] {"Je créer un nouveau livre !", "ISBN N° 1", "ISBN N° 2", "ISBN N° 3", "ISBN N° 4"}));
+		JComboBox comboBoxPrincipale = new JComboBox();
+		comboBoxPrincipale.setBounds(224, 11, 251, 28);
+		panel1.add(comboBoxPrincipale);
+		comboBoxPrincipale.setModel(new DefaultComboBoxModel(new String[] {"Je créer un nouveau livre !", "ISBN N° 1", "ISBN N° 2", "ISBN N° 3", "ISBN N° 4"}));
 		
 		/*######################*/
 		/* ### PANEL ETAPE 2 ### */
@@ -204,18 +204,13 @@ public class BackOffice extends JPanel {
 		add(panel3);
 		panel3.setLayout(null);
 		
-		JLabel titreabelZone3 = new JLabel("<html><b style=\"color:red\">3 -</b> Gestion des exemplaires :</html>");
+		JLabel titreabelZone3 = new JLabel("<html><b style=\"color:red\">3 -</b> Gestion des exemplaires :<br><i style=\"font-size:x-small;\">Pour supprimer selectionner le dans la liste ci-dessous</i></html>");
 		titreabelZone3.setHorizontalAlignment(SwingConstants.LEFT);
 		titreabelZone3.setFont(new Font("Noto Serif", Font.PLAIN, 16));
-		titreabelZone3.setBounds(10, 12, 224, 30);
+		titreabelZone3.setBounds(10, 12, 224, 48);
 		panel3.add(titreabelZone3);
-		
-		JComboBox comboBoxExemplaire = new JComboBox();
-		comboBoxExemplaire.setModel(new DefaultComboBoxModel(new String[] {"Sélectionner un ISBN"}));
-		comboBoxExemplaire.setBounds(10, 52, 395, 30);
-		panel3.add(comboBoxExemplaire);
 
-		JButton btnPlus1 = new JButton("+ 1");
+		JButton btnPlus1 = new JButton("ajouter un exemplaire");
 		btnPlus1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO ajout d'un exemplaire selon ISBN dans le comboBox
@@ -223,12 +218,12 @@ public class BackOffice extends JPanel {
 		});
 		btnPlus1.setFont(new Font("Noto Serif", Font.PLAIN, 10));
 		btnPlus1.setBackground(new Color(90, 205, 25));
-		btnPlus1.setBounds(415, 52, 60, 30);
+		btnPlus1.setBounds(296, 15, 179, 30);
 		panel3.add(btnPlus1);
 		
 		
 		JScrollPane scrollPaneExemplaire = new JScrollPane();
-		scrollPaneExemplaire.setBounds(10, 93, 465, 102);
+		scrollPaneExemplaire.setBounds(10, 71, 465, 124);
 		panel3.add(scrollPaneExemplaire);
 		
 		tableExemplaire = new JTable();
@@ -335,30 +330,30 @@ public class BackOffice extends JPanel {
 		auteurLivre.setBounds(20, 298, 59, 30);
 		panel4.add(auteurLivre);
 
-		JComboBox auteurCm = new JComboBox();
-		auteurCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un auteur", "auteur 1", "auteur 2"}));
-		auteurCm.setBounds(89, 298, 375, 30);
-		panel4.add(auteurCm);
+		JComboBox comboBoxauteurCm = new JComboBox();
+		comboBoxauteurCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un auteur", "auteur 1", "auteur 2"}));
+		comboBoxauteurCm.setBounds(89, 298, 375, 30);
+		panel4.add(comboBoxauteurCm);
 		
 		JLabel genreLivre = new JLabel("Genre :");
 		genreLivre.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		genreLivre.setBounds(20, 339, 59, 30);
 		panel4.add(genreLivre);
 		
-		JComboBox genreCm = new JComboBox();
-		genreCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un thème", "thème 1", "thème 2"}));
-		genreCm.setBounds(89, 339, 375, 30);
-		panel4.add(genreCm);
+		JComboBox comboBoxGenreCm = new JComboBox();
+		comboBoxGenreCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un thème", "thème 1", "thème 2"}));
+		comboBoxGenreCm.setBounds(89, 339, 375, 30);
+		panel4.add(comboBoxGenreCm);
 		
 		JLabel serieLivre = new JLabel("Serie :");
 		serieLivre.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		serieLivre.setBounds(20, 380, 59, 30);
 		panel4.add(serieLivre);
 
-		JComboBox serieCm = new JComboBox();
-		serieCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez une serie", "null (Livre ne faisant as partie d'une série)", "serie 1", "serie 2"}));
-		serieCm.setBounds(89, 380, 214, 30);
-		panel4.add(serieCm);
+		JComboBox comboBoxSerieCm = new JComboBox();
+		comboBoxSerieCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez une serie", "null (Livre ne faisant as partie d'une série)", "serie 1", "serie 2"}));
+		comboBoxSerieCm.setBounds(89, 380, 214, 30);
+		panel4.add(comboBoxSerieCm);
 		
 		JLabel labelVolumeCm = new JLabel("+ son Volume N° :");
 		labelVolumeCm.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -374,10 +369,10 @@ public class BackOffice extends JPanel {
 		editeurLivre.setBounds(20, 421, 59, 30);
 		panel4.add(editeurLivre);
 		
-		JComboBox editeurCm = new JComboBox();
-		editeurCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un éditeur", "editeur 1", "editeur 2"}));
-		editeurCm.setBounds(89, 421, 375, 30);
-		panel4.add(editeurCm);
+		JComboBox comboBoxEditeurCm = new JComboBox();
+		comboBoxEditeurCm.setModel(new DefaultComboBoxModel(new String[] {"Choisissez un éditeur", "editeur 1", "editeur 2"}));
+		comboBoxEditeurCm.setBounds(89, 421, 375, 30);
+		panel4.add(comboBoxEditeurCm);
 		
 		JButton btnValideLIvre = new JButton("Je valide mon livre !");
 		btnValideLIvre.addActionListener(new ActionListener() {
