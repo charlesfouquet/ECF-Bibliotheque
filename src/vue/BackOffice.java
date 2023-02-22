@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -60,7 +61,8 @@ public class BackOffice extends JPanel {
 	private JTextField dateCm;
 	private JButton datePanelBtn = new JButton("Choisir");
 	private JSpinner volNumCm = new JSpinner();
-	private JButton btnPlus1 = new JButton("ajouter un exemplaire");
+	private JButton btnPlus1 = new JButton("Ajouter un exemplaire");
+	private Livre selectedBook = null;
 
 	/**
 	 * Create the panel.
@@ -127,7 +129,7 @@ public class BackOffice extends JPanel {
 		comboBoxPrincipale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (comboBoxPrincipale.getSelectedItem().toString() != "Créer un nouveau livre") {
-					Livre selectedBook = livreDAO.findByISBN(backOfficeDAO.getISBN(comboBoxPrincipale.getSelectedItem().toString()));
+					selectedBook = livreDAO.findByISBN(backOfficeDAO.getISBN(comboBoxPrincipale.getSelectedItem().toString()));
 					ISBNCm.setText(selectedBook.getISBN());
 					ISBNCm.setEditable(false);
 					titreCm.setText(selectedBook.getTitre());
@@ -186,19 +188,19 @@ public class BackOffice extends JPanel {
 		JButton btnAuteur = new JButton("Ajouter");
 		btnAuteur.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				String [] values = {nom.getText(), prenom.getText()};
-//				for (String string : values) {
-//					System.out.println(string);
-//				}
-//				if(!nom.getText().isEmpty() && !prenom.getText().isEmpty()) {
-//					if(backOffice.create("auteurs", "nom, prenom", values, "nom NOT IN (SELECT nom From auteur.nom) AND prenom NOT IN (SELECT prenom FROM auteur.prenom)")) {
-//						JOptionPane.showMessageDialog(null,"Auteur correctement créer", "AUTEUR", JOptionPane.INFORMATION_MESSAGE);
-//					}else {
-//						JOptionPane.showMessageDialog(null,"Erreur : Auteur non créé", "AUTEUR", JOptionPane.ERROR_MESSAGE);
-//					}
-//				}else {
-//					JOptionPane.showMessageDialog(null,"Merci de remplir les champs auteur","AUTEUR", JOptionPane.WARNING_MESSAGE);
-//				}
+				if(!nom.getText().isEmpty() && !prenom.getText().isEmpty()) {
+					if(backOfficeDAO.smallAddToDB("Auteur", nom.getText(), prenom.getText())) {
+						JOptionPane.showMessageDialog(null,"Auteur correctement créé", "AUTEUR", JOptionPane.INFORMATION_MESSAGE);
+						removeAll();
+						add(new BackOffice());
+						repaint();
+						revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null,"Erreur : L'auteur existe probablement déjà", "AUTEUR", JOptionPane.ERROR_MESSAGE);
+					}
+				}else {
+					JOptionPane.showMessageDialog(null,"Merci de remplir les champs auteur","AUTEUR", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnAuteur.setBackground(new Color(90, 205, 25));
@@ -219,7 +221,19 @@ public class BackOffice extends JPanel {
 		JButton btnGenre = new JButton("Ajouter");
 		btnGenre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO INSERT INTO avec méthode générique
+				if(!theme.getText().isEmpty()) {
+					if(backOfficeDAO.smallAddToDB("Genre", theme.getText(), null)) {
+						JOptionPane.showMessageDialog(null,"Genre correctement créé", "GENRE", JOptionPane.INFORMATION_MESSAGE);
+						removeAll();
+						add(new BackOffice());
+						repaint();
+						revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null,"Erreur : Le genre existe probablement déjà", "GENRE", JOptionPane.ERROR_MESSAGE);
+					}
+				}else {
+					JOptionPane.showMessageDialog(null,"Merci de remplir le champ genre","GENRE", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnGenre.setBackground(new Color(90, 205, 25));
@@ -240,7 +254,19 @@ public class BackOffice extends JPanel {
 		JButton btnSerie = new JButton("Ajouter");
 		btnSerie.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO INSERT INTO avec méthode générique
+				if(!nomSerie.getText().isEmpty()) {
+					if(backOfficeDAO.smallAddToDB("Serie", nomSerie.getText(), null)) {
+						JOptionPane.showMessageDialog(null,"Série correctement créée", "SERIE", JOptionPane.INFORMATION_MESSAGE);
+						removeAll();
+						add(new BackOffice());
+						repaint();
+						revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null,"Erreur : La série existe probablement déjà", "SERIE", JOptionPane.ERROR_MESSAGE);
+					}
+				}else {
+					JOptionPane.showMessageDialog(null,"Merci de remplir le champ série","SERIE", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnSerie.setBackground(new Color(90, 205, 25));
@@ -261,7 +287,19 @@ public class BackOffice extends JPanel {
 		JButton btnEditeur = new JButton("Ajouter");
 		btnEditeur.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO INSERT INTO avec méthode générique
+				if(!nomSocial.getText().isEmpty()) {
+					if(backOfficeDAO.smallAddToDB("Editeur", nomSocial.getText(), null)) {
+						JOptionPane.showMessageDialog(null,"Editeur correctement créé", "EDITEUR", JOptionPane.INFORMATION_MESSAGE);
+						removeAll();
+						add(new BackOffice());
+						repaint();
+						revalidate();
+					}else {
+						JOptionPane.showMessageDialog(null,"Erreur : L'éditeur existe probablement déjà", "EDITEUR", JOptionPane.ERROR_MESSAGE);
+					}
+				}else {
+					JOptionPane.showMessageDialog(null,"Merci de remplir le champ éditeur","EDITEUR", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnEditeur.setBackground(new Color(90, 205, 25));
@@ -290,7 +328,13 @@ public class BackOffice extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				//TODO ajout d'un exemplaire selon ISBN dans le comboBox
 				if (btnPlus1.isEnabled()) {
-					
+					if (backOfficeDAO.smallAddToDB("Exemplaire", selectedBook.getISBN(), null)) {
+						JOptionPane.showMessageDialog(null,"Exemplaire ajouté au stock", "AJOUT D'EXEMPLAIRE", JOptionPane.INFORMATION_MESSAGE);
+						tableExemplaire.setModel(listeExemplaires(selectedBook.getISBN()));
+						reformatTable(tableExemplaire);
+					} else {
+						JOptionPane.showMessageDialog(null,"Une erreur est survenue.\nVeuillez réessayer","AJOUT D'EXEMPLAIRE", JOptionPane.WARNING_MESSAGE);
+					};
 				}
 			}
 		});
