@@ -212,5 +212,54 @@ public class BackOfficeDAO {
 		
 		return listeExemplaires;
 	}
+	
+	public boolean smallAddToDB(String type, String paramA, String paramB) {
+		String table = "";
+		String valuesSet = "";
+		String values = "";
+		
+		switch (type) {
+			case "Auteur": {
+				table = "auteurs";
+				valuesSet = "(nom, prenom)";
+				values = "(\"" + paramA + "\", \"" + paramB + "\")";
+				break;
+			}
+			case "Genre": {
+				table = "genres";
+				valuesSet = "(theme)";
+				values = "(\"" + paramA + "\")";
+				break;
+			}
+			case "Serie": {	
+				table = "series";
+				valuesSet = "(nomSerie)";
+				values = "(\"" + paramA + "\")";
+				break;
+			}
+			case "Editeur": {	
+				table = "editeurs";
+				valuesSet = "(nomSocial)";
+				values = "(\"" + paramA + "\")";
+				break;
+			}
+			case "Exemplaire": {	
+				table = "exemplaires";
+				valuesSet = "(ISBN_livre)";
+				values = "(\"" + paramA + "\")";
+				break;
+			}
+		};
+		
+		try {
+			PreparedStatement req = connect.prepareStatement("INSERT INTO " + table + " " + valuesSet + " VALUES " + values);
+			req.execute();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }
