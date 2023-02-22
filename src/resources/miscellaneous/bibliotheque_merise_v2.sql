@@ -625,3 +625,63 @@ LEFT JOIN series s ON ls.id_serie = s.id
 LEFT JOIN emprunts em ON ex.id = em.id_exemplaire
 WHERE em.dateRetour IS NOT NULL OR ex.id NOT IN (SELECT id_exemplaire FROM emprunts)  
 ORDER BY `idL` DESC;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER checkAuteurIfExists
+	BEFORE INSERT ON auteurs
+	FOR EACH ROW
+	BEGIN
+        SET @ID = (SELECT id FROM auteurs WHERE nom = NEW.nom AND prenom = NEW.prenom LIMIT 1);
+        IF @ID IS NOT NULL THEN
+		    SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Existe déjà";
+        END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER checkGenreIfExists
+	BEFORE INSERT ON genres
+	FOR EACH ROW
+	BEGIN
+        SET @ID = (SELECT id FROM genres WHERE theme = NEW.theme LIMIT 1);
+        IF @ID IS NOT NULL THEN
+		    SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Existe déjà";
+        END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER checkSerieIfExists
+	BEFORE INSERT ON series
+	FOR EACH ROW
+	BEGIN
+        SET @ID = (SELECT id FROM series WHERE nomSerie = NEW.nomSerie LIMIT 1);
+        IF @ID IS NOT NULL THEN
+		    SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Existe déjà";
+        END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER checkEditeurIfExists
+	BEFORE INSERT ON editeurs
+	FOR EACH ROW
+	BEGIN
+        SET @ID = (SELECT id FROM editeurs WHERE nomSocial = NEW.nomSocial LIMIT 1);
+        IF @ID IS NOT NULL THEN
+		    SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Existe déjà";
+        END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER checkLivreIfExists
+	BEFORE INSERT ON livres
+	FOR EACH ROW
+	BEGIN
+        SET @ID = (SELECT id FROM livres WHERE ISBN = NEW.ISBN LIMIT 1);
+        IF @ID IS NOT NULL THEN
+		    SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Existe déjà";
+        END IF;
+	END //
+DELIMITER ;
