@@ -267,7 +267,7 @@ public class BackOfficeDAO {
 	public boolean bigAddToDB(Livre livre, String date, int auteur, int genre, int serie, int position, int editeur) {
 		
 		try {
-			PreparedStatement insLivre = connect.prepareStatement("INSERT INTO livres (ISBN, titre, resume, datePubli, nbPages, id_editeur) VALUES (?, ?, ?, ?, ?, ?)");
+			PreparedStatement insLivre = connect.prepareStatement("INSERT INTO livres (ISBN, titre, resume, datePubli, nbPages, couverture, id_editeur) VALUES (?, ?, ?, ?, ?, NULL, ?)");
 			insLivre.setString(1, livre.getISBN());
 			insLivre.setString(2, livre.getTitre());
 			insLivre.setString(3, livre.getResume());

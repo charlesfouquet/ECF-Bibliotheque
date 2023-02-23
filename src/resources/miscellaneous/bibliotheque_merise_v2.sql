@@ -100,15 +100,15 @@ INSERT INTO editeurs (nomSocial) VALUES ("Folio Junior"),("Gallimard"),("Gallima
 INSERT INTO genres (theme) VALUES ("Fantastique"),("Conte"),("Drame"),("Science-Fiction"),("Dystopie"),("Aventure"),("Horreur"),("Essai"),("Romance"),("Humour"),("Thriller"),("Autobiographie");
 
 DELIMITER //
-CREATE OR REPLACE TRIGGER autoCouverture
+CREATE OR REPLACE TRIGGER autoCouvertureBefore
 	BEFORE INSERT ON livres
 	FOR EACH ROW
 	BEGIN
-        IF NEW.couverture IS NULL THEN
-		    SET NEW.couverture = CONCAT(NEW.ISBN, ".jpg");
-        END IF;
+		SET NEW.couverture = CONCAT(NEW.ISBN, ".jpg");
 	END //
 DELIMITER ;
+        -- IF NEW.couverture IS NULL THEN
+        -- END IF;
 
 INSERT INTO livres (ISBN, titre, resume, datePubli, nbPages, id_editeur) VALUES 
 ("018474911-5", "Harie Peauteur à l'Ecole", "J'ai pas trouvé le résumé", "2001-11-16", 2, 13),
