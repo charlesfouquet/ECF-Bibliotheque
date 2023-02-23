@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import controler.CommentaireDAO;
+import controler.EmpruntDAO;
 import controler.LivreDAO;
 import controler.UserDAO;
 import model.Commentaire;
@@ -37,6 +38,7 @@ public class FicheLivre extends JPanel {
 	private static final long serialVersionUID = 3209269363955639051L;
 	LivreDAO livreDAO = new LivreDAO();
 	CommentaireDAO commentaireDAO = new CommentaireDAO();
+	EmpruntDAO empruntDAO = new EmpruntDAO();
 
 	/**
 	 * Create the panel.
@@ -100,26 +102,28 @@ public class FicheLivre extends JPanel {
 		backToSeries.setBounds(20, 20, 660, 30);
 		backToSeries.setFont(new Font("Noto Serif", Font.ITALIC, 15));
 		add(backToSeries);
-		if (Integer.parseInt(livreDAO.getSeries(livre.getISBN()).get(0)) > 0) {
-			backToSeries.setText("Tome " + livreDAO.getSeries(livre.getISBN()).get(0) + " de la série " + livreDAO.getSeries(livre.getISBN()).get(1));
-			backToSeries.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					backToSeries.setCursor(new Cursor(Cursor.HAND_CURSOR));
-					backToSeries.setForeground(new Color(199, 152, 50));
-				}
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					removeAll();
-					add(new Tri(new String[]{"Series", backToSeries.getText().split("de la série ")[1]}));
-					repaint();
-					revalidate();
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					backToSeries.setForeground(new Color(0, 0, 0));
-				}
-			});
+		if (livreDAO.getSeries(livre.getISBN()).size() != 0) {
+			if (Integer.parseInt(livreDAO.getSeries(livre.getISBN()).get(0)) > 0) {
+				backToSeries.setText("Tome " + livreDAO.getSeries(livre.getISBN()).get(0) + " de la série " + livreDAO.getSeries(livre.getISBN()).get(1));
+				backToSeries.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						backToSeries.setCursor(new Cursor(Cursor.HAND_CURSOR));
+						backToSeries.setForeground(new Color(199, 152, 50));
+					}
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						removeAll();
+						add(new Tri(new String[]{"Series", backToSeries.getText().split("de la série ")[1]}));
+						repaint();
+						revalidate();
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						backToSeries.setForeground(new Color(0, 0, 0));
+					}
+				});
+			}
 		}
 		
 		JLabel commentsLabel = new JLabel("Commentaires");
@@ -162,6 +166,32 @@ public class FicheLivre extends JPanel {
 		stockInfo.setText(livreDAO.getStock(livre.getISBN()).get(0) + "/" + livreDAO.getStock(livre.getISBN()).get(1) + " exemplaires disponibles");
 		
 		JButton btnNewButton = new JButton("Emprunter");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (btnNewButton.isEnabled()) {
+					if (empruntDAO.qtLivreARendre(UserDAO.currentUser) >= 5) {
+						JOptionPane.showMessageDialog(null, "Vous avez déjà atteint votre capacité d'emprunt maximale.\nVeuillez rendre des livres.\nVous pouvez le faire dans votre compte.", "Emprunter un livre", JOptionPane.WARNING_MESSAGE);
+					} else if (empruntDAO.checkPenalty(UserDAO.currentUser)) {
+						JOptionPane.showMessageDialog(null, "Vous avez actuellement des emprunts en retard, ce qui vous empêche d'emprunter d'autres livres.\nVeuillez les rendre avant d'emprunter d'autres livres.\nVous pouvez le faire dans votre compte.", "Emprunter un livre", JOptionPane.WARNING_MESSAGE);
+					} else {
+						Object[] options = {"Oui", "Non"};
+						int livreEmprunte = JOptionPane.showOptionDialog(null, "Souhaitez-vous emprunter \"" + livre.getTitre() + "\" ?", "Emprunter un livre", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+						if (livreEmprunte == 0) {
+							if (empruntDAO.emprunterLivre(UserDAO.currentUser, livre)) {
+								JOptionPane.showConfirmDialog(null, "Vous venez bien d'emprunter \"" + livre.getTitre() + "\"", "Livre emprunté", JOptionPane.WARNING_MESSAGE);							
+							} else {
+								JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Emprunter un livre", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+						removeAll();
+						add(new FicheLivre(livre));
+						repaint();
+						revalidate();
+					}
+				}
+			}
+		});
 		btnNewButton.setBackground(new Color(255, 255, 255));
 		btnNewButton.setForeground(new Color(199, 152, 50));
 		btnNewButton.setFont(new Font("Noto Serif", Font.BOLD, 15));
@@ -227,13 +257,14 @@ public class FicheLivre extends JPanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String genres = "";
-				String[] genresParts = labelGenres.getText().substring(9).split(", ");
-				for (String theme : genresParts) {
-					genres += theme + " ";
-				}
+				String genres = labelGenres.getText().substring(9);
+//				String genres = "";
+//				String[] genresParts = labelGenres.getText().substring(9).split(", ");
+//				for (String theme : genresParts) {
+//					genres += theme + " ";
+//				}
 				removeAll();
-				add(new Catalogue(genres));
+				add(new Tri(new String[]{"Genres", genres}));
 				repaint();
 				revalidate();
 			}

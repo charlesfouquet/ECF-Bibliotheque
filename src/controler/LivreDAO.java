@@ -39,7 +39,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivres;
@@ -48,14 +47,33 @@ public class LivreDAO implements IDAO<Livre> {
 	public ArrayList<Livre> read(String searchString) {
 		ArrayList<Livre> listeLivres = new ArrayList<>();
 		
-		try {			
-			String[] searchStringParts = searchString.split(" ");
+		try {
+			ArrayList<String> listeEditeurs = getEditeurs();
+			boolean searchIsEditeur = false;
+			for (String string : listeEditeurs) {
+				if (string.equals(searchString)) {
+					searchIsEditeur = true;
+				}
+			}
+			
+			String[] searchStringParts = searchString.split(" ");							
+			
+			if (searchIsEditeur) {
+				for (int i = 0; i < searchStringParts.length; i++) {
+					if (i==0) {
+						searchStringParts[i] = searchString;
+					} else {
+						searchStringParts[i] = "zzzzzz";
+					}
+				}
+			}
+			
 			ArrayList<String> queryFilters = new ArrayList<>();
 			queryFilters.add("titreL");
 			queryFilters.add("resumeL");
 			queryFilters.add("nomA");
 			queryFilters.add("prenomA");
-			queryFilters.add("bioA");
+//			queryFilters.add("bioA");
 			queryFilters.add("nomSocialE");
 			queryFilters.add("themeG");
 			queryFilters.add("nomSerieS");
@@ -95,7 +113,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivres;
@@ -118,7 +135,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivresDispos;
@@ -128,13 +144,32 @@ public class LivreDAO implements IDAO<Livre> {
 		ArrayList<Livre> listeLivresDispos = new ArrayList<>();
 		
 		try {			
-			String[] searchStringParts = searchString.split(" ");
+			ArrayList<String> listeEditeurs = getEditeurs();
+			boolean searchIsEditeur = false;
+			for (String string : listeEditeurs) {
+				if (string.equals(searchString)) {
+					searchIsEditeur = true;
+				}
+			}
+			
+			String[] searchStringParts = searchString.split(" ");							
+			
+			if (searchIsEditeur) {
+				for (int i = 0; i < searchStringParts.length; i++) {
+					if (i==0) {
+						searchStringParts[i] = searchString;
+					} else {
+						searchStringParts[i] = "zzzzzz";
+					}
+				}
+			}
+			
 			ArrayList<String> queryFilters = new ArrayList<>();
 			queryFilters.add("titreL");
 			queryFilters.add("resumeL");
 			queryFilters.add("nomA");
 			queryFilters.add("prenomA");
-			queryFilters.add("bioA");
+//			queryFilters.add("bioA");
 			queryFilters.add("nomSocialE");
 			queryFilters.add("themeG");
 			queryFilters.add("nomSerieS");
@@ -174,7 +209,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivresDispos;
@@ -197,7 +231,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeNewBooks;
@@ -222,7 +255,7 @@ public class LivreDAO implements IDAO<Livre> {
 					break;
 				}
 			}
-			PreparedStatement req = connect.prepareStatement("SELECT DISTINCT " + triString + " FROM catalogue_complet ORDER BY " + triString + " ASC");
+			PreparedStatement req = connect.prepareStatement("SELECT DISTINCT " + triString + " FROM catalogue_complet WHERE " + triString + " IS NOT NULL ORDER BY " + triString + " ASC");
 			
 			ResultSet rs = req.executeQuery();
 			
@@ -231,7 +264,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeTri;
@@ -280,7 +312,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeLivresDispos;
@@ -301,7 +332,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return livre;
@@ -334,7 +364,6 @@ public class LivreDAO implements IDAO<Livre> {
 			stockInfo.add(stockTotal);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return stockInfo;
@@ -355,7 +384,6 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return seriesInfo;
@@ -378,21 +406,35 @@ public class LivreDAO implements IDAO<Livre> {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return genresInfo;
 	}
+	
+	public ArrayList<String> getEditeurs() {
+		ArrayList<String> listeEditeurs = new ArrayList<>();
+		
+		try {
+			PreparedStatement req = connect.prepareStatement("SELECT nomSocial FROM editeurs");
+			ResultSet rs = req.executeQuery();
+			
+			while(rs.next()) {
+				listeEditeurs.add(rs.getString("nomSocial"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listeEditeurs;
+	}
 
 	@Override
 	public void update(Livre object) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public boolean delete(Livre object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

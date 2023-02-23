@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,8 +25,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controler.BackOfficeDAO;
+import controler.EmpruntDAO;
 import controler.UserDAO;
+import model.Emprunt;
 import model.User;
+import utilities.DateTime;
 
 public class Compte extends JPanel {
 	private static final long serialVersionUID = 6556442715550137983L;
@@ -38,8 +46,10 @@ public class Compte extends JPanel {
 	private JTextField textVille;
 	private JTextField textTel;
 	private JTable table;
+	private boolean histoState = false;
 
 	UserDAO userDao = new UserDAO();
+	EmpruntDAO empruntDAO = new EmpruntDAO();
 	
 	public Compte() {
 		setBackground(new Color(240, 227, 198));
@@ -51,16 +61,28 @@ public class Compte extends JPanel {
 		//###################
 		JPanel panelBackOffice = new JPanel();
 		panelBackOffice.setBounds(900, 0, 100, 30);
-		panelBackOffice.setBackground(new Color(233, 215, 171));
-		add(panelBackOffice);
+		panelBackOffice.setBackground(new Color(233, 215, 170));
 		panelBackOffice.setLayout(null);
 		
+		if (UserDAO.currentUser.getId_role() != 1) {
+			add(panelBackOffice);
+		}
+		
 		JButton btnBackOffice = new JButton("Back-Office");
-		btnBackOffice.setForeground(new Color(128, 64, 0));
+		btnBackOffice.setForeground(new Color(255, 255, 255));
 		btnBackOffice.setBackground(new Color(128, 64, 0));
+		btnBackOffice.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		btnBackOffice.setBounds(0, 0, 100, 30);
 		panelBackOffice.add(btnBackOffice);
-		
+		btnBackOffice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BackOfficeDAO.ISBNOnLoad = null;
+				removeAll();
+				add(new BackOffice());
+				repaint();
+				revalidate();;
+			}
+		});
 		
 		//###################
 		// ### INFORMATIONS GENERALES ###
@@ -85,44 +107,45 @@ public class Compte extends JPanel {
 		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelNomInscription.setBounds(79, 64, 75, 30);
+		labelNomInscription.setBounds(78, 46, 75, 30);
 		panelInfoGen.add(labelNomInscription);
 		
 		textNom = new JTextField();
 		textNom.setBackground(new Color(250, 243, 230));
 		labelNomInscription.setLabelFor(textNom);
 		textNom.setColumns(10);
-		textNom.setBounds(176, 64, 200, 30);
+		textNom.setBounds(175, 46, 200, 30);
 		panelInfoGen.add(textNom);
 		
 		JLabel labelPrenomInscription = new JLabel("Prenom :");
 		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelPrenomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelPrenomInscription.setBounds(79, 105, 75, 30);
+		labelPrenomInscription.setBounds(78, 87, 75, 30);
 		panelInfoGen.add(labelPrenomInscription);
 		
 		textPrenom = new JTextField();
 		textPrenom.setBackground(new Color(250, 243, 230));
 		labelPrenomInscription.setLabelFor(textPrenom);
 		textPrenom.setColumns(10);
-		textPrenom.setBounds(176, 105, 200, 30);
+		textPrenom.setBounds(175, 87, 200, 30);
 		panelInfoGen.add(textPrenom);
 		
 		JLabel labelEmailInscription = new JLabel("E-mail :");
 		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailInscription.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelEmailInscription.setBounds(79, 146, 75, 30);
+		labelEmailInscription.setBounds(78, 128, 75, 30);
 		panelInfoGen.add(labelEmailInscription);
 		
 		textEmail = new JTextField();
 		textEmail.setBackground(new Color(250, 243, 230));
 		labelEmailInscription.setLabelFor(textEmail);
 		textEmail.setColumns(10);
-		textEmail.setBounds(176, 146, 200, 30);
+		textEmail.setBounds(175, 128, 200, 30);
 		panelInfoGen.add(textEmail);
-		
+			
+		// ### BTN VALIDATION INFORMATIONS GENERALES ###
 		JButton btnInfoGen = new JButton("Validation");
 		btnInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnInfoGen.addActionListener(new ActionListener() {
@@ -150,7 +173,11 @@ public class Compte extends JPanel {
 				}
 			}
 		});
-		btnInfoGen.setBounds(247, 187, 130, 30);
+
+		btnInfoGen.setBounds(230, 166, 145, 30);
+		btnInfoGen.setBackground(new Color(255, 255, 255));
+		btnInfoGen.setForeground(new Color(199, 152, 50));
+		btnInfoGen.setFont(new Font("Noto Serif", Font.BOLD, 14));
 		panelInfoGen.add(btnInfoGen);
 		
 		if (UserDAO.currentUser != null) {
@@ -225,6 +252,7 @@ public class Compte extends JPanel {
 		textTel.setBounds(184, 169, 200, 30);
 		panelAdresseDom.add(textTel);
 		
+		// ### BTN VALIDATION ADRESSE DE DOMICILIATION ###
 		JButton btnAdrDom = new JButton("Validation");
 		btnAdrDom.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnAdrDom.addActionListener(new ActionListener() {
@@ -236,7 +264,7 @@ public class Compte extends JPanel {
 					postCode = Integer.parseInt(textCp.getText());
 				}
 				if (userDao.updateAddress(new User(UserDAO.currentUser.getId(), null, null, null, null, textAdr.getText(), postCode, textVille.getText(), textTel.getText(), 0))) {
-					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
+ 					JOptionPane.showMessageDialog(null,"Mise à jour de votre adresse effectuée !","Mise à jour de l'adresse", JOptionPane.INFORMATION_MESSAGE);
 					if (textAdr.getText().isEmpty()) {
 						UserDAO.currentUser.setAdresse(null);		
 					} else {
@@ -269,21 +297,24 @@ public class Compte extends JPanel {
 				}
 			}
 		});
+		btnAdrDom.setBackground(new Color(255, 255, 255));
+		btnAdrDom.setForeground(new Color(199, 152, 50));
+		btnAdrDom.setFont(new Font("Noto Serif", Font.BOLD, 14));
 		btnAdrDom.setBounds(254, 210, 130, 30);
 		panelAdresseDom.add(btnAdrDom);
 		
 		if (UserDAO.currentUser != null) {
 			if (UserDAO.currentUser.getAdresse() != null) {
-				textAdr.setText(UserDAO.currentUser.getAdresse());				
+				textAdr.setText(UserDAO.currentUser.getAdresse());
 			}
 			if (UserDAO.currentUser.getCp() > 0) {
-				textCp.setText(String.valueOf(UserDAO.currentUser.getCp()));				
+				textCp.setText(String.valueOf(UserDAO.currentUser.getCp()));
 			}
 			if (UserDAO.currentUser.getVille() != null) {
-				textVille.setText(UserDAO.currentUser.getVille());				
+				textVille.setText(UserDAO.currentUser.getVille());
 			}
 			if (UserDAO.currentUser.getTel() != null) {
-				textTel.setText(UserDAO.currentUser.getTel());				
+				textTel.setText(UserDAO.currentUser.getTel());
 			}
 		}
 		
@@ -344,9 +375,9 @@ public class Compte extends JPanel {
 		textConfMdp.setBounds(177, 133, 200, 30);
 		PanelMdp.add(textConfMdp);
 		
+		// ### BTN VALIDATION MODIFICATION MOT DE PASSE ###
 		JButton btnModifMdp = new JButton("Validation");
 		btnModifMdp.setFont(new Font("Noto Serif", Font.PLAIN, 14));
-		panelInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		btnModifMdp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if ((!String.valueOf(textAncienMdp.getPassword()).isEmpty()) && (!String.valueOf(textNvMdp.getPassword()).isEmpty()) && (!String.valueOf(textConfMdp.getPassword()).isEmpty())) {
@@ -372,7 +403,11 @@ public class Compte extends JPanel {
 				}
 			}
 		});
-		btnModifMdp.setBounds(247, 174, 130, 30);
+
+		btnModifMdp.setBounds(232, 174, 145, 30);
+		btnModifMdp.setBackground(new Color(255, 255, 255));
+		btnModifMdp.setForeground(new Color(199, 152, 50));
+		btnModifMdp.setFont(new Font("Noto Serif", Font.BOLD, 14));
 		PanelMdp.add(btnModifMdp);
 		
 		//###################
@@ -389,7 +424,7 @@ public class Compte extends JPanel {
 		lblListeDesEmprunts.setIcon(new ImageIcon("src/resources/images/logos/list.png"));
 		lblListeDesEmprunts.setHorizontalAlignment(SwingConstants.LEFT);
 		lblListeDesEmprunts.setFont(new Font("Noto Serif", Font.BOLD, 16));
-		lblListeDesEmprunts.setBounds(10, 10, 480, 35);
+		lblListeDesEmprunts.setBounds(10, 10, 240, 35);
 		panelEmprunt.add(lblListeDesEmprunts);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -400,44 +435,74 @@ public class Compte extends JPanel {
 		panelEmprunt.add(scrollPane);
 		
 		table = new JTable();
-		table.setBackground(new Color(250, 243, 230));
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-			},
-			new String[] {
-				"Référence", "Titre", "Emprunté le  :", "A rendre le :"
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				if (!histoState) {
+					Object[] options = {"Oui", "Non"};
+					int livreRendu = JOptionPane.showOptionDialog(null, "Souhaitez-vous rendre \"" + (String) table.getValueAt(row, 1) + "\" (Livre #" + (String) table.getValueAt(row, 0) + ") ?", "Retourner un livre", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+					if (livreRendu == 0) {
+						if (empruntDAO.rendreLivre(UserDAO.currentUser, Integer.parseInt((String) table.getValueAt(row, 0)))) {
+							JOptionPane.showConfirmDialog(null, "Merci d'avoir rendu \"" + (String) table.getValueAt(row, 1) + "\"", "Livre retourné", JOptionPane.WARNING_MESSAGE);							
+						} else {
+							JOptionPane.showMessageDialog(null, "Une erreur est survenue, veuillez réessayer ultérieurement", "Retourner un livre", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				table.setModel(listeEmprunts(UserDAO.currentUser, histoState));
+				reformatTable(table);
 			}
-		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table.getColumnModel().getColumn(0).setMinWidth(30);
-		table.getColumnModel().getColumn(1).setPreferredWidth(100);
-		table.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		});
+		table.setBackground(new Color(250, 243, 230));
+		table.setModel(listeEmprunts(UserDAO.currentUser, histoState));
+		reformatTable(table);
 		scrollPane.setViewportView(table);
+		
+		JButton histoBtn = new JButton("Afficher l'historique des commandes");
+		histoBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				histoState = !histoState;
+				if (histoState) {
+					histoBtn.setText("Afficher les emprunts en cours");
+				} else {
+					histoBtn.setText("Afficher l'historique des commandes");					
+				}
+				table.setModel(listeEmprunts(UserDAO.currentUser, histoState));
+				reformatTable(table);
+			}
+		});
+		histoBtn.setBackground(new Color(255, 255, 255));
+		histoBtn.setForeground(new Color(199, 152, 50));
+		histoBtn.setFont(new Font("Noto Serif", Font.BOLD, 11));
+		histoBtn.setBounds(240, 15, 250, 25);
+		panelEmprunt.add(histoBtn);
 		
 		//###################
 		// ### SUPPRESSION DU COMPTE ###
 		//###################
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(240, 227, 198));
-		panel.setBorder(new MatteBorder(2, 0, 0, 2, (Color) new Color(199, 152, 50)));
-		panel.setBounds(10, 455, 490, 85);
-		add(panel);
-		panel.setLayout(null);
+		JPanel panelDesactivez = new JPanel();
+		panelDesactivez.setBackground(new Color(240, 227, 198));
+		panelDesactivez.setBorder(new MatteBorder(2, 0, 0, 2, (Color) new Color(199, 152, 50)));
+		panelDesactivez.setBounds(10, 455, 490, 85);
+		add(panelDesactivez);
+		panelDesactivez.setLayout(null);
 		
-		JLabel labelSuppCompte = new JLabel("Je supprime mon compte :");
-		labelSuppCompte.setIcon(new ImageIcon("src/resources/images/logos/delete.png"));
+		JLabel labelSuppCompte = new JLabel("Desactivez mon compte :");
+		labelSuppCompte.setIcon(new ImageIcon("src/resources/images/logos/userDesactivate.png"));
 		labelSuppCompte.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelSuppCompte.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelSuppCompte.setBounds(10, 11, 257, 45);
-		panel.add(labelSuppCompte);
+		labelSuppCompte.setBounds(0, 10, 210, 45);
+		panelDesactivez.add(labelSuppCompte);
 		
-		JButton btnDelete = new JButton("Suppression");
-		btnDelete.setFont(new Font("Noto Serif", Font.PLAIN, 14));
+		JButton btnDelete = new JButton("Désactivation");
+		btnDelete.setForeground(new Color(255, 255, 255));
+		btnDelete.setFont(new Font("Dialog", Font.ITALIC, 14));
 		btnDelete.setBackground(Color.LIGHT_GRAY);
 		btnDelete.setBackground(new Color(240, 145, 145));
 		btnDelete.addMouseListener(new MouseAdapter() {
+			//hover des couleur du bouton
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				btnDelete.setBackground(new Color(255, 0, 0));
@@ -446,42 +511,106 @@ public class Compte extends JPanel {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				btnDelete.setBackground(new Color(240, 145, 145));
-				btnDelete.setForeground(new Color(0, 0, 0));
+				btnDelete.setForeground(new Color(255, 255, 255));
 			}
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				if (/* si user a encore des livre emprunté */) {
-//					JOptionPane.showConfirmDialog(null, "Vous ne pouvez pas supprimer votre compte.\n Il vous reste des livres à rendre", "SUPRESSION du compte", JOptionPane.WARNING_MESSAGE);
-//					Object[] options = {"Oui", "Non"};
-//					int supprimeCompte = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement supprimer votre compte !", "SUPPRESSION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/delete.png"), options, options[0]);
-//					if (supprimeCompte == 0) {
-//						String validPassSuppr = (String) JOptionPane.showInputDialog( null, "Pour finaliser la suppression de votre compte.\n Veuillez renseigner votre mot de passe :", "SUPPRESSION du compte !", JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/delete.png"), null, "Votre mot de passe ... !");
-//						if ((validPassSuppr != null) && (validPassSuppr.equals(UserDAO.currentUser.getPassword()))) {
-//							System.out.println("retour de l'input : "+validPassSuppr);
-//							userDao.delete(UserDAO.currentUser);
-//							UserDAO.currentUser = null;
-//							Main.frame.getContentPane().removeAll();
-//							Main.frame.getContentPane().add(new Accueil());
-//							Main.frame.getContentPane().repaint();
-//							Main.frame.getContentPane().revalidate();
-//						}else {
-//							JOptionPane.showMessageDialog(null, "Votre mot de passe est incorrect !", "SUPPRESSION du compte !", JOptionPane.ERROR_MESSAGE);
-//							System.out.println("retour de l'input : "+validPassSuppr);
-//							System.out.println(UserDAO.currentUser.getPassword());
-//						}
-//					} 
-//					btnDelete.setBackground(Color.GREEN);
-//					btnDelete.setForeground(new Color(0, 0, 0));
-//				}
-//			}
+			
+			// ### BTN VALIDATION SUPPRESSION DU COMPTE ###
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int nbrDeLivre = empruntDAO.qtLivreARendre(UserDAO.currentUser);
+				if (nbrDeLivre == 0) {
+					Object[] options = {"Oui", "Non"};
+					int supprimeCompte = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement désactivez votre compte !", "DESACTIVATION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), options, options[0]);
+					if (supprimeCompte == 0) {
+						JPasswordField jpass = new JPasswordField();
+						int reponse = JOptionPane.showConfirmDialog(null, jpass, "Saisissez votre mot de passe !", JOptionPane.OK_CANCEL_OPTION );
+						System.out.println(reponse);
+						if(reponse == 0) {
+							if(userDao.deactivate(UserDAO.currentUser, String.valueOf(jpass.getPassword() ))) {
+								JOptionPane.showMessageDialog(null, "Votre compte a était désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
+								UserDAO.currentUser = null;
+								Main.frame.getContentPane().removeAll();
+								Main.frame.getContentPane().add(new Accueil());
+								Main.frame.getContentPane().repaint();
+								Main.frame.getContentPane().revalidate();
+							}
+						}else {
+							JOptionPane.showMessageDialog(null, "Votre mot de passe est incorrect !", "DESACTIVATION du compte !", JOptionPane.ERROR_MESSAGE);
+						}
+					} 
+				}else {
+					JOptionPane.showConfirmDialog(null, "Vous ne pouvez pas désactiver votre compte.\n Il vous reste : "+nbrDeLivre+" livres à rendre", "DESACTIVATION du compte", JOptionPane.WARNING_MESSAGE);
+				}
+			}
 		});
-		btnDelete.setBounds(277, 20, 120, 30);
-		panel.add(btnDelete);
+		btnDelete.setBounds(233, 20, 145, 30);
+		panelDesactivez.add(btnDelete);
+	}
+	
+	//###################
+	// ### LISTE DES EMPRUNTS ###
+	//###################
+	public void reformatTable(JTable tableInput) {
+		tableInput.getColumnModel().getColumn(0).setPreferredWidth(0);
+		tableInput.getColumnModel().getColumn(1).setPreferredWidth(250);
+		tableInput.getColumnModel().getColumn(2).setPreferredWidth(50);
+		tableInput.getColumnModel().getColumn(3).setPreferredWidth(50);
+	}
+	
+	public DefaultTableModel listeEmprunts(User user, Boolean histoState) {
+		String col [] = new String[4];
+		col[0] = "Ref.";
+		col[1] = "Titre";
+		col[2] = "Emprunté le";
+		if (histoState) {
+			col[3] = "Rendu le";					
+		} else {
+			col[3] = "A rendre le";											
+		}
 		
-		
-		
-		
-		
+		DefaultTableModel tableau = new DefaultTableModel(null, col)
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2767358890848023063L;
 
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		
+		ArrayList<Emprunt> emprunts = empruntDAO.read(user, histoState);
+		
+		for (Emprunt emp : emprunts) {
+			String finalDateRetour = "";
+			Date dateSortie = emp.getDateSortie();
+			LocalDate dateRetour = dateSortie.toLocalDate().plusMonths(1);
+			LocalDate today = LocalDate.now();
+			
+			if (histoState == false) {				
+				Period difference = Period.between(dateRetour, today);
+				
+				Date dateRetourD = Date.valueOf(dateRetour);
+				if (difference.getDays() > 0) {
+					finalDateRetour = "<html><body style=\"color:red;\">✖<span style=\"font-weight:bold;\">" + DateTime.sdfShortDate.format(dateRetourD) + "</span></body></html>";					
+				} else {
+					finalDateRetour = DateTime.sdfShortDate.format(dateRetourD);
+				}
+			} else {
+				finalDateRetour = DateTime.sdfShortDate.format(emp.getDateRetour());
+			}
+			
+			tableau.addRow(new Object[] {
+					String.format("%05d", emp.getExemplaire()),
+					emp.getTitre(),
+					DateTime.sdfShortDate.format(dateSortie),
+					finalDateRetour
+			});
+			
+		}
+		return tableau;
 	}
 }

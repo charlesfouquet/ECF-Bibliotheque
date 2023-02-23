@@ -87,17 +87,6 @@ public class Tri extends JPanel {
 			resultsPane.setViewportView(resultsTable);
 		}
 		
-		sortTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = sortTable.getSelectedRow();
-				selectedItem = (String) sortTable.getModel().getValueAt(row, 0);
-				resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, false));
-				reformatTable(resultsTable);
-				resultsPane.setViewportView(resultsTable);
-			}
-		});
-		
 		resultsTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -129,6 +118,21 @@ public class Tri extends JPanel {
 		onlyAvailable.setBounds(465, 515, 270, 20);
 		onlyAvailable.setFont(new Font("Noto Serif", Font.PLAIN, 12));
 		add(onlyAvailable);
+		
+		sortTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = sortTable.getSelectedRow();
+				selectedItem = (String) sortTable.getModel().getValueAt(row, 0);
+				if (onlyAvailable.isSelected()) {
+					resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, true));					
+				} else {
+					resultsTable.setModel(listeViaTri(categoryString[0], selectedItem, false));										
+				}
+				reformatTable(resultsTable);
+				resultsPane.setViewportView(resultsTable);
+			}
+		});
 	}
 	
 	public void reformatTable(JTable tableInput) {

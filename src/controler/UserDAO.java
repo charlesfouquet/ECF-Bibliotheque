@@ -39,13 +39,11 @@ public class UserDAO implements IDAO<User>{
 
 	@Override
 	public ArrayList<User> read() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void update(User object) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -63,7 +61,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -104,7 +101,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -139,7 +135,6 @@ public class UserDAO implements IDAO<User>{
 			return true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -151,7 +146,6 @@ public class UserDAO implements IDAO<User>{
 		Pattern compilRegex = Pattern.compile(regex);
 		Matcher verifEmail = compilRegex.matcher(email);
 		boolean mailCheck = verifEmail.matches();
-		System.out.println("email valide : "+mailCheck);
 		return mailCheck;
 	}
 	
@@ -161,7 +155,6 @@ public class UserDAO implements IDAO<User>{
 		Pattern compileRegex = Pattern.compile(regex);
 		Matcher verifPass = compileRegex.matcher(pass);
 		boolean passCheck = verifPass.matches();
-		System.out.println("password : "+passCheck);
 		return passCheck;
 	}
 	
@@ -204,7 +197,6 @@ public class UserDAO implements IDAO<User>{
 			PreparedStatement sql = connect.prepareStatement(requete);
 			sql.setInt(1, user.getId());
 			sql.execute();
-			System.out.println("suppression de : "+currentUser.getEmail());
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -212,20 +204,44 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//vérifiacation du password et mise a jour du user pour stokage non utilisé
+	public boolean deactivate(User userIn, String pass) {
+		try {
+			PreparedStatement req1 = connect.prepareStatement("SELECT id FROM users WHERE email = ? AND password = PASSWORD(?)");
+			req1.setString(1, userIn.getEmail());
+			req1.setString(2, pass);
+			ResultSet rs = req1.executeQuery();
+			
+			int checkedID = 0;
+			
+			while(rs.next()) {
+				checkedID = rs.getInt("id");
+			}
+			if (userIn.getId() == checkedID) {
+				PreparedStatement req2 = connect.prepareStatement("UPDATE users SET nom=?, prenom=?, email=?, password=?, adresse=?, cp=?, ville=?, tel=?, id_role=? WHERE id = ? AND email = ?");
+				req2.setString(1, "utilisateur");
+				req2.setString(2, "Ancien");
+				req2.setString(3, "");
+				req2.setString(4, "");
+				req2.setNull(5, Types.VARCHAR);
+				req2.setNull(6, Types.INTEGER);
+				req2.setNull(7, Types.VARCHAR);
+				req2.setNull(8, Types.VARCHAR);
+				req2.setInt(9, 1);
+				req2.setInt(10, checkedID);
+				req2.setString(11, userIn.getEmail());
+				req2.execute();
+			} else {
+				JOptionPane.showMessageDialog(null,"Votre mot de passe ne correspond pas à votre saisie.\nVeuillez réessayer.","DESACTIVATION du compte", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			
+			return true;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 }
