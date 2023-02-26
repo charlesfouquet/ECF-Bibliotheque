@@ -19,13 +19,11 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 
 	@Override
 	public boolean create(Emprunt object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public ArrayList<Emprunt> read() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -114,7 +112,6 @@ public class EmpruntDAO implements IDAO<Emprunt> {
 		return false;
 	}
 	
-	//verif si User a un emprunt en cours
 	public int qtLivreARendre(User user) {
 		String requete = ("SELECT COUNT(*) as qtLivreARendre FROM users INNER JOIN emprunts ON users.id = emprunts.id_user WHERE users.id=? AND dateRetour IS NULL;");
 		try {

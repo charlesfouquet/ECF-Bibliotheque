@@ -72,7 +72,7 @@ public class BackOffice extends JPanel {
 	private JSpinner volNumCm = new JSpinner();
 	private JButton btnPlus1 = new JButton("Ajouter un exemplaire");
 	private Livre selectedBook = null;
-	private 	String bookCoverFilePath = "";
+	private String bookCoverFilePath = "";
 	private String bookCoversDestination = "src/resources/images/bookcovers/";
 
 	/**
@@ -316,7 +316,7 @@ public class BackOffice extends JPanel {
 		add(panel3);
 		panel3.setLayout(null);
 		
-		JLabel titreabelZone3 = new JLabel("<html><b style=\"color:red\">3 -</b> Gestion des exemplaires :<br><i style=\"font-size:x-small;\">Pour supprimer selectionner le dans la liste ci-dessous</i></html>");
+		JLabel titreabelZone3 = new JLabel("<html><b style=\"color:red\">3 -</b> Gestion des exemplaires :<br><i style=\"font-size:x-small;\">Pour supprimer, selectionnez-le dans la liste ci-dessous</i></html>");
 		titreabelZone3.setHorizontalAlignment(SwingConstants.LEFT);
 		titreabelZone3.setFont(new Font("Noto Serif", Font.PLAIN, 16));
 		titreabelZone3.setBounds(10, 12, 224, 48);
@@ -325,7 +325,6 @@ public class BackOffice extends JPanel {
 		btnPlus1.setEnabled(false);
 		btnPlus1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO ajout d'un exemplaire selon ISBN dans le comboBox
 				if (btnPlus1.isEnabled()) {
 					if (backOfficeDAO.smallAddToDB("Exemplaire", selectedBook.getISBN(), null)) {
 						JOptionPane.showMessageDialog(null,"Exemplaire ajouté au stock", "AJOUT D'EXEMPLAIRE", JOptionPane.INFORMATION_MESSAGE);
@@ -510,8 +509,10 @@ public class BackOffice extends JPanel {
 								if (backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxSerieCm.getSelectedItem().toString())), Integer.parseInt(volNumCm.getValue().toString()), Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
 									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToCreate.getTitre() + "\" a bien été créé !", "Nouveau livre ajouté", JOptionPane.WARNING_MESSAGE);
 									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToCreate.getISBN()).getCouverture())) {
-										if (!getOrUpdateBookcover(bookToCreate)) {
-											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										if (!bookCoverFilePath.substring(bookCoverFilePath.lastIndexOf(".")+1).isEmpty()) {
+											if (!getOrUpdateBookcover(bookToCreate)) {
+												JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+											}											
 										}
 									}
 									BackOfficeDAO.ISBNOnLoad = bookToCreate.getISBN();
@@ -526,8 +527,10 @@ public class BackOffice extends JPanel {
 								if (backOfficeDAO.bigAddToDB(bookToCreate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), 0, 0, Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
 									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToCreate.getTitre() + "\" a bien été créé !", "Nouveau livre ajouté", JOptionPane.WARNING_MESSAGE);
 									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToCreate.getISBN()).getCouverture())) {
-										if (!getOrUpdateBookcover(bookToCreate)) {
-											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										if (!bookCoverFilePath.substring(bookCoverFilePath.lastIndexOf(".")+1).isEmpty()) {
+											if (!getOrUpdateBookcover(bookToCreate)) {
+												JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+											}											
 										}
 									}
 									BackOfficeDAO.ISBNOnLoad = bookToCreate.getISBN();
@@ -540,19 +543,20 @@ public class BackOffice extends JPanel {
 								}	
 							}
 						} catch (NumberFormatException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					} else {
 						try {
 							Livre bookToUpdate = new Livre(ISBNCm.getText(), "", titreCm.getText(), new Auteur(null, null), resumeCm.getText(), null, Integer.parseInt(nbPageCm.getValue().toString()), new Editeur(null));
-							getOrUpdateBookcover(bookToUpdate);
+//							getOrUpdateBookcover(bookToUpdate);
 							if (comboBoxSerieCm.getSelectedItem().toString() != "Choisir une série") {
 								if (backOfficeDAO.bigUpdateToDB(bookToUpdate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxSerieCm.getSelectedItem().toString())), Integer.parseInt(volNumCm.getValue().toString()), Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
 									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToUpdate.getTitre() + "\" a bien été mis à jour !", "Livre mis à jour", JOptionPane.WARNING_MESSAGE);
 									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToUpdate.getISBN()).getCouverture())) {
-										if (!getOrUpdateBookcover(bookToUpdate)) {
-											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										if (!bookCoverFilePath.substring(bookCoverFilePath.lastIndexOf(".")+1).isEmpty()) {
+											if (!getOrUpdateBookcover(bookToUpdate)) {
+												JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+											}											
 										}
 									}
 									BackOfficeDAO.ISBNOnLoad = bookToUpdate.getISBN();
@@ -567,8 +571,10 @@ public class BackOffice extends JPanel {
 								if (backOfficeDAO.bigUpdateToDB(bookToUpdate, dateCm.getText(), Integer.parseInt(backOfficeDAO.getItemID(comboBoxAuteurCm.getSelectedItem().toString())), Integer.parseInt(backOfficeDAO.getItemID(comboBoxGenreCm.getSelectedItem().toString())), 0, 0, Integer.parseInt(backOfficeDAO.getItemID(comboBoxEditeurCm.getSelectedItem().toString())))) {
 									JOptionPane.showConfirmDialog(null, "Le livre \"" + bookToUpdate.getTitre() + "\" a bien été mis à jour !", "Livre mis à jour", JOptionPane.WARNING_MESSAGE);
 									if (!couvCm.getText().equals(livreDAO.findByISBN(bookToUpdate.getISBN()).getCouverture())) {
-										if (!getOrUpdateBookcover(bookToUpdate)) {
-											JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+										if (!bookCoverFilePath.substring(bookCoverFilePath.lastIndexOf(".")+1).isEmpty()) {
+											if (!getOrUpdateBookcover(bookToUpdate)) {
+												JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'import de la couverture.\nVeuillez réessayer ultérieurement", "Ajout de livre / Couverture", JOptionPane.ERROR_MESSAGE);								
+											}											
 										}
 									}
 									BackOfficeDAO.ISBNOnLoad = bookToUpdate.getISBN();
@@ -581,7 +587,6 @@ public class BackOffice extends JPanel {
 								}			
 							}
 						} catch (NumberFormatException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -798,7 +803,6 @@ public class BackOffice extends JPanel {
 			}
 			return true;
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		return false;

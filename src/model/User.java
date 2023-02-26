@@ -13,8 +13,41 @@ public class User {
 	private String tel;
 	private int id_role;
 	
+	//Constructeur à 2 paramètres pour connexion et mise à jour mot de passe
+	public User(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
 	
-	//Constructeur FULL 10 param
+	//Constructeur à 3 paramètres pour commentaires
+	public User(int id, String nom, String prenom) {
+		this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
+	}
+	
+	//Constructeur à 4 paramètres pour inscription
+	public User(String nom, String prenom, String email, String password) {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.password = password;
+	}
+	
+	//Constructeur à 9 paramètres SANS PASSWORD pour recupération des données et instanciation d'un User sans mot de passe lors de la connexion
+	public User(int id, String nom, String prenom, String email, String adresse, int cp, String ville, String tel, int id_role) {
+		this.id =id;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.adresse = adresse;
+		this.cp = cp;
+		this.ville = ville;
+		this.tel = tel;
+		this.id_role = id_role; 
+	}
+	
+	//Constructeur entier (10 paramètres)
 	public User(int id, String nom, String prenom, String email, String password, String adresse, int cp, String ville, String tel, int id_role) {
 		super();
 		this.id = id;
@@ -28,38 +61,8 @@ public class User {
 		this.tel = tel;
 		this.id_role = id_role;
 	}
-	//Constructeur 4 param pour inscription
-	public User(String nom, String prenom, String email, String password) {
-		this.nom = nom;
-		this.prenom = prenom;
-		this.email = email;
-		this.password = password;
-	}
-	//Constructeur 2 param pour connexion
-	public User(String email, String password) {
-		this.email = email;
-		this.password = password;
-	}
-	//Constructeur 3 param pour commentaires
-	public User(int id, String nom, String prenom) {
-		this.id = id;
-		this.nom = nom;
-		this.prenom = prenom;
-	}
-		//Constructeur 9 param SANS PASSWORD pour recupération lors de la connexion et possible update
-	public User(int id, String nom, String prenom, String email, String adresse, int cp, String ville, String tel, int id_role) {
-		this.id =id;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.email = email;
-		this.adresse = adresse;
-		this.cp = cp;
-		this.ville = ville;
-		this.tel = tel;
-		this.id_role = id_role; 
-	}
-	
-	//Getters Setters
+
+	//Getters & Setters
 	public int getId() {
 		return id;
 	}

@@ -684,3 +684,5 @@ CREATE OR REPLACE TRIGGER checkLivreIfExists
         END IF;
 	END //
 DELIMITER ;
+
+DROP TRIGGER autoCouvertureBefore;

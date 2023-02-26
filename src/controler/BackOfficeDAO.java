@@ -14,22 +14,6 @@ import sqlConnection.DBConnect;
 public class BackOfficeDAO {
 	Connection connect = DBConnect.getConnect();
 	public static String ISBNOnLoad = null;
-
-//	public boolean create(String table, String args, Object values, String condition ) {
-//		try {
-//			PreparedStatement sql = connect.prepareStatement("INSERT INTO ? (?) VALUES (?) WHERE ?;");
-//			sql.setString(1, table);
-//			sql.setString(2, args);
-//			sql.setObject(3, values);
-//			sql.setString(4, condition);
-//			sql.execute();
-//			System.out.println(sql);
-//			return true;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//	}
 	
 	public ArrayList<String> getList(int i) {
 	    ArrayList<String> liste = new ArrayList<>();
@@ -96,7 +80,6 @@ public class BackOfficeDAO {
 			}
 			};
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -170,7 +153,6 @@ public class BackOfficeDAO {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return relationID;
@@ -188,7 +170,6 @@ public class BackOfficeDAO {
 				position = rs.getInt("position");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -258,7 +239,6 @@ public class BackOfficeDAO {
 			req.execute();
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -300,7 +280,6 @@ public class BackOfficeDAO {
 			
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -342,7 +321,6 @@ public class BackOfficeDAO {
 			
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -359,7 +337,6 @@ public class BackOfficeDAO {
 			del.execute();
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -373,7 +350,6 @@ public class BackOfficeDAO {
 			req.execute();
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -386,7 +362,6 @@ public class BackOfficeDAO {
 			req.setString(1, ISBN);
 			req.execute();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -98,13 +98,11 @@ public class Compte extends JPanel {
 		JLabel titreInfoGen = new JLabel(" Informations générales");
 		titreInfoGen.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		titreInfoGen.setIcon(new ImageIcon("src/resources/images/logos/user.png"));
-		titreInfoGen.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		titreInfoGen.setHorizontalAlignment(SwingConstants.LEFT);
 		titreInfoGen.setBounds(0, 0, 480, 35);
 		panelInfoGen.add(titreInfoGen);
 		
 		JLabel labelNomInscription = new JLabel("Nom :");
-		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelNomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelNomInscription.setBounds(78, 46, 75, 30);
@@ -119,7 +117,6 @@ public class Compte extends JPanel {
 		
 		JLabel labelPrenomInscription = new JLabel("Prenom :");
 		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
-		labelPrenomInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelPrenomInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelPrenomInscription.setBounds(78, 87, 75, 30);
 		panelInfoGen.add(labelPrenomInscription);
@@ -132,7 +129,6 @@ public class Compte extends JPanel {
 		panelInfoGen.add(textPrenom);
 		
 		JLabel labelEmailInscription = new JLabel("E-mail :");
-		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelEmailInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelEmailInscription.setBounds(78, 128, 75, 30);
@@ -200,7 +196,6 @@ public class Compte extends JPanel {
 		lblAdresseDeDomiciliation.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		lblAdresseDeDomiciliation.setIcon(new ImageIcon("src/resources/images/logos/house.png"));
 		lblAdresseDeDomiciliation.setHorizontalAlignment(SwingConstants.LEFT);
-		lblAdresseDeDomiciliation.setFont(new Font("Noto Serif", Font.BOLD, 16));
 		lblAdresseDeDomiciliation.setBounds(10, 0, 480, 35);
 		panelAdresseDom.add(lblAdresseDeDomiciliation);
 		
@@ -520,14 +515,14 @@ public class Compte extends JPanel {
 				int nbrDeLivre = empruntDAO.qtLivreARendre(UserDAO.currentUser);
 				if (nbrDeLivre == 0) {
 					Object[] options = {"Oui", "Non"};
-					int supprimeCompte = JOptionPane.showOptionDialog(null, "Souhaitez-vous réelement désactivez votre compte !", "DESACTIVATION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), options, options[0]);
+					int supprimeCompte = JOptionPane.showOptionDialog(null, "Souhaitez-vous réellement désactiver votre compte ?", "DESACTIVATION du compte !", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("src/resources/images/logos/userDesactivate.png"), options, options[0]);
 					if (supprimeCompte == 0) {
 						JPasswordField jpass = new JPasswordField();
 						int reponse = JOptionPane.showConfirmDialog(null, jpass, "Saisissez votre mot de passe !", JOptionPane.OK_CANCEL_OPTION );
 						System.out.println(reponse);
 						if(reponse == 0) {
 							if(userDao.deactivate(UserDAO.currentUser, String.valueOf(jpass.getPassword() ))) {
-								JOptionPane.showMessageDialog(null, "Votre compte a était désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Votre compte a été désactivé !", "DESACTIVATION du compte !", JOptionPane.INFORMATION_MESSAGE);
 								UserDAO.currentUser = null;
 								Main.frame.getContentPane().removeAll();
 								Main.frame.getContentPane().add(new Accueil());
