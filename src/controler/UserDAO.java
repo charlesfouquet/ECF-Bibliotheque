@@ -17,7 +17,7 @@ import sqlConnection.DBConnect;
 public class UserDAO implements IDAO<User>{
 	Connection connect = DBConnect.getConnect();
 	
-	//déclaration d'un currentUser en static pour appel a différent endroit
+	//Déclaration d'un "currentUser" en static pour appel à différents endroits
 	public static User currentUser = null;
 
 	@Override
@@ -140,7 +140,7 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
-	//vérification de mail : aaa @ aaa . aa : débute pas lettre, suivi de min 3 lettres @ min 3 lettres . min 2 lettres fini par lettres
+	//Vérification de mail : aaa @ aaa . aa : débute par lettre, min 3 lettres, finit par lettre @ débute par lettre, min 3 lettres, finit par lettre . 2 à 3 lettres
 	public boolean emailValidator(String email) {
 		String regex = "^[A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][@][A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][.][A-Za-z0-9]{2,3}$";
 		Pattern compilRegex = Pattern.compile(regex);
@@ -149,7 +149,7 @@ public class UserDAO implements IDAO<User>{
 		return mailCheck;
 	}
 	
-	//vérification de password : 8 caractères, 1 maj, 1 minus, 1 chiffre, 1 spécial
+	//Vérification de password : 8 caractères minimum, 1 majuscule, 1 minuscule, 1 chiffre, 1 spécial
 	public boolean passValidator(String pass) {
 		String regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[?!$%\\-_]).{8,}$";
 		Pattern compileRegex = Pattern.compile(regex);
@@ -158,7 +158,7 @@ public class UserDAO implements IDAO<User>{
 		return passCheck;
 	}
 	
-	//vérification si mail déjà existant dans la bdd
+	//Vérification si mail déjà existant dans la BDD
 	public boolean isExist(String email) {
 		try {
 			PreparedStatement requete = connect.prepareStatement("SELECT * FROM users WHERE email=?");
@@ -173,7 +173,7 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
-	//connexion sur la page login
+	//Connexion sur la page Login
 	public User connexion(String email, String password) {
 		try {
 			PreparedStatement requete = connect.prepareStatement("SELECT * FROM users WHERE email = ? AND password = PASSWORD(?)");
@@ -204,7 +204,7 @@ public class UserDAO implements IDAO<User>{
 		return false;
 	}
 	
-	//vérifiacation du password et mise a jour du user pour stokage non utilisé
+	//Vérification du password et mise a jour du user pour stockage de sa data
 	public boolean deactivate(User userIn, String pass) {
 		try {
 			PreparedStatement req1 = connect.prepareStatement("SELECT id FROM users WHERE email = ? AND password = PASSWORD(?)");
@@ -232,7 +232,7 @@ public class UserDAO implements IDAO<User>{
 				req2.setString(11, userIn.getEmail());
 				req2.execute();
 			} else {
-				JOptionPane.showMessageDialog(null,"Votre mot de passe ne correspond pas à votre saisie.\nVeuillez réessayer.","DESACTIVATION du compte", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,"Votre mot de passe ne correspond pas à votre saisie.\nVeuillez réessayer.","Désactivation du compte", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			

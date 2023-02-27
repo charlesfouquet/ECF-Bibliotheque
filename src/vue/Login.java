@@ -82,7 +82,7 @@ public class Login extends JPanel {
 		textMdpC.setBounds(200, 160, 200, 30);
 		panelConnexion.add(textMdpC);
 		
-		JLabel labelContrainteC = new JLabel("* champs obligatoire !");
+		JLabel labelContrainteC = new JLabel("* champs obligatoires !");
 		labelContrainteC.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelContrainteC.setBounds(200, 200, 200, 14);
 		panelConnexion.add(labelContrainteC);
@@ -103,10 +103,10 @@ public class Login extends JPanel {
 						Main.frame.getContentPane().repaint();
 						Main.frame.getContentPane().revalidate();
 					}else {
-						JOptionPane.showMessageDialog(null,"Vérifier vos informations.\n ECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Vérifiez vos informations !\nECHEC de connexion !","CONNEXION", JOptionPane.ERROR_MESSAGE);
 					}
 				}else {
-				JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\nMerci de le modifier.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -171,7 +171,7 @@ public class Login extends JPanel {
 		textEmailI.setBounds(222, 222, 200, 30);
 		panelInscription.add(textEmailI);
 		
-		JLabel labelContrainte = new JLabel("* champs obligatoire !");
+		JLabel labelContrainte = new JLabel("* champs obligatoires !");
 		labelContrainte.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelContrainte.setBounds(222, 386, 200, 14);
 		panelInscription.add(labelContrainte);
@@ -181,11 +181,11 @@ public class Login extends JPanel {
 		labelIconeEmail.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JOptionPane.showMessageDialog(null, "Format e-mail obligatoire :\n exemple @ domaine . fr","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Format e-mail obligatoire :\nExemple @ domaine . fr","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		
-		JLabel labelMdpInscription = new JLabel("Mot de pase * :");
+		JLabel labelMdpInscription = new JLabel("Mot de passe * :");
 		labelMdpInscription.setFont(new Font("Noto Serif", Font.PLAIN, 14));
 		labelMdpInscription.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelMdpInscription.setBounds(50, 284, 150, 30);
@@ -206,7 +206,7 @@ public class Login extends JPanel {
 		labelIconeMdp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JOptionPane.showMessageDialog(null, "Format mot de passe oligatoire :\n 8 caractères minimum.\n dont :\n 1 majuscule.\n 1 minuscule.\n 1 chiffre.\n 1 caractère spécial.","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Format mot de passe oligatoire :\n8 caractères minimum\ndont :\n1 majuscule\n1 minuscule\n1 chiffre\n1 caractère spécial","CONTRAINTE", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		
@@ -234,13 +234,13 @@ public class Login extends JPanel {
 				User userI = new User(textNomI.getText(), textPrenomI.getText(), textEmailI.getText(), String.valueOf(textMdpI.getPassword()));
 				//vérif si aucun champs vide
 				if(textNomI.getText().isEmpty() || textPrenomI.getText().isEmpty() || textEmailI.getText().isEmpty() || String.valueOf(textMdpI.getPassword()).isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Merci de remplir les champs vide.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Merci de remplir les champs vides.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 				}else {
 					//verif regex mail
 					if (userDao.emailValidator(textEmailI.getText())) {
 						//verif si mail existe déjà bdd
 						if (userDao.isExist(textEmailI.getText())) {
-							JOptionPane.showMessageDialog(null, "Cet e-mail existe déjà !\n Veuillez en choisir un nouveaux.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Cet e-mail existe déjà !\nVeuillez en choisir un nouveau.","INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 						} else {
 							//verif regex mdp
 							if (userDao.passValidator(String.valueOf(textMdpI.getPassword()))) {
@@ -257,17 +257,17 @@ public class Login extends JPanel {
 										Main.frame.getContentPane().repaint();
 										Main.frame.getContentPane().revalidate();
 									} else {
-										JOptionPane.showMessageDialog(null, "Votre compte n'a pas pu être créé !\n Verifier vos informations.","INSCRIPTION", JOptionPane.ERROR_MESSAGE);
+										JOptionPane.showMessageDialog(null, "Votre compte n'a pas pu être créé !\nVerifiez vos informations.","INSCRIPTION", JOptionPane.ERROR_MESSAGE);
 									}
 								} else {
-									JOptionPane.showMessageDialog(null, "ATTENTION, vos mots de passe ne sont pas identique !", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+									JOptionPane.showMessageDialog(null, "ATTENTION, vos mots de passe ne sont pas identiques !", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 								}
 							} else {
-								JOptionPane.showMessageDialog(null, "Le format de votre mot de passe n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Le format de votre mot de passe n'est pas correct !\nMerci de le modifier.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 							}
 						}
 					} else {
-						JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\n Merci de le modifié.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,  "Le format de votre e-mail n'est pas correct !\nMerci de le modifier.", "INSCRIPTION", JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}
